@@ -3,11 +3,21 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <script>
-  var password = prompt("Vui lòng nhập mật khẩu để truy cập:");
-  if (password !== "anhem123") { // Thay 123456 bằng mật khẩu bạn muốn
-    alert("Sai mật khẩu!");
-    window.location.href = "about:blank"; // Đẩy ra trang trắng nếu sai
+<script>
+  // Kiểm tra xem máy này đã nhập đúng mật khẩu trước đó chưa
+  var isAuthenticated = localStorage.getItem("my_web_auth");
+
+  if (isAuthenticated !== "true") {
+    var password = prompt("Vui lòng nhập mật khẩu để truy cập:");
+    
+    if (password === "anhem123") {
+      // Nếu đúng, lưu trạng thái "đã xác thực" vào máy (vĩnh viễn cho đến khi xóa cache)
+      localStorage.setItem("my_web_auth", "true");
+      alert("Đăng nhập thành công! Máy này đã được ghi nhớ.");
+    } else {
+      alert("Sai mật khẩu!");
+      window.location.href = "about:blank";
+    }
   }
 </script>
 
