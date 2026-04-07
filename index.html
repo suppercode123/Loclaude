@@ -1,363 +1,411 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-  <title>⚜ Tướng Số AI — Thầy Khởi Phán Tướng</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet"/>
-  <style>
-    :root{
-      /* ── BẢNG MÀU "BẢNG VÀNG CHỐT SỐ" ── */
-      --bg-outer:  #000000;
-      --bg-main:   #fffce0;
-      --bg-card:   #fff8cc;
-      
-      --text-title:#8b6508;
-      --text-red:  #d32f2f;
-      --text-green:#2e7d32;
-      --text-orange:#ef6c00;
-      --text-dark: #333333;
-      
-      --border:    #d4af37;
-      --border-dim:rgba(212,175,55,0.4);
-    }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    html,body{min-height:100vh;font-family:'Cormorant Garamond',Georgia,serif;background:var(--bg-outer);color:var(--text-dark);overflow-x:hidden;}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<title>⚜ Thầy Khởi Phán Tướng AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#fdf8ee;
+  --bg2:#fff9f0;
+  --card:#fffdf5;
+  --card2:#fef9e8;
+  --gold:#c8960a;
+  --gold-lt:#f0b90b;
+  --gold-dk:#8a6400;
+  --gold-glow:rgba(200,150,10,.18);
+  --red:#c0180c;
+  --red-lt:#e82010;
+  --green:#0a8020;
+  --green-lt:#12a030;
+  --orange:#d06000;
+  --orange-lt:#f07010;
+  --blue:#0050a0;
+  --border:#e8c547;
+  --border-dim:rgba(200,150,10,.22);
+  --text:#1a1200;
+  --text2:#3a2800;
+  --muted:#7a6030;
+  --muted2:#a08040;
+  --shadow:0 4px 20px rgba(200,150,10,.15);
+  --shadow2:0 8px 40px rgba(200,150,10,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{min-height:100vh;font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
 
-    #app-container {
-      max-width: 1300px;
-      margin: 0 auto;
-      background: var(--bg-main);
-      min-height: 100vh;
-      border-left: 3px solid var(--border);
-      border-right: 3px solid var(--border);
-      box-shadow: 0 0 20px rgba(212,175,55,0.3);
-    }
+/* ══ LOADER ══ */
+#loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .8s ease;}
+#loader.fade-out{opacity:0;pointer-events:none;}
+.ld-sigil{font-size:clamp(54px,14vw,80px);color:var(--gold-lt);text-shadow:0 0 30px rgba(240,185,11,.6);animation:pulse 2.5s ease-in-out infinite;user-select:none;}
+.ld-title{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,5vw,26px);color:var(--gold-dk);letter-spacing:5px;text-align:center;}
+.ld-sub{font-size:clamp(9px,2.5vw,12px);color:var(--muted2);letter-spacing:3px;text-transform:uppercase;text-align:center;padding:0 20px;}
+#ld-status{font-size:clamp(11px,3vw,13px);color:var(--muted);letter-spacing:1px;text-align:center;padding:0 20px;min-height:22px;font-weight:500;}
+.ld-bar-wrap{width:min(300px,82vw);background:rgba(200,150,10,.12);border-radius:6px;height:10px;overflow:hidden;border:1px solid var(--border-dim);position:relative;}
+#ld-bar{height:100%;background:linear-gradient(90deg,var(--gold-dk),var(--gold-lt));border-radius:6px;width:0%;transition:width .5s ease;position:relative;}
+#ld-bar::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.4) 50%,transparent 100%);animation:shimmer 1.5s linear infinite;}
+#ld-pct{font-family:'Cinzel',serif;font-size:11px;color:var(--gold-dk);letter-spacing:2px;margin-top:2px;text-align:center;}
+#btn-retry{display:none;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border:none;padding:11px 28px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:3px;border-radius:6px;cursor:pointer;box-shadow:var(--shadow);margin-top:4px;}
+#btn-retry:active{transform:scale(.97);}
 
-    /* ══ LOADER ══ */
-    #loader{position:fixed;inset:0;z-index:9999;background:var(--bg-main);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .9s ease;}
-    #loader.fade-out{opacity:0;pointer-events:none;}
-    .loader-sigil{font-size:clamp(52px,14vw,76px);color:var(--text-red);animation:pulse 2s ease-in-out infinite;user-select:none;}
-    .loader-title{font-family:'Arial',sans-serif;font-weight:bold;font-size:clamp(17px,5vw,28px);color:var(--text-red);letter-spacing:2px;}
-    .loader-sub{font-family:'Arial',sans-serif;font-size:clamp(10px,3vw,13px);color:var(--text-green);letter-spacing:1px;text-transform:uppercase;text-align:center;padding:0 20px;}
-    #loader-status{font-size:clamp(12px,3.5vw,14px);color:var(--text-title);letter-spacing:1px;text-align:center;padding:0 20px;font-weight:bold;}
+/* ══ HEADER ══ */
+header{position:relative;z-index:10;padding:14px 16px 12px;text-align:center;border-bottom:3px solid var(--gold-lt);background:linear-gradient(135deg,#fff9e0,#ffeea0,#fff9e0);box-shadow:0 4px 20px rgba(200,150,10,.2);}
+.hdr-top{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px;}
+.hdr-badge{background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border-radius:20px;padding:2px 12px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;}
+.hdr-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,5.5vw,32px);font-weight:900;color:var(--gold-dk);text-shadow:2px 2px 0 rgba(200,150,10,.2);letter-spacing:3px;line-height:1.1;}
+.hdr-sub{font-size:clamp(8px,2vw,10px);color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:4px;}
 
-    /* ══ HEADER ══ */
-    header{position:relative;z-index:10;padding:16px 16px 12px;text-align:center;border-bottom:3px solid var(--border);background:#fffef0;}
-    .hdr-title{font-family:'Arial',sans-serif;font-size:clamp(22px,6vw,32px);font-weight:900;color:var(--text-red);letter-spacing:1px;line-height:1.2;text-shadow:1px 1px 0px rgba(0,0,0,0.1);}
-    .hdr-sub{font-family:'Arial',sans-serif;font-size:clamp(11px,3vw,13px);color:var(--text-green);font-weight:bold;letter-spacing:1px;text-transform:uppercase;margin-top:6px;}
+/* ══ LAYOUT ══ */
+main{position:relative;z-index:5;display:grid;grid-template-columns:1fr 420px;max-width:1320px;margin:0 auto;padding:16px;gap:0;min-height:calc(100vh - 92px);}
 
-    /* ══ LAYOUT ══ */
-    main{display:grid;grid-template-columns:1fr 450px;padding:16px;gap:0;}
+/* ══ CAMERA SIDE ══ */
+.camera-side{padding:12px 14px 12px 0;display:flex;flex-direction:column;align-items:center;gap:12px;}
 
-    /* ══ CAMERA SIDE ══ */
-    .camera-side{padding:12px 16px 12px 0;display:flex;flex-direction:column;align-items:center;gap:16px;}
+/* Portrait 3:4 frame */
+.cam-frame{position:relative;width:100%;max-width:min(360px,100%);aspect-ratio:3/4;background:#1a1200;border-radius:16px;overflow:hidden;border:3px solid var(--gold-lt);box-shadow:var(--shadow2),inset 0 0 30px rgba(0,0,0,.5);}
+.crnr{position:absolute;width:30px;height:30px;border-color:var(--gold-lt);border-style:solid;z-index:20;pointer-events:none;}
+.crnr-tl{top:10px;left:10px;border-width:3px 0 0 3px;border-radius:4px 0 0 0;}
+.crnr-tr{top:10px;right:10px;border-width:3px 3px 0 0;border-radius:0 4px 0 0;}
+.crnr-bl{bottom:10px;left:10px;border-width:0 0 3px 3px;border-radius:0 0 0 4px;}
+.crnr-br{bottom:10px;right:10px;border-width:0 3px 3px 0;border-radius:0 0 4px 0;}
+.scan{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(240,185,11,.9) 50%,transparent);z-index:15;top:-3px;opacity:0;transition:opacity .3s;pointer-events:none;}
+.scan.on{opacity:1;animation:scanMove 1s linear infinite;}
+#video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block;}
+#faceCanvas{position:absolute;top:0;left:0;width:100%;height:100%;transform:scaleX(-1);pointer-events:none;z-index:10;}
+#idle-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:12;pointer-events:none;transition:opacity .4s;background:rgba(20,14,0,.7);}
+#idle-msg.off{opacity:0;pointer-events:none;}
+.idle-icon{font-size:48px;animation:pulse 3s ease-in-out infinite;}
+.idle-text{font-family:'Cinzel',serif;font-size:11px;color:rgba(255,220,100,.85);letter-spacing:2px;text-align:center;line-height:2;}
 
-    .cam-frame{
-      position:relative;width:100%;
-      max-width:min(420px, 100%);
-      aspect-ratio:3/4;
-      background:#000;
-      border-radius:12px;overflow:hidden;
-      border:4px solid var(--border);
-      box-shadow:0 8px 20px rgba(0,0,0,0.2);
-    }
-    
-    .scan{position:absolute;left:0;right:0;height:4px;background:var(--text-red);box-shadow:0 0 10px var(--text-red);z-index:15;top:-4px;opacity:0;transition:opacity .3s;pointer-events:none;}
-    .scan.on{opacity:1;animation:scanMove 1.5s linear infinite;}
+/* Scan overlay */
+#scan-overlay{position:absolute;inset:0;background:rgba(10,7,0,.85);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:25;}
+#scan-overlay.on{display:flex;}
+.scan-ring{width:90px;height:90px;border-radius:50%;border:4px solid rgba(240,185,11,.2);border-top-color:var(--gold-lt);animation:spin 1s linear infinite;}
+#scan-count{font-family:'Cinzel Decorative',serif;font-size:56px;color:var(--gold-lt);text-shadow:0 0 30px rgba(240,185,11,.8);line-height:1;}
+.scan-label{font-family:'Cinzel',serif;font-size:11px;color:rgba(255,220,100,.85);letter-spacing:3px;text-transform:uppercase;text-align:center;padding:0 16px;line-height:1.8;}
 
-    #video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block;}
-    #faceCanvas{position:absolute;top:0;left:0;width:100%;height:100%;transform:scaleX(-1);pointer-events:none;z-index:10;}
-    
-    #idle-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:12;pointer-events:none;transition:opacity .4s;}
-    #idle-msg.off{opacity:0;pointer-events:none;}
-    .idle-icon{font-size:44px;color:rgba(255,255,255,0.7);animation:pulse 2s ease-in-out infinite;}
-    .idle-text{font-family:'Arial',sans-serif;font-size:14px;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,0.8);letter-spacing:1px;text-align:center;line-height:1.6;font-weight:bold;}
+/* Score overlay */
+#score-overlay{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:18;text-align:center;opacity:0;transition:opacity .5s;pointer-events:none;}
+#score-overlay.on{opacity:1;}
+.score-num{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(44px,11vw,66px);line-height:1;transition:color .5s,text-shadow .5s;}
+.score-unit{font-family:'Cinzel',serif;font-size:8px;letter-spacing:4px;color:rgba(255,220,100,.7);margin-top:2px;}
 
-    #score-overlay{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:18;text-align:center;opacity:0;transition:opacity .5s;pointer-events:none;background:rgba(255,252,224,0.9);padding:8px 24px;border-radius:8px;border:2px solid var(--border);box-shadow:0 4px 10px rgba(0,0,0,0.3);}
-    #score-overlay.on{opacity:1;}
-    .score-num{font-family:'Arial',sans-serif;font-weight:900;font-size:clamp(40px,10vw,62px);line-height:1;color:var(--text-red);}
-    .score-unit{font-family:'Arial',sans-serif;font-size:11px;font-weight:bold;letter-spacing:1px;color:var(--text-title);margin-top:4px;}
+/* Done overlay */
+#done-overlay{position:absolute;inset:0;background:rgba(10,7,0,.9);display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:26;}
+#done-overlay.on{display:flex;animation:fadeIn .4s ease;}
+.done-check{font-size:60px;animation:popIn .5s ease;}
+.done-title{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,4.5vw,22px);color:var(--gold-lt);letter-spacing:3px;text-align:center;padding:0 16px;}
+.done-sub{font-family:'Cinzel',serif;font-size:10px;color:rgba(255,220,100,.7);letter-spacing:3px;text-align:center;line-height:1.8;}
+.done-btn{margin-top:4px;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border:none;padding:11px 30px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:4px;border-radius:6px;cursor:pointer;touch-action:manipulation;animation:pulse 2s ease-in-out infinite;box-shadow:0 4px 20px rgba(200,150,10,.4);}
 
-    #scan-overlay{position:absolute;inset:0;background:rgba(0,0,0,.7);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:25;}
-    #scan-overlay.on{display:flex;}
-    .scan-ring{width:90px;height:90px;border-radius:50%;border:4px solid rgba(255,255,255,.2);border-top-color:var(--text-red);animation:spin 1s linear infinite;}
-    #scan-count{font-family:'Arial',sans-serif;font-weight:bold;font-size:52px;color:#fff;line-height:1;position:absolute;top:50%;transform:translateY(-75%);}
-    .scan-label{font-family:'Arial',sans-serif;font-size:16px;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,0.8);text-transform:uppercase;font-weight:bold;text-align:center;line-height:1.6;margin-top:20px;}
-    .scan-label span{color: #ffeb3b; font-size:18px;}
+/* Controls */
+.cam-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;width:100%;max-width:360px;}
+.btn-primary{flex:1;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border:none;padding:12px 16px;font-family:'Cinzel',serif;font-size:clamp(10px,2.5vw,12px);font-weight:700;letter-spacing:3px;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:var(--shadow);touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+.btn-primary:hover:not(:disabled){background:linear-gradient(135deg,var(--gold-lt),#ffcf00);}
+.btn-primary:active:not(:disabled){transform:scale(.97);}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;}
+.btn-primary.active{background:linear-gradient(135deg,#084a0a,var(--green-lt));color:#fff;box-shadow:0 0 20px rgba(18,160,48,.25);}
+.btn-reset{background:linear-gradient(135deg,#8a1010,var(--red-lt));color:#fff;border:none;padding:12px 18px;font-family:'Cinzel',serif;font-size:clamp(9px,2vw,11px);font-weight:700;letter-spacing:2px;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 4px 16px rgba(200,24,12,.2);touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+.btn-reset:active{transform:scale(.97);}
+.gender-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:2px solid var(--border);border-radius:20px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:var(--gold-dk);background:rgba(200,150,10,.08);opacity:0;transition:opacity .5s;font-weight:700;}
+.gender-pill.on{opacity:1;}
 
-    #done-overlay{position:absolute;inset:0;background:rgba(255,252,224,.95);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:26;}
-    #done-overlay.on{display:flex;animation:fadeIn .4s ease;}
-    .done-check{font-size:56px;animation:popIn .4s ease;}
-    .done-title{font-family:'Arial',sans-serif;font-weight:bold;font-size:24px;color:var(--text-green);text-align:center;}
-    .done-btn{margin-top:10px;background:var(--text-red);color:#fff;border:none;box-shadow:0 4px 10px rgba(211,47,47,0.3);padding:12px 30px;font-family:'Arial',sans-serif;font-size:14px;font-weight:bold;border-radius:6px;cursor:pointer;animation:pulse 2s infinite;}
+/* ══ AUDIO CONTROLS ══ */
+.audio-bar{display:none;align-items:center;gap:8px;background:linear-gradient(135deg,var(--card),var(--card2));border:2px solid var(--border-dim);border-radius:10px;padding:10px 14px;width:100%;max-width:360px;}
+.audio-bar.show{display:flex;}
+.audio-btn{background:linear-gradient(135deg,var(--blue),#0070d0);color:#fff;border:none;padding:8px 14px;border-radius:6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:2px;cursor:pointer;touch-action:manipulation;flex:1;transition:all .25s;}
+.audio-btn:active{transform:scale(.97);}
+.audio-btn.stop{background:linear-gradient(135deg,#8a1010,var(--red-lt));}
+.audio-icon{font-size:14px;}
 
-    .cam-controls{display:flex;align-items:center;justify-content:center;width:100%;max-width:420px;}
-    .btn-cam{
-      background: var(--text-red);
-      color: #fff;
-      border: 2px solid #b71c1c;
-      box-shadow: 0 4px 10px rgba(211,47,47,0.3);
-      padding: 16px 0;width:100%;
-      font-family:'Arial',sans-serif;font-size:16px;font-weight:bold;letter-spacing:1px;border-radius:8px;cursor:pointer;transition:all .3s;text-transform:uppercase;
-    }
-    .btn-cam:hover:not(:disabled){background:#e53935;}
-    .btn-cam:active:not(:disabled){transform:scale(.97);}
-    .btn-cam.active{background:var(--text-green); border-color:#1b5e20; box-shadow:0 4px 10px rgba(46,125,50,0.3);}
+/* ══ ANALYSIS SIDE ══ */
+.analysis-side{border-left:2px solid var(--border-dim);padding:12px 0 12px 16px;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 96px);overflow-y:auto;position:sticky;top:0;}
+.analysis-side::-webkit-scrollbar{width:4px;}
+.analysis-side::-webkit-scrollbar-thumb{background:var(--gold-lt);border-radius:3px;}
 
-    .gender-pill{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border:2px solid var(--border);border-radius:20px;font-family:'Arial',sans-serif;font-size:13px;font-weight:bold;color:var(--text-title);background:var(--bg-card);opacity:0;transition:opacity .5s;}
-    .gender-pill.on{opacity:1;}
+.sect-title{font-family:'Cinzel',serif;font-size:9px;color:var(--muted);letter-spacing:5px;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin:2px 0;}
+.sect-title::before,.sect-title::after{content:'';flex:1;height:1px;background:var(--border-dim);}
 
-    /* ══ ANALYSIS SIDE ══ */
-    .analysis-side{border-left:2px dashed var(--border);padding:12px 0 12px 20px;display:flex;flex-direction:column;gap:16px;max-height:calc(100vh - 95px);overflow-y:auto;position:sticky;top:0;}
-    .analysis-side::-webkit-scrollbar{width:6px;}
-    .analysis-side::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+/* Grade card */
+.grade-card{background:linear-gradient(135deg,#fff9e0,#ffeea0);border:2px solid var(--gold-lt);border-radius:12px;padding:18px 14px;text-align:center;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+.grade-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold-lt),transparent);}
+.grade-letter{font-family:'Cinzel Decorative',serif;font-size:clamp(54px,12vw,74px);font-weight:900;line-height:1;transition:color .6s;}
+.grade-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--gold-dk);margin-top:5px;text-transform:uppercase;font-weight:700;}
+.golden-row{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:8px;}
+.golden-lbl{font-family:'Cinzel',serif;font-size:8px;color:var(--muted2);letter-spacing:2px;}
+.golden-pct{font-family:'Cinzel',serif;font-size:15px;font-weight:900;color:var(--gold-dk);}
 
-    .sect-title{font-family:'Arial',sans-serif;font-weight:bold;font-size:15px;color:var(--text-title);text-align:center;text-transform:uppercase;border-bottom:2px solid var(--border);padding-bottom:6px;margin-top:8px;}
+/* Master block */
+.master-block{background:linear-gradient(135deg,var(--card),var(--card2));border:2px solid var(--border-dim);border-radius:12px;padding:16px 14px;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+.master-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold-lt),transparent);}
+.master-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.master-icon{font-size:20px;}
+.master-title{font-family:'Cinzel Decorative',serif;font-size:clamp(12px,3vw,15px);color:var(--gold-dk);letter-spacing:2px;}
+.master-badge{margin-left:auto;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border-radius:10px;padding:2px 8px;font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;}
+.overall-reading{background:linear-gradient(135deg,rgba(200,150,10,.06),rgba(200,150,10,.12));border:1px solid var(--border-dim);border-left:4px solid var(--gold-lt);border-radius:0 8px 8px 0;padding:12px;margin-bottom:12px;font-size:clamp(12px,3vw,14px);color:var(--text2);line-height:1.9;font-style:italic;}
+.overall-reading b{color:var(--red);font-style:normal;font-weight:700;}
+.overall-reading em{color:var(--green);font-style:normal;font-weight:600;}
 
-    .grade-card, .master-block, .metrics-block {
-      background: var(--bg-card);
-      border: 2px solid var(--border);
-      border-radius: 8px;
-      padding:16px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
-    
-    .grade-card{text-align:center;}
-    .grade-label{font-family:'Arial',sans-serif;font-size:14px;font-weight:bold;color:var(--text-title);margin-bottom:8px;}
-    .grade-letter{font-family:'Arial',sans-serif;font-size:72px;font-weight:900;line-height:1;color:var(--text-red);}
-    .grade-title{font-family:'Arial',sans-serif;font-size:16px;color:var(--text-green);margin-top:12px;text-transform:uppercase;font-weight:bold;}
+/* Destiny 2x2 */
+.destiny-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.destiny-cell{background:var(--card);border:1px solid var(--border-dim);border-radius:8px;padding:10px;}
+.dc-icon{font-size:16px;display:block;margin-bottom:3px;}
+.dc-title{font-family:'Cinzel',serif;font-size:8px;color:var(--gold-dk);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;font-weight:700;}
+.dc-text{font-size:clamp(10px,2.5vw,12px);color:var(--text2);line-height:1.75;}
 
-    .overall-reading{background:#fff;border:1px solid var(--border-dim);border-radius:6px;padding:14px;margin-bottom:16px;font-size:15px;color:var(--text-dark);line-height:1.6;}
-    .overall-reading b{color:var(--text-red);font-weight:bold;font-size:16px;}
+/* Metrics block */
+.metrics-block{background:linear-gradient(135deg,var(--card),var(--card2));border:2px solid var(--border-dim);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow);}
+.metrics-block::before{content:'';display:block;font-family:'Cinzel',serif;font-size:8px;color:var(--muted);letter-spacing:3px;}
+.metric-row{display:flex;flex-direction:column;gap:4px;}
+.mr-header{display:flex;justify-content:space-between;align-items:center;}
+.mr-name{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);font-weight:600;}
+.mr-score{font-family:'Cinzel',serif;font-size:16px;font-weight:900;transition:color .5s;min-width:32px;text-align:right;}
+.bar-bg{height:6px;background:rgba(200,150,10,.12);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;width:0%;transition:width 1.3s cubic-bezier(.4,0,.2,1);}
+.mr-desc{font-size:9px;color:var(--muted);line-height:1.65;font-style:italic;}
 
-    .destiny-grid{display:grid;grid-template-columns:1fr;gap:12px;}
-    .destiny-cell{background:#fff;border:1px solid var(--border-dim);border-radius:6px;padding:12px;}
-    .dc-title{font-family:'Arial',sans-serif;font-weight:bold;font-size:13px;color:var(--text-orange);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
-    .dc-text{font-size:14px;color:var(--text-dark);line-height:1.5;}
+/* 12-month block */
+.month-block{background:linear-gradient(135deg,var(--card),var(--card2));border:2px solid var(--border-dim);border-radius:12px;padding:14px;box-shadow:var(--shadow);}
+.month-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;}
+.month-cell{background:var(--card);border:1px solid var(--border-dim);border-radius:8px;padding:8px 10px;}
+.mc-month{font-family:'Cinzel',serif;font-size:8px;color:var(--gold-dk);letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:3px;}
+.mc-star{font-size:12px;margin-bottom:2px;display:block;}
+.mc-text{font-size:9px;color:var(--text2);line-height:1.7;}
+.mc-tag{display:inline-block;margin-top:3px;padding:1px 6px;border-radius:10px;font-size:8px;font-weight:700;font-family:'Cinzel',serif;letter-spacing:1px;}
+.mc-tag.good{background:rgba(10,128,32,.12);color:var(--green);border:1px solid rgba(10,128,32,.2);}
+.mc-tag.ok{background:rgba(200,150,10,.12);color:var(--gold-dk);border:1px solid var(--border-dim);}
+.mc-tag.care{background:rgba(200,24,12,.1);color:var(--red);border:1px solid rgba(200,24,12,.2);}
 
-    .monthly-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 8px; }
-    .month-card { background: #fff; border: 1px solid var(--border-dim); border-radius: 6px; padding: 12px; display: flex; gap: 12px; align-items: flex-start; }
-    .month-badge { color: #fff; font-family:'Arial',sans-serif; font-weight: bold; font-size: 13px; padding: 6px 10px; border-radius: 4px; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .month-text { font-size: 14.5px; color: var(--text-dark); line-height: 1.5; padding-top: 2px;}
+/* Ref row */
+.ref-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.ref-card{background:var(--card);border:1px solid var(--border-dim);border-radius:8px;padding:8px 6px;text-align:center;}
+.ref-svg{width:48px;height:58px;margin:0 auto 4px;display:block;}
+.ref-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--muted2);}
 
-    .metric-row{display:flex;flex-direction:column;gap:6px;background:#fff;padding:10px;border-radius:6px;border:1px solid var(--border-dim);margin-bottom:8px;}
-    .mr-header{display:flex;justify-content:space-between;align-items:center;}
-    .mr-name{font-family:'Arial',sans-serif;font-weight:bold;font-size:12px;color:var(--text-title);text-transform:uppercase;}
-    .mr-score{font-family:'Arial',sans-serif;font-size:20px;font-weight:900;color:var(--text-red);}
-    .bar-bg{height:8px;background:#eee;border-radius:4px;overflow:hidden;}
-    .bar-fill{height:100%;border-radius:4px;width:0%;transition:width 1s ease;}
-    .mr-desc{font-size:13px;color:#555;line-height:1.4;padding-top:4px;}
+/* Panel idle */
+#panel-idle{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 14px;gap:14px;text-align:center;}
+.idle-sym{font-size:38px;color:var(--gold-lt);animation:pulse 3.5s ease-in-out infinite;}
+.idle-p{font-family:'Cinzel',serif;font-size:10px;color:var(--muted2);letter-spacing:2px;line-height:2;}
+#results{display:none;flex-direction:column;gap:12px;}
+#results.show{display:flex;}
 
-    /* ── BẢNG ĐIỀU KHIỂN ÂM THANH ── */
-    .audio-panel {
-      background: #fff;
-      border: 2px solid var(--text-green);
-      border-radius: 8px;
-      padding: 14px;
-      text-align: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-      margin-bottom: 4px;
-    }
-    .audio-title {
-      font-family: 'Arial', sans-serif;
-      font-size: 14px;
-      font-weight: bold;
-      color: var(--text-green);
-      margin-bottom: 12px;
-    }
-    .audio-title.playing {
-      animation: pulse 1.5s infinite;
-      color: var(--text-red);
-    }
-    .audio-btns {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-    }
-    .audio-btns button {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text-title);
-      font-family: 'Arial', sans-serif;
-      font-weight: bold;
-      font-size: 12px;
-      padding: 10px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .audio-btns button:hover {
-      background: var(--border);
-      color: #fff;
-    }
+footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:2px solid var(--border-dim);font-family:'Cinzel',serif;font-size:8px;color:var(--muted);letter-spacing:4px;background:linear-gradient(135deg,#fff9e0,#ffeea0);}
 
-    #panel-idle{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;gap:16px;text-align:center;border:2px dashed var(--border);border-radius:8px;background:var(--bg-card);}
-    .idle-sym{font-size:40px;color:var(--text-title);animation:pulse 2s infinite;}
-    .idle-p{font-family:'Arial',sans-serif;font-size:15px;font-weight:bold;color:var(--text-title);line-height:1.6;}
-    
-    #results{display:none;flex-direction:column;gap:16px;}
-    #results.show{display:flex;}
+/* ══ KEYFRAMES ══ */
+@keyframes pulse{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes scanMove{0%{top:-3px}100%{top:100%}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
-    footer{text-align:center;padding:16px;border-top:2px solid var(--border);font-family:'Arial',sans-serif;font-weight:bold;font-size:12px;color:var(--text-title);background:var(--bg-card);}
-
-    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-    @keyframes scanMove{0%{top:-4px}100%{top:100%}}
-    @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    @keyframes popIn{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
-
-    @media(max-width:900px){
-      main{grid-template-columns:1fr;padding:12px;gap:0;}
-      .camera-side{padding:0 0 16px 0;}
-      .analysis-side{border-left:none;border-top:2px dashed var(--border);padding:20px 0 0;max-height:none;position:static;overflow-y:visible;}
-    }
-  </style>
+/* ══ RESPONSIVE ══ */
+@media(max-width:900px){
+  main{grid-template-columns:1fr;padding:10px;gap:0;}
+  .camera-side{padding:8px 0;}
+  .cam-frame{max-width:min(340px,96vw);}
+  .analysis-side{border-left:none;border-top:2px solid var(--border-dim);padding:14px 0 0;max-height:none;position:static;overflow-y:visible;}
+}
+@media(max-width:480px){
+  .destiny-grid{grid-template-columns:1fr;}
+  .month-grid{grid-template-columns:1fr;}
+}
+</style>
 </head>
 <body>
 
-<div id="app-container">
-  
-  <div id="loader">
-    <div class="loader-sigil">👁️</div>
-    <div class="loader-title">HỆ THỐNG XEM TƯỚNG AI</div>
-    <div class="loader-sub">Phân tích chuẩn xác - Luận giải chi tiết</div>
-    <div id="loader-status">Đang tải dữ liệu...</div>
-    <button id="btn-retry" onclick="retryLoad()">↺ THỬ LẠI</button>
-  </div>
-
-  <header>
-    <div class="hdr-title">DỰ ĐOÁN VẬN MỆNH AI</div>
-    <div class="hdr-sub">👉 THẦY KHỞI LUẬN GIẢI TƯỚNG MẶT 👈</div>
-  </header>
-
-  <main>
-    <div class="camera-side">
-      <div class="cam-frame" id="camFrame">
-        <div class="scan" id="scanLine"></div>
-        <video id="video" autoplay muted playsinline webkit-playsinline></video>
-        <canvas id="faceCanvas"></canvas>
-
-        <div id="idle-msg">
-          <div class="idle-icon">📸</div>
-          <div class="idle-text">Hướng mặt thẳng vào camera<br>Để Thầy Khởi xem tướng</div>
-        </div>
-
-        <div id="scan-overlay">
-          <div class="scan-ring"></div>
-          <div id="scan-count">5</div>
-          <div class="scan-label"><span>Thầy Khởi đang xem</span><br>Đừng cử động giữ nguyên tư thế</div>
-        </div>
-
-        <div id="done-overlay">
-          <div class="done-check">✅</div>
-          <div class="done-title">ĐÃ PHÂN TÍCH XONG</div>
-          <button class="done-btn" onclick="hideDone()">XEM BẢNG KẾT QUẢ VẬN MỆNH</button>
-        </div>
-
-        <div id="score-overlay">
-          <div class="score-num" id="scoreNum">—</div>
-          <div class="score-unit">ĐIỂM TƯỚNG SỐ</div>
-        </div>
-      </div>
-
-      <div class="cam-controls">
-        <button class="btn-cam" id="btnCam" onclick="startCamera()">KÍCH HOẠT CAMERA QUÉT TƯỚNG</button>
-      </div>
-      
-      <div class="gender-pill" id="genderPill">
-        <span id="gIcon">⚥</span>
-        <span id="gText">—</span>
-        <span id="gAge"></span>
-      </div>
-    </div>
-    
-    <div class="analysis-side">
-      <div id="panel-idle">
-        <div class="idle-sym">🔮</div>
-        <div class="idle-p">Chưa có dữ liệu khuôn mặt.<br>Vui lòng kích hoạt Camera để bắt đầu.</div>
-      </div>
-
-      <div id="results">
-        
-        <div class="audio-panel" id="audioPanel">
-          <div class="audio-title" id="audioStatus">🔇 ĐANG CHỜ PHÁT ÂM THANH...</div>
-          <div class="audio-btns">
-            <button onclick="readFullReport()">▶ ĐỌC TOÀN BỘ BÁO CÁO</button>
-            <button onclick="stopReading()">⏸ DỪNG ĐỌC</button>
-          </div>
-        </div>
-
-        <div class="sect-title">KẾT QUẢ TỔNG QUAN</div>
-        <div class="grade-card">
-          <div class="grade-label">BẢN MỆNH ĐẠT LOẠI</div>
-          <div class="grade-letter" id="gradeLetter">—</div>
-          <div class="grade-title" id="gradeTitle">Đang phân tích...</div>
-        </div>
-
-        <div class="sect-title">THẦY PHÁN VẬN MỆNH TỔNG QUAN</div>
-        <div class="master-block">
-          <div class="overall-reading" id="overallReading">
-            Đang chờ AI tính toán...
-          </div>
-          <div class="destiny-grid">
-            <div class="destiny-cell">
-              <div class="dc-title">👉 Tính Cách</div>
-              <div class="dc-text" id="rdPersonality">—</div>
-            </div>
-            <div class="destiny-cell">
-              <div class="dc-title">🔥 Tiền Vận</div>
-              <div class="dc-text" id="rdEarly">—</div>
-            </div>
-            <div class="destiny-cell">
-              <div class="dc-title">⭐ Vận Hạn</div>
-              <div class="dc-text" id="rdCurrent">—</div>
-            </div>
-            <div class="destiny-cell">
-              <div class="dc-title">💎 Hậu Vận</div>
-              <div class="dc-text" id="rdLate">—</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sect-title">DỰ ĐOÁN VẬN HẠN 12 THÁNG NĂM NAY</div>
-        <div class="master-block">
-          <div class="monthly-grid" id="monthlyGrid">
-            </div>
-        </div>
-
-        <div class="sect-title">CHỈ SỐ CHI TIẾT NGŨ QUAN</div>
-        <div class="metrics-block">
-          <div class="metric-row">
-            <div class="mr-header"><span class="mr-name">Hình Dáng Khuôn Mặt</span><span class="mr-score" id="mFace">—</span></div>
-            <div class="bar-bg"><div class="bar-fill" id="bFace"></div></div>
-            <div class="mr-desc" id="dFace">Đang chờ dữ liệu...</div>
-          </div>
-          <div class="metric-row">
-            <div class="mr-header"><span class="mr-name">Đôi Mắt · Thần Quang</span><span class="mr-score" id="mEyes">—</span></div>
-            <div class="bar-bg"><div class="bar-fill" id="bEyes"></div></div>
-            <div class="mr-desc" id="dEyes">Đang chờ dữ liệu...</div>
-          </div>
-          <div class="metric-row">
-            <div class="mr-header"><span class="mr-name">Mũi · Tài Lộc</span><span class="mr-score" id="mNose">—</span></div>
-            <div class="bar-bg"><div class="bar-fill" id="bNose"></div></div>
-            <div class="mr-desc" id="dNose">Đang chờ dữ liệu...</div>
-          </div>
-          <div class="metric-row">
-            <div class="mr-header"><span class="mr-name">Miệng & Môi · Khẩu Phúc</span><span class="mr-score" id="mMouth">—</span></div>
-            <div class="bar-bg"><div class="bar-fill" id="bMouth"></div></div>
-            <div class="mr-desc" id="dMouth">Đang chờ dữ liệu...</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer>
-    DỰ ĐOÁN KẾT QUẢ TƯỚNG SỐ AI BỞI THẦY KHỞI
-  </footer>
+<!-- ══ LOADER ══ -->
+<div id="loader">
+  <div class="ld-sigil">☯</div>
+  <div class="ld-title">Thầy Khởi Phán Tướng AI</div>
+  <div class="ld-sub">Hệ thống nhận diện khuôn mặt · Tỷ lệ vàng Phi</div>
+  <div id="ld-status">Đang khởi tạo hệ thống...</div>
+  <div class="ld-bar-wrap"><div id="ld-bar"></div></div>
+  <div id="ld-pct">0%</div>
+  <button id="btn-retry" onclick="retryLoad()">↺ THỬ LẠI</button>
 </div>
 
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="hdr-top">
+    <div class="hdr-badge">⚜ AI TƯỚNG SỐ HỌC ⚜</div>
+  </div>
+  <div class="hdr-title">Thầy Khởi Phán Tướng AI</div>
+  <div class="hdr-sub">Phân tích khuôn mặt · Tỷ lệ vàng Phi 1.618 · Luận giải vận mệnh</div>
+</header>
+
+<main>
+
+<!-- ══ CAMERA SIDE ══ -->
+<div class="camera-side">
+
+  <div class="cam-frame" id="camFrame">
+    <div class="crnr crnr-tl"></div><div class="crnr crnr-tr"></div>
+    <div class="crnr crnr-bl"></div><div class="crnr crnr-br"></div>
+    <div class="scan" id="scanLine"></div>
+    <video id="video" autoplay muted playsinline webkit-playsinline></video>
+    <canvas id="faceCanvas"></canvas>
+
+    <div id="idle-msg">
+      <div class="idle-icon">👁️</div>
+      <div class="idle-text">Hướng mặt thẳng vào camera<br>Giữ nguyên để quét tướng số</div>
+    </div>
+
+    <div id="scan-overlay">
+      <div class="scan-ring"></div>
+      <div id="scan-count">5</div>
+      <div class="scan-label">Thầy Khởi đang xem<br>đừng cử động, giữ nguyên tư thế</div>
+    </div>
+
+    <div id="done-overlay">
+      <div class="done-check">✅</div>
+      <div class="done-title">Đã quét xong!</div>
+      <div class="done-sub">Mời quý khách xem chỉ số bên dưới</div>
+      <button class="done-btn" onclick="hideDone()">▼ XEM KẾT QUẢ</button>
+    </div>
+
+    <div id="score-overlay">
+      <div class="score-num" id="scoreNum">—</div>
+      <div class="score-unit">TƯỚNG SỐ / 100</div>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="cam-controls">
+    <button class="btn-primary" id="btnCam" onclick="startCamera()">▶ KÍCH HOẠT CAMERA</button>
+    <button class="btn-reset" id="btnReset" onclick="resetSession()" style="display:none;">🗑 XÓA — QUÉT NGƯỜI KHÁC</button>
+  </div>
+  <div class="gender-pill" id="genderPill">
+    <span id="gIcon">⚥</span><span id="gText">—</span><span id="gAge"></span>
+  </div>
+
+  <!-- Audio controls -->
+  <div class="audio-bar" id="audioBar">
+    <button class="audio-btn" onclick="readFullReport()"><span class="audio-icon">🔊</span> ĐỌC TOÀN BỘ BÁO CÁO</button>
+    <button class="audio-btn stop" onclick="stopReading()"><span class="audio-icon">⏹</span> DỪNG</button>
+  </div>
+
+</div><!-- /camera-side -->
+
+<!-- ══ ANALYSIS SIDE ══ -->
+<div class="analysis-side">
+  <div id="panel-idle">
+    <div class="idle-sym">☽ ✦ ☾</div>
+    <div class="idle-p">Chưa phát hiện khuôn mặt<br>Kích hoạt camera để Thầy Khởi<br>bắt đầu phân tích tướng số</div>
+  </div>
+
+  <div id="results">
+
+    <!-- Grade -->
+    <div class="grade-card">
+      <div class="grade-letter" id="gradeLetter" style="color:var(--gold-dk)">—</div>
+      <div class="grade-title" id="gradeTitle">Đang phân tích...</div>
+      <div class="golden-row">
+        <span class="golden-lbl">TỶ LỆ VÀNG PHI</span>
+        <span class="golden-pct" id="goldenPct">—%</span>
+      </div>
+    </div>
+
+    <!-- Ref -->
+    <div class="sect-title">Chuẩn Tham Chiếu</div>
+    <div class="ref-row">
+      <div class="ref-card">
+        <svg class="ref-svg" viewBox="0 0 56 66" fill="none">
+          <ellipse cx="28" cy="30" rx="20" ry="24" stroke="#c8960a" stroke-width="1.2" fill="none"/>
+          <line x1="28" y1="6" x2="28" y2="54" stroke="#c8960a" stroke-width=".4" stroke-dasharray="2,3" opacity=".5"/>
+          <line x1="8" y1="26" x2="48" y2="26" stroke="#c8960a" stroke-width=".4" stroke-dasharray="2,3" opacity=".5"/>
+          <ellipse cx="21" cy="26" rx="4.5" ry="2.5" stroke="#c8960a" stroke-width=".9" fill="none"/>
+          <ellipse cx="35" cy="26" rx="4.5" ry="2.5" stroke="#c8960a" stroke-width=".9" fill="none"/>
+          <path d="M22 44 Q28 48 34 44" stroke="#c8960a" stroke-width="1.1" fill="none"/>
+          <path d="M16 21 Q21 19 26 21" stroke="#c8960a" stroke-width=".9" fill="none"/>
+          <path d="M30 21 Q35 19 40 21" stroke="#c8960a" stroke-width=".9" fill="none"/>
+          <text x="28" y="63" text-anchor="middle" font-family="Cinzel,serif" font-size="5" fill="#8a6400" letter-spacing="2">1.618</text>
+        </svg>
+        <div class="ref-lbl">NAM CHUẨN</div>
+      </div>
+      <div class="ref-card">
+        <svg class="ref-svg" viewBox="0 0 56 66" fill="none">
+          <ellipse cx="28" cy="29" rx="18" ry="25" stroke="#c0180c" stroke-width="1.2" fill="none"/>
+          <line x1="28" y1="4" x2="28" y2="54" stroke="#c0180c" stroke-width=".4" stroke-dasharray="2,3" opacity=".5"/>
+          <line x1="10" y1="25" x2="46" y2="25" stroke="#c0180c" stroke-width=".4" stroke-dasharray="2,3" opacity=".5"/>
+          <ellipse cx="21" cy="25" rx="5" ry="3.2" stroke="#c0180c" stroke-width=".9" fill="none"/>
+          <ellipse cx="35" cy="25" rx="5" ry="3.2" stroke="#c0180c" stroke-width=".9" fill="none"/>
+          <path d="M21 42 Q28 47 35 42" stroke="#c0180c" stroke-width="1.1" fill="none"/>
+          <path d="M16 20 Q21 17 26 20" stroke="#c0180c" stroke-width=".9" fill="none"/>
+          <path d="M30 20 Q35 17 40 20" stroke="#c0180c" stroke-width=".9" fill="none"/>
+          <text x="28" y="63" text-anchor="middle" font-family="Cinzel,serif" font-size="5" fill="#c0180c" letter-spacing="2">1.618</text>
+        </svg>
+        <div class="ref-lbl" style="color:#c0180c">NỮ CHUẨN</div>
+      </div>
+    </div>
+
+    <!-- Master reading -->
+    <div class="sect-title">Lời Phán Của Thầy Khởi</div>
+    <div class="master-block">
+      <div class="master-header">
+        <span class="master-icon">🔮</span>
+        <span class="master-title">Thầy Phán Tổng Quát</span>
+        <span class="master-badge">AI TƯỚNG SỐ</span>
+      </div>
+      <div class="overall-reading" id="overallReading">Đang chờ quét khuôn mặt...</div>
+      <div class="destiny-grid">
+        <div class="destiny-cell">
+          <span class="dc-icon">🌟</span>
+          <div class="dc-title">Tính Cách</div>
+          <div class="dc-text" id="rdPersonality">—</div>
+        </div>
+        <div class="destiny-cell">
+          <span class="dc-icon">🌱</span>
+          <div class="dc-title">Tiền Vận</div>
+          <div class="dc-text" id="rdEarly">—</div>
+        </div>
+        <div class="destiny-cell">
+          <span class="dc-icon">⚡</span>
+          <div class="dc-title">Vận Hạn</div>
+          <div class="dc-text" id="rdCurrent">—</div>
+        </div>
+        <div class="destiny-cell">
+          <span class="dc-icon">🌙</span>
+          <div class="dc-title">Hậu Vận</div>
+          <div class="dc-text" id="rdLate">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="sect-title">Chỉ Số Ngũ Quan</div>
+    <div class="metrics-block">
+      <div class="master-header" style="margin-bottom:4px;">
+        <span class="master-icon">📐</span>
+        <span class="master-title" style="font-size:11px;">Tỷ Lệ Vàng Phi · Ngũ Quan</span>
+      </div>
+      <div class="metric-row"><div class="mr-header"><span class="mr-name">Hình Dáng Khuôn Mặt</span><span class="mr-score" id="mFace">—</span></div><div class="bar-bg"><div class="bar-fill" id="bFace"></div></div><div class="mr-desc" id="dFace">Đang chờ...</div></div>
+      <div class="metric-row"><div class="mr-header"><span class="mr-name">Đôi Mắt · Thần Quang</span><span class="mr-score" id="mEyes">—</span></div><div class="bar-bg"><div class="bar-fill" id="bEyes"></div></div><div class="mr-desc" id="dEyes">Đang chờ...</div></div>
+      <div class="metric-row"><div class="mr-header"><span class="mr-name">Mũi · Tài Lộc</span><span class="mr-score" id="mNose">—</span></div><div class="bar-bg"><div class="bar-fill" id="bNose"></div></div><div class="mr-desc" id="dNose">Đang chờ...</div></div>
+      <div class="metric-row"><div class="mr-header"><span class="mr-name">Miệng & Môi · Khẩu Phúc</span><span class="mr-score" id="mMouth">—</span></div><div class="bar-bg"><div class="bar-fill" id="bMouth"></div></div><div class="mr-desc" id="dMouth">Đang chờ...</div></div>
+      <div class="metric-row"><div class="mr-header"><span class="mr-name">Tính Đối Xứng</span><span class="mr-score" id="mSym">—</span></div><div class="bar-bg"><div class="bar-fill" id="bSym"></div></div><div class="mr-desc" id="dSym">Đang chờ...</div></div>
+      <div class="metric-row"><div class="mr-header"><span class="mr-name">Trán & Ngũ Quan</span><span class="mr-score" id="mForehead">—</span></div><div class="bar-bg"><div class="bar-fill" id="bForehead"></div></div><div class="mr-desc" id="dForehead">Đang chờ...</div></div>
+    </div>
+
+    <!-- 12 months -->
+    <div class="sect-title">Dự Đoán 12 Tháng</div>
+    <div class="month-block">
+      <div class="master-header" style="margin-bottom:0;">
+        <span class="master-icon">📅</span>
+        <span class="master-title" style="font-size:11px;">Vận Hạn Từng Tháng Năm 2025</span>
+      </div>
+      <div class="month-grid" id="monthGrid">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+
+  </div><!-- /results -->
+</div><!-- /analysis-side -->
+</main>
+
+<footer>⬡ THẦY KHỞI PHÁN TƯỚNG AI · TỶ LỆ VÀNG PHI 1.618 · XEM TƯỚNG NHƯ THẦY ⬡</footer>
+
+<!-- ══ LOAD face-api.js multi-CDN ══ -->
 <script>
 (function(){
   var CDNS=[
@@ -368,7 +416,7 @@
   var i=0;
   function tryLoad(){
     if(i>=CDNS.length){
-      document.getElementById('loader-status').textContent='⚠ Lỗi mạng. Nhấn Thử Lại.';
+      document.getElementById('ld-status').textContent='⚠ Không tải được thư viện. Kiểm tra WiFi/4G và nhấn THỬ LẠI.';
       document.getElementById('btn-retry').style.display='block';
       return;
     }
@@ -382,189 +430,106 @@
   window.retryLoad=function(){
     i=0;
     document.getElementById('btn-retry').style.display='none';
-    document.getElementById('loader-status').textContent='Đang tải lại...';
+    document.getElementById('ld-status').textContent='Đang thử lại...';
+    setLdBar(0);
     tryLoad();
   };
 })();
 </script>
 
+<!-- ══ APP ══ -->
 <script>
-/* ── MODULE GIỌNG NÓI AI (TEXT TO SPEECH) ── */
-var viVoice = null;
-var currentReportTexts = []; // Mảng chứa các câu cần đọc
-
-function loadVoices() {
-  var voices = window.speechSynthesis.getVoices();
-  for(var i=0; i<voices.length; i++){
-    if(voices[i].lang.includes('vi') || voices[i].lang.includes('VI')) {
-      viVoice = voices[i];
-      if(voices[i].name.toLowerCase().includes('female')) break; 
-    }
-  }
-}
-if (window.speechSynthesis.onvoiceschanged !== undefined) {
-  window.speechSynthesis.onvoiceschanged = loadVoices;
-}
-
-// Hàm đọc (Hỗ trợ đọc nối tiếp nhau hoặc ngắt câu cũ)
-function speakText(text, cancelPrev) {
-  if (!('speechSynthesis' in window)) return;
-  // Mặc định là ngắt câu cũ, trừ khi truyền cancelPrev = false (để xếp hàng chờ đọc)
-  if (cancelPrev !== false) {
-    window.speechSynthesis.cancel(); 
-  }
-  var msg = new SpeechSynthesisUtterance(text);
-  msg.lang = 'vi-VN';
-  if(viVoice) msg.voice = viVoice;
-  msg.rate = 1.0; 
-  msg.pitch = 1.2; 
-  
-  // Hiệu ứng nhấp nháy chữ khi đang đọc
-  msg.onstart = function() {
-    var st = document.getElementById('audioStatus');
-    if(st){ st.textContent = "🔊 THẦY ĐANG ĐỌC LUẬN GIẢI..."; st.classList.add('playing'); }
-  };
-  msg.onend = function() {
-    // Nếu là câu cuối cùng trong hàng đợi thì tắt hiệu ứng nhấp nháy
-    if(!window.speechSynthesis.pending && !window.speechSynthesis.speaking) {
-      var st = document.getElementById('audioStatus');
-      if(st){ st.textContent = "✅ ĐÃ ĐỌC XONG"; st.classList.remove('playing'); }
-    }
-  };
-
-  window.speechSynthesis.speak(msg);
-}
-
-function unlockAudio() {
-  var msg = new SpeechSynthesisUtterance('');
-  window.speechSynthesis.speak(msg);
-}
-
-// Chức năng Đọc toàn bộ báo cáo
-function readFullReport() {
-  if (!('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel(); // Dừng mọi thứ trước khi đọc bài mới
-  
-  // Đọc lần lượt từng câu trong mảng (truyền false để xếp hàng)
-  currentReportTexts.forEach(function(text) {
-    speakText(text, false); 
-  });
-}
-
-// Chức năng Dừng đọc
-function stopReading() {
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-  }
-  var st = document.getElementById('audioStatus');
-  if(st){ st.textContent = "🔇 ĐÃ DỪNG ĐỌC"; st.classList.remove('playing'); }
-}
-
-// Tạo kịch bản nội dung để AI đọc
-function generateReportAudio(scores, g, fortunes) {
-  currentReportTexts = [];
-  currentReportTexts.push("Hệ thống đã phân tích xong. Điểm tướng số của quý khách là " + scores.total + " điểm.");
-  currentReportTexts.push("Bản mệnh đạt loại " + g.l + ". " + g.t + ".");
-  
-  currentReportTexts.push("Sau đây là phần Thầy phán vận mệnh tổng quan. " + document.getElementById('overallReading').textContent);
-  
-  currentReportTexts.push("Về Tính cách: " + document.getElementById('rdPersonality').textContent);
-  currentReportTexts.push("Về Tiền vận: " + document.getElementById('rdEarly').textContent);
-  currentReportTexts.push("Về Vận hạn hiện tại: " + document.getElementById('rdCurrent').textContent);
-  currentReportTexts.push("Về Hậu vận: " + document.getElementById('rdLate').textContent);
-  
-  currentReportTexts.push("Tiếp theo là dự đoán vận hạn 12 tháng trong năm nay.");
-  for(let i=0; i<12; i++) {
-    currentReportTexts.push("Tháng " + (i+1) + ". " + fortunes[i]);
-  }
-  
-  currentReportTexts.push("Và cuối cùng là chi tiết điểm số ngũ quan.");
-  currentReportTexts.push("Hình dáng khuôn mặt đạt " + scores.faceShape + " điểm. " + document.getElementById('dFace').textContent);
-  currentReportTexts.push("Đôi mắt và Thần quang đạt " + scores.eyes + " điểm. " + document.getElementById('dEyes').textContent);
-  currentReportTexts.push("Mũi và Tài lộc đạt " + scores.nose + " điểm. " + document.getElementById('dNose').textContent);
-  currentReportTexts.push("Miệng, Môi và Khẩu phúc đạt " + scores.mouth + " điểm. " + document.getElementById('dMouth').textContent);
-  
-  currentReportTexts.push("Phần luận giải tướng số đến đây là kết thúc. Cảm ơn quý khách.");
-}
-
-
-/* ── CONSTANTS ── */
 var MODEL_URLS=[
   'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights',
   'https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights'
 ];
 var PHI=1.618033988;
 
-/* ── TEXT DATABASE ── */
+/* ── LOADING BAR ── */
+function setLdBar(pct){
+  document.getElementById('ld-bar').style.width=pct+'%';
+  document.getElementById('ld-pct').textContent=pct+'%';
+}
+
+/* ── TEXT DATA ── */
+var MONTHS=['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+var MONTH_ICONS=['❄️','🌸','🌿','🌺','☀️','🔥','🌊','⛅','🍂','🌾','🌙','⭐'];
+
 var DB={
   personality:{
     hi:["Khí chất cao quý, nhân hậu đức độ — mệnh có quý nhân phù trợ trọn đời.","Thông tuệ xuất chúng, lãnh đạo thiên bẩm, sự nghiệp hiển hách vinh danh.","Tướng phú quý vẹn toàn, tâm địa thiện lương, được bốn phương kính nể."],
-    md:["Cần cù kiên nhẫn — vận may đến muộn nhưng bền vững chắc chắn lâu dài.","Tính tình thẳng thắn, trọng nghĩa tình, nhiều bạn tốt đồng hành cuộc sống.","Tư chất thông minh, nỗ lực phấn đấu ắt đạt thành tựu xứng đáng."],
-    lo:["Lao khổ rèn ý chí — tích đức hành thiện có thể cải được số phận.","Chí hướng mạnh mẽ, vượt qua thử thách để gặt hái thành công xứng đáng.","Tướng số là khởi điểm — nội tâm tu dưỡng mới quyết định vận mệnh."]
+    md:["Cần cù kiên nhẫn — vận may đến muộn nhưng bền vững chắc chắn.","Tính tình thẳng thắn, trọng nghĩa tình, bạn bè tốt đồng hành.","Tư chất thông minh, nỗ lực ắt đạt thành tựu xứng đáng."],
+    lo:["Lao khổ rèn ý chí — tích đức hành thiện có thể cải số phận.","Chí hướng mạnh mẽ, vượt thử thách để gặt hái thành công.","Tướng số là khởi điểm — nội tâm tu dưỡng quyết định vận mệnh."]
   },
   early:{
-    hi:["Tiền vận hanh thông, gia đình hòa thuận, học hành xuất sắc thuận lợi.","Thuở nhỏ được yêu thương, nền tảng vững chắc, tương lai rộng mở tươi sáng."],
-    md:["Tiền vận vất vả nhưng tích lũy nhiều kinh nghiệm quý báu vô giá.","Tuổi trẻ nhiều thử thách, rèn ý chí bản lĩnh vững vàng cho tương lai."],
-    lo:["Tiền vận gian nan rèn ý chí kiên cường — hậu vận bù đắp xứng đáng.","Thuở nhỏ trải qua khó khăn — chính thử thách tạo nên tính cách mạnh."]
+    hi:["Tiền vận hanh thông, gia đình hòa thuận, học hành xuất sắc.","Thuở nhỏ được yêu thương, nền tảng vững chắc, tương lai rộng mở.","Thời trẻ gặp thầy giỏi, học vấn rộng mở, tiền đồ rực rỡ."],
+    md:["Tiền vận vất vả nhưng tích lũy kinh nghiệm quý báu.","Tuổi trẻ nhiều thử thách, rèn ý chí bản lĩnh vững vàng.","Tiền vận trung bình, kiên trì xây dựng nền tảng bền vững."],
+    lo:["Tiền vận gian nan rèn ý chí kiên cường — hậu vận bù đắp.","Thuở nhỏ khó khăn — chính thử thách tạo nên tính cách mạnh.","Tiền vận vất vả, học cân bằng và tìm hỗ trợ từ người thân."]
   },
   current:{
-    hi:["Vận khí đỉnh cao, tài lộc dồi dào, quý nhân hỗ trợ, cơ hội liên tiếp đến.","Thuận buồm xuôi gió, sự nghiệp thăng tiến rực rỡ — giai đoạn vàng son."],
-    md:["Vận hạn trung bình, kiên nhẫn sáng suốt nắm bắt thời cơ đúng lúc.","Thời điểm tích lũy, chuẩn bị cho bước ngoặt lớn và cơ hội sắp tới."],
-    lo:["Vận hạn cần chú ý, thận trọng quyết định quan trọng, tránh mạo hiểm.","Giai đoạn thử lửa — giữ bình tĩnh, tìm lời khuyên từ người kinh nghiệm."]
+    hi:["Vận khí đỉnh cao, tài lộc dồi dào, cơ hội liên tiếp.","Sự nghiệp thăng tiến rực rỡ — đây là giai đoạn vàng son.","Mạnh dạn nắm bắt cơ hội — thành công trong tầm tay."],
+    md:["Vận hạn trung bình, kiên nhẫn nắm bắt thời cơ đúng lúc.","Thời điểm tích lũy, chuẩn bị cho bước ngoặt lớn.","Vận đang chuyển tích cực, giữ vững tinh thần kiên trì."],
+    lo:["Vận hạn cần chú ý, thận trọng quyết định quan trọng.","Giai đoạn thử lửa — giữ bình tĩnh, tìm lời khuyên đúng đắn.","Có trở ngại nhất thời, nhẫn nại tích đức để vượt qua."]
   },
   late:{
-    hi:["Hậu vận cực tốt — an nhàn hưởng phúc, con cháu hiếu thảo, tuổi già sung túc.","Hậu vận rực rỡ, tiếng thơm lưu truyền, con cháu thành tài, gia đạo hưng thịnh."],
-    md:["Hậu vận ổn định, cuộc sống bình yên hạnh phúc, con cháu thành đạt.","Về già có người chăm sóc, tâm hồn thanh thản, hưởng cuộc sống an lành."],
-    lo:["Hậu vận cần tích đức để cải thiện, chú trọng sức khỏe và gia đình.","Tuổi già cần giữ gìn sức khỏe, củng cố các mối quan hệ tốt đẹp."]
+    hi:["Hậu vận cực tốt — an nhàn hưởng phúc, con cháu hiếu thảo.","Về già được kính trọng, sức khỏe tốt, thọ lâu phúc hậu.","Hậu vận rực rỡ, tiếng thơm lưu truyền, gia đạo hưng thịnh."],
+    md:["Hậu vận ổn định, cuộc sống bình yên, con cháu thành đạt.","Về già có người chăm sóc, tâm hồn thanh thản, an lành.","Hậu vận ấm áp, gia đình hòa thuận, hạnh phúc bền vững."],
+    lo:["Hậu vận cần tích đức để cải thiện, chú trọng gia đình.","Tuổi già giữ gìn sức khỏe, củng cố mối quan hệ tốt đẹp.","Kiên trì tu dưỡng đức hạnh, cơ hội cải mệnh còn đó."]
   },
   metrics:{
-    faceShape:{hi:"Hình oval chuẩn Phi — tướng phú quý hiển hách.",md:"Khuôn mặt cân đối hài hòa — cuộc sống ổn định.",lo:"Khuôn mặt chưa đạt tỷ lệ — cần rèn luyện."},
-    eyes:{hi:"Mắt sáng thần quang — tướng thông minh, có quý nhân.",md:"Mắt bình thường — cần phát huy trực giác bẩm sinh.",lo:"Đôi mắt cần chú ý — rèn luyện sự tập trung."},
-    nose:{hi:"Mũi thẳng đầu tròn — tài lộc dồi dào, phát đạt.",md:"Mũi cân đối — tài lộc ổn định, không thiếu hụt.",lo:"Cẩn thận tài chính, tránh đầu cơ mạo hiểm."},
-    mouth:{hi:"Môi đầy đặn — khẩu phúc tốt, khéo giao tiếp.",md:"Miệng cân đối — giao tiếp tốt, quan hệ rộng rãi.",lo:"Chú ý lời ăn tiếng nói, tránh gây hiểu lầm."}
+    faceShape:{hi:"Khuôn mặt tỷ lệ vàng hoàn hảo, hình oval chuẩn Phi — tướng phú quý hiển hách.",md:"Khuôn mặt cân đối, tỷ lệ hài hòa — cuộc sống ổn định sung túc.",lo:"Khuôn mặt chưa đạt tỷ lệ lý tưởng — cần rèn luyện phát huy tiềm năng."},
+    eyes:{hi:"Đôi mắt sáng, khoảng cách lý tưởng — thông minh, quý nhân phù trợ.",md:"Đôi mắt bình thường — nội tâm phong phú, cần phát huy trực giác thiên bẩm.",lo:"Đôi mắt cần chú ý — rèn luyện tập trung và nhìn nhận đa chiều."},
+    nose:{hi:"Mũi thẳng đứng đắn, đầu mũi tròn — tài lộc dồi dào, kinh doanh phát đạt.",md:"Mũi cân đối — tài lộc ổn định, biết tính toán, vật chất không thiếu.",lo:"Mũi chưa đạt chuẩn — cẩn thận tài chính, tránh đầu cơ mạo hiểm."},
+    mouth:{hi:"Miệng chuẩn, môi đầy đặn — khẩu phúc tốt, giao tiếp thành công.",md:"Miệng cân đối — giao tiếp tốt, khéo léo trong quan hệ xã hội.",lo:"Miệng chưa đạt tỷ lệ — chú ý lời ăn tiếng nói, tránh gây hiểu lầm."},
+    symmetry:{hi:"Đối xứng tuyệt vời — nội tâm cân bằng, sức khỏe bền vững.",md:"Đối xứng khá tốt — tính cách ổn định, cuộc sống bình ổn hạnh phúc.",lo:"Còn bất đối xứng — cần cân bằng nội tâm và các mối quan hệ."},
+    forehead:{hi:"Trán rộng phẳng, ngũ quan chuẩn — thông tuệ sáng tạo, quan lộc hanh thông.",md:"Trán và ngũ quan cân đối — trí tuệ tốt, sự nghiệp từng bước vững vàng.",lo:"Ngũ quan chưa hoàn hảo — phát huy thế mạnh và không ngừng học hỏi."}
   },
   overall:{
-    hi:[
-      "Đây là khuôn mặt <b>QUÝ TƯỚNG THƯỢNG PHẨM</b>. Thần thái sáng suốt, khí chất lãnh đạo thiên bẩm. Người này mệnh có quý nhân, tài lộc hanh thông. Tiền vận thuận lợi, trung vận thăng tiến, hậu vận an nhàn.",
-      "Khuôn mặt <b>PHÚ QUÝ SONG TOÀN</b>. Mắt sáng thần linh, mũi thẳng tài lộc, miệng khẩu phúc dồi dào. Đây là người thông tuệ, bản lĩnh, thu hút quý nhân phù trợ suốt đời."
-    ],
-    md:[
-      "Khuôn mặt <b>HẢO TƯỚNG TRUNG CẤP</b>. Các đường nét ngũ quan khá hài hòa, thể hiện phúc lộc ổn định. Cần nỗ lực để phát huy tiềm năng, vận may đến muộn nhưng bền vững.",
-      "Tướng số <b>TRUNG BÌNH KHÁ</b>. Người này thẳng thắn, trọng nghĩa khí. Vận hạn hiện tại đang trong giai đoạn tích lũy, cần kiên nhẫn chờ thời cơ thuận lợi."
-    ],
-    lo:[
-      "Khuôn mặt <b>CẦN TU DƯỠNG ĐỨC HẠNH</b>. Tướng chưa toàn vẹn nhưng tích đức, hành thiện có thể cải mệnh. Ý chí quyết tâm mới là yếu tố quyết định vận mệnh.",
-      "Tướng số <b>LAO KHỔ RÈN Ý CHÍ</b>. Trải qua nhiều thử thách để thành công. Phúc đức tại mẫu — tu thân tích đức là con đường thay đổi vận mệnh."
-    ]
-  },
-  monthly: {
-    hi: [
-      "Đại cát đại lợi, tài lộc hanh thông, mưu sự dễ thành, cầu tài đắc tài.",
-      "Gặp quý nhân phù trợ, công việc có bước thăng tiến vượt bậc, vạn sự hanh thông.",
-      "Gia đạo an vui, tình duyên nở rộ, gia đình đón nhận nhiều tin vui bất ngờ.",
-      "Sức khỏe dồi dào, tinh thần minh mẫn, rất thích hợp ký kết hợp đồng lớn.",
-      "Tháng bản lề mang lại vận may tài chính, thu nhập gia tăng đáng kể.",
-      "Mọi sự hanh thông êm đẹp, có cơ hội thăng chức hoặc mở rộng kinh doanh.",
-      "Vận khí đỉnh cao, gặp hung hóa cát, các khoản đầu tư bắt đầu sinh lời lớn."
-    ],
-    md: [
-      "Vận trình bình hòa, công việc duy trì ở mức ổn định, không có biến cố lớn.",
-      "Có chút thử thách nhỏ nhưng nhờ tính kiên nhẫn sẽ vượt qua một cách êm đẹp.",
-      "Tài chính duy trì ở mức ổn, tuy nhiên cần chú ý quản lý chi tiêu hợp lý.",
-      "Gia đạo bình an, là thời điểm rất tốt để học hỏi thêm kỹ năng và kiến thức mới.",
-      "Mưu sự cần chậm mà chắc, tuyệt đối không nên nóng vội hay hấp tấp trong tháng này.",
-      "Tuy vất vả bôn ba nhưng có quý nhân âm thầm giúp đỡ, cuối cùng cũng thu về quả ngọt."
-    ],
-    lo: [
-      "Cần đặc biệt thận trọng trong lời ăn tiếng nói, tránh xa thị phi khẩu thiệt.",
-      "Tài lộc có dấu hiệu hao hụt nhẹ, tháng này tuyệt đối không đầu tư mạo hiểm.",
-      "Công việc gặp nhiều áp lực, cần giữ tinh thần lạc quan, lấy tĩnh để chế động.",
-      "Cần chú ý chăm sóc sức khỏe, đề phòng các bệnh lặt vặt lúc giao mùa.",
-      "Có chút rắc rối trong các mối quan hệ xã hội, cần nhẫn nhịn và thấu hiểu.",
-      "Vận hạn trắc trở, cẩn thận vấn đề đi lại, không nên đưa ra quyết định trọng đại."
-    ]
+    hi:["Đây là khuôn mặt <b>QUÝ TƯỚNG THƯỢNG PHẨM</b> — tỷ lệ vàng Phi gần đạt chuẩn tuyệt đối. Thần thái sáng suốt, khí chất lãnh đạo thiên bẩm. Mệnh có quý nhân, <em>tài lộc hanh thông</em>, sự nghiệp rực rỡ. Tiền vận thuận lợi, trung vận thăng tiến, hậu vận an nhàn hưởng phúc.",
+     "Khuôn mặt <b>PHÚ QUÝ SONG TOÀN</b> — các vùng ngũ quan đều đạt chuẩn tỷ lệ vàng. Mắt sáng thần linh, mũi thẳng tài lộc, miệng khẩu phúc dồi dào. Người thông tuệ, bản lĩnh, được trời phú <em>khả năng lãnh đạo và thu hút quý nhân</em> phù trợ suốt đời.",
+     "Tướng mạo <b>ĐẶC BIỆT QUÝ PHÁ</b> — tỷ lệ khuôn mặt đạt mức hiếm thấy. Trán rộng trí tuệ vượt trội, mắt thần quang chiếu sáng, ngũ quan hài hòa phong thủy. Cuộc đời được ông trời ưu ái, <em>gặp nhiều may mắn và cơ hội lớn</em> trong sự nghiệp lẫn tình duyên."],
+    md:["Khuôn mặt <b>HẢO TƯỚNG TRUNG CẤP</b> — tỷ lệ vàng Phi đạt mức trung bình khá. Các đường nét ngũ quan khá hài hòa, thể hiện người có <em>phúc lộc ổn định</em>. Cần kiên trì nỗ lực để phát huy hết tiềm năng, vận may đến muộn nhưng bền vững.",
+     "Tướng số <b>TRUNG BÌNH KHÁ</b> — khuôn mặt cân đối, một số vùng đạt tỷ lệ vàng tốt. Người có tính cách thẳng thắn, trọng nghĩa khí, được bạn bè tin yêu. Vận hạn hiện tại đang <em>tích lũy, cần kiên nhẫn chờ thời cơ</em> thuận lợi.",
+     "Khuôn mặt <b>BÌNH THƯỜNG ĐẾN KHÁ</b> — tỷ lệ phi đạt phần lớn nhưng chưa toàn hảo. Cuộc sống ổn định, ít sóng gió, tiền tài không thiếu hụt. Biết phát huy điểm mạnh, <em>vận mệnh hoàn toàn có thể cải thiện</em> đáng kể."],
+    lo:["Khuôn mặt <b>CẦN TU DƯỠNG ĐỨC HẠNH</b> — tỷ lệ vàng Phi chưa đạt nhiều vùng. Nhưng đây không phải tướng xấu tuyệt đối — <em>tích đức, hành thiện và rèn luyện</em> có thể cải được số phận.",
+     "Tướng số <b>LÀO KHỔ RÈN Ý CHÍ</b> — khuôn mặt có nhiều thử thách tỷ lệ. Lịch sử cho thấy nhiều vĩ nhân tướng mạo bình thường mà <em>vẫn thành công nhờ ý chí sắt đá</em>.",
+     "Khuôn mặt <b>THỬ THÁCH VẬN MỆNH</b> — tỷ lệ phi còn nhiều điểm chưa đạt. Người mang tướng này trải qua gian nan để trưởng thành. <em>Sự kiên cường trong nghịch cảnh</em> chính là tài sản quý giá nhất."]
   }
 };
+
+/* 12-month predictions seeded by total score */
+function genMonths(totalScore){
+  var now=new Date();
+  var curMonth=now.getMonth(); // 0-indexed
+  var tiers=[
+    {tag:'good',label:'Hanh thông',texts:['Tài lộc hanh thông, gặp quý nhân hỗ trợ, sự nghiệp thuận lợi.','Đây là tháng vàng — mạnh dạn ra quyết định và nắm bắt cơ hội.','Tiền tài đổ vào, gia đạo hòa thuận, sức khỏe dồi dào.']},
+    {tag:'ok',label:'Bình thường',texts:['Vận hạn bình ổn, không có biến động lớn, cần duy trì nhịp sống.','Tháng tích lũy — chuẩn bị cho giai đoạn bứt phá sắp tới.','Giữ vững tinh thần, không nên mạo hiểm, ổn định là chìa khóa.']},
+    {tag:'care',label:'Cần chú ý',texts:['Tháng cần cẩn trọng — tránh đầu tư lớn, chú ý sức khỏe.','Coi chừng tiểu nhân — giữ miệng, tránh tranh cãi không đáng.','Vận hạn có phần khó khăn, nhẫn nại và kiên trì vượt qua.']}
+  ];
+  var arr=[];
+  for(var m=0;m<12;m++){
+    var idx=(m+curMonth)%12;
+    // seed based on score + month
+    var seed=(totalScore*7+m*13+idx*3)%100;
+    var tier;
+    if(totalScore>=75) tier=seed<55?0:(seed<80?1:2);
+    else if(totalScore>=50) tier=seed<30?0:(seed<65?1:2);
+    else tier=seed<15?0:(seed<50?1:2);
+    var t=tiers[tier];
+    var txt=t.texts[(totalScore+m*7)%t.texts.length];
+    arr.push({month:MONTHS[idx],icon:MONTH_ICONS[idx],tag:t.tag,label:t.label,text:txt});
+  }
+  return arr;
+}
+
+function renderMonths(totalScore){
+  var arr=genMonths(totalScore);
+  var html='';
+  arr.forEach(function(m){
+    html+='<div class="month-cell"><div class="mc-month">'+m.month+'</div><span class="mc-star">'+m.icon+'</span><div class="mc-text">'+m.text+'</div><span class="mc-tag '+m.tag+'">'+m.label+'</span></div>';
+  });
+  document.getElementById('monthGrid').innerHTML=html;
+}
 
 function pick(cat,score){
   var tier=score>=75?'hi':score>=50?'md':'lo';
@@ -574,27 +539,6 @@ function pick(cat,score){
 function metricDesc(key,score){
   var tier=score>=75?'hi':score>=50?'md':'lo';
   return DB.metrics[key][tier];
-}
-
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
-function generateMonthlyFortunes(score) {
-  let hiCount = score >= 80 ? 8 : (score >= 60 ? 4 : 2);
-  let mdCount = score >= 80 ? 3 : (score >= 60 ? 6 : 4);
-  let loCount = score >= 80 ? 1 : (score >= 60 ? 2 : 6);
-  
-  let pool = [];
-  for(let i=0; i<hiCount; i++) pool.push(DB.monthly.hi[Math.floor(Math.random() * DB.monthly.hi.length)]);
-  for(let i=0; i<mdCount; i++) pool.push(DB.monthly.md[Math.floor(Math.random() * DB.monthly.md.length)]);
-  for(let i=0; i<loCount; i++) pool.push(DB.monthly.lo[Math.floor(Math.random() * DB.monthly.lo.length)]);
-  
-  return shuffle(pool);
 }
 
 /* ── SCORING ── */
@@ -612,33 +556,42 @@ function calcScore(lm,gender){
   var eyeGap=dist(p[39],p[42]);
   var noseW=dist(p[31],p[35]);
   var mouthW=dist(p[48],p[54]);
+  var upperLipH=dist(p[51],p[62]),lowerLipH=dist(p[57],p[62]);
   var browY=(p[19].y+p[24].y)/2,noseTipY=p[33].y,chinY=p[8].y;
   var faceH=Math.abs(chinY-browY);
   var isMale=gender==='male';
-  
   var s1=scoreR(faceH/faceW,isMale?1.5:1.58,0.16);
   var s2=scoreR(eyeGap/avgEW,1.0,0.18);
   var s3=scoreR(noseW/faceW,0.200,0.07);
   var s4=scoreR(mouthW/noseW,PHI,0.13);
-  
-  var raw=s1*.3 + s2*.3 + s3*.2 + s4*.2;
+  var eyeSymm=1-Math.min(1,Math.abs(leW-reW)/avgEW);
+  var browSymm=1-Math.min(1,Math.abs(p[19].y-p[24].y)/(faceH*.1+1));
+  var s5=Math.min(100,(eyeSymm*.55+Math.min(1,browSymm)*.45)*100);
+  var upper=Math.abs(noseTipY-browY),lower=Math.abs(chinY-noseTipY);
+  var s6=scoreR(upper/(lower||1),1.0,0.17);
+  var s7=scoreR(lowerLipH/(upperLipH||1),PHI,0.22);
+  var raw=s1*.16+s2*.20+s3*.15+s4*.14+s5*.20+s6*.10+s7*.05;
   var total=Math.round(Math.min(97,Math.max(38,raw)));
-  return{total,faceShape:Math.round(s1),eyes:Math.round(s2),nose:Math.round(s3),mouth:Math.round(s4)};
+  return{total:total,faceShape:Math.round(s1),eyes:Math.round(s2),nose:Math.round(s3),mouth:Math.round(s4),symmetry:Math.round(s5),forehead:Math.round(s6),phi:Math.round(scoreR(faceH/faceW,PHI,0.13))};
 }
 
 /* ── COLORS ── */
-function barColor(s){
-  if(s>=80) return '#2e7d32'; 
-  if(s>=60) return '#ef6c00'; 
-  return '#d32f2f';           
+function clr(s){
+  if(s>=88)return'#c8960a';if(s>=74)return'#0a8020';
+  if(s>=60)return'#d06000';if(s>=45)return'#a05010';return'#c0180c';
 }
-
+function barGrad(s){
+  if(s>=88)return'linear-gradient(90deg,#8a6400,#f0b90b)';
+  if(s>=74)return'linear-gradient(90deg,#065018,#12a030)';
+  if(s>=60)return'linear-gradient(90deg,#804000,#f07010)';
+  return'linear-gradient(90deg,#801010,#e82010)';
+}
 function grade(s){
-  if(s>=90)return{l:'S',t:'PHÚ QUÝ SONG TOÀN'};
-  if(s>=80)return{l:'A',t:'QUÝ TƯỚNG THƯỢNG PHẨM'};
-  if(s>=70)return{l:'B',t:'HẢO TƯỚNG TRUNG CẤP'};
-  if(s>=55)return{l:'C',t:'TƯỚNG BÌNH THƯỜNG'};
-  return{l:'D',t:'CẦN TU DƯỠNG'};
+  if(s>=93)return{l:'S',t:'PHÚ QUÝ SONG TOÀN',c:'#c8960a'};
+  if(s>=83)return{l:'A',t:'QUÝ TƯỚNG THƯỢNG PHẨM',c:'#0a8020'};
+  if(s>=71)return{l:'B',t:'HẢO TƯỚNG TRUNG CẤP',c:'#d06000'};
+  if(s>=56)return{l:'C',t:'TƯỚNG BÌNH THƯỜNG',c:'#0050a0'};
+  return{l:'D',t:'CẦN TU DƯỠNG ĐỨC HẠNH',c:'#c0180c'};
 }
 
 /* ── CANVAS ── */
@@ -650,105 +603,170 @@ function drawFace(dets,vw,vh){
   dets.forEach(function(det){
     var box=det.detection.box,pts=det.landmarks.positions;
     if(!pts||pts.length<68)return;
-    
-    ctx.strokeStyle='#76ff03';ctx.lineWidth=2;
+    ctx.save();
+    ctx.strokeStyle='rgba(240,185,11,.9)';ctx.lineWidth=2;
+    ctx.shadowColor='#f0b90b';ctx.shadowBlur=16;
     ctx.strokeRect(box.x,box.y,box.width,box.height);
-    
-    [{rng:[0,16],col:'#ffff00',r:1.5},
-     {rng:[17,26],col:'#ff3d00',r:1.5},
-     {rng:[27,35],col:'#00e5ff',r:1.5},
-     {rng:[36,47],col:'#76ff03',r:1.5},
-     {rng:[48,67],col:'#ff1744',r:1.5}].forEach(function(rg){
-      ctx.fillStyle=rg.col;
-      for(var i=rg.rng[0];i<=rg.rng[1]&&i<pts.length;i++){
-        ctx.beginPath();ctx.arc(pts[i].x,pts[i].y,rg.r,0,Math.PI*2);ctx.fill();
-      }
+    ctx.restore();
+    var cs=16;
+    ctx.strokeStyle='#f0b90b';ctx.lineWidth=3;ctx.shadowColor='#f0b90b';ctx.shadowBlur=10;
+    [[box.x,box.y,1,1],[box.x+box.width,box.y,-1,1],[box.x,box.y+box.height,1,-1],[box.x+box.width,box.y+box.height,-1,-1]].forEach(function(c){
+      ctx.beginPath();ctx.moveTo(c[0]+c[2]*cs,c[1]);ctx.lineTo(c[0],c[1]);ctx.lineTo(c[0],c[1]+c[3]*cs);ctx.stroke();
     });
+    ctx.shadowBlur=0;
+    [{rng:[0,16],col:'rgba(200,150,10,.4)',r:1.4},{rng:[17,26],col:'rgba(200,120,10,.6)',r:1.5},{rng:[27,35],col:'rgba(240,150,30,.6)',r:1.5},{rng:[36,41],col:'rgba(0,100,200,.7)',r:1.7},{rng:[42,47],col:'rgba(0,100,200,.7)',r:1.7},{rng:[48,67],col:'rgba(200,20,20,.7)',r:1.5}].forEach(function(rg){
+      ctx.fillStyle=rg.col;
+      for(var i=rg.rng[0];i<=rg.rng[1]&&i<pts.length;i++){ctx.beginPath();ctx.arc(pts[i].x,pts[i].y,rg.r,0,Math.PI*2);ctx.fill();}
+    });
+    ctx.setLineDash([3,4]);ctx.lineWidth=0.8;ctx.strokeStyle='rgba(200,150,10,.3)';
+    var eyeY=(pts[39].y+pts[42].y)/2;
+    ctx.beginPath();ctx.moveTo(box.x,eyeY);ctx.lineTo(box.x+box.width,eyeY);ctx.stroke();
+    var cx=(pts[27].x+pts[33].x)/2;
+    ctx.beginPath();ctx.moveTo(cx,box.y);ctx.lineTo(cx,box.y+box.height);ctx.stroke();
+    ctx.setLineDash([]);
   });
 }
 
+/* ── VOICE SPEECH ── */
+var synth=window.speechSynthesis;
+var currentUtterance=null;
+
+function speak(txt,onEnd){
+  if(!synth)return;
+  stopReading();
+  currentUtterance=new SpeechSynthesisUtterance(txt);
+  currentUtterance.lang='vi-VN';
+  currentUtterance.rate=0.9;
+  currentUtterance.pitch=1.05;
+  // Try to find Vietnamese female voice
+  var voices=synth.getVoices();
+  var viVoice=voices.find(function(v){return v.lang==='vi-VN'&&v.name.toLowerCase().indexOf('female')>-1;});
+  if(!viVoice)viVoice=voices.find(function(v){return v.lang==='vi-VN';});
+  if(!viVoice)viVoice=voices.find(function(v){return v.lang.indexOf('vi')>-1;});
+  if(viVoice)currentUtterance.voice=viVoice;
+  if(onEnd)currentUtterance.onend=onEnd;
+  synth.speak(currentUtterance);
+}
+
+window.stopReading=function(){
+  if(synth)synth.cancel();
+  currentUtterance=null;
+};
+
+window.readFullReport=function(){
+  if(!window._lastScores)return;
+  var s=window._lastScores;
+  var g=grade(s.total);
+  var overall=document.getElementById('overallReading').textContent||'';
+  var personality=document.getElementById('rdPersonality').textContent||'';
+  var early=document.getElementById('rdEarly').textContent||'';
+  var current=document.getElementById('rdCurrent').textContent||'';
+  var late=document.getElementById('rdLate').textContent||'';
+  var text='Hệ thống đã phân tích xong. '+
+    'Điểm tướng số tổng là '+s.total+' trên một trăm điểm. '+
+    'Xếp loại: '+g.t+'. '+
+    'Tỷ lệ vàng Phi đạt '+s.phi+' phần trăm. '+
+    'Lời phán của Thầy Khởi: '+overall.replace(/<[^>]*>/g,'')+'. '+
+    'Về tính cách: '+personality+'. '+
+    'Tiền vận: '+early+'. '+
+    'Vận hạn hiện tại: '+current+'. '+
+    'Hậu vận: '+late+'. '+
+    'Điểm ngũ quan: Khuôn mặt '+s.faceShape+' điểm. Đôi mắt '+s.eyes+' điểm. Mũi '+s.nose+' điểm. Miệng '+s.mouth+' điểm. Đối xứng '+s.symmetry+' điểm. Trán ngũ quan '+s.forehead+' điểm.';
+  speak(text);
+};
+
 /* ── UI UPDATE ── */
-var readingDone=false,scanDone=false;
+var lastTotal=-99,readingDone=false,scanDone=false;
 var scanTimer=null,scanCounter=0;
 
 function setBar(id,val){
   var el=document.getElementById(id);if(!el)return;
-  el.style.background=barColor(val);
+  el.style.background=barGrad(val);
   setTimeout(function(){el.style.width=val+'%';},60);
 }
 
 function updateUI(scores,gender,age){
+  window._lastScores=scores;
   document.getElementById('panel-idle').style.display='none';
   document.getElementById('results').classList.add('show');
-  
   var so=document.getElementById('score-overlay');so.classList.add('on');
-  document.getElementById('scoreNum').textContent=scores.total; 
-  
+  var sn=document.getElementById('scoreNum');
+  sn.textContent=scores.total;sn.style.color=clr(scores.total);
+  sn.style.textShadow='0 0 20px '+clr(scores.total)+',0 0 40px '+clr(scores.total)+'80';
   var g=grade(scores.total);
-  document.getElementById('gradeLetter').textContent=g.l; 
+  var gl=document.getElementById('gradeLetter');
+  gl.textContent=g.l;gl.style.color=g.c;
   document.getElementById('gradeTitle').textContent=g.t;
-  
+  document.getElementById('goldenPct').textContent=scores.phi+'%';
   var pill=document.getElementById('genderPill');pill.classList.add('on');
   document.getElementById('gIcon').textContent=gender==='male'?'♂':'♀';
   document.getElementById('gText').textContent=gender==='male'?'Nam':'Nữ';
   if(age)document.getElementById('gAge').textContent='· ~'+Math.round(age)+' tuổi';
-  
   var mkeys=[
     {key:'faceShape',sId:'mFace',bId:'bFace',dId:'dFace'},
     {key:'eyes',sId:'mEyes',bId:'bEyes',dId:'dEyes'},
     {key:'nose',sId:'mNose',bId:'bNose',dId:'dNose'},
-    {key:'mouth',sId:'mMouth',bId:'bMouth',dId:'dMouth'}
+    {key:'mouth',sId:'mMouth',bId:'bMouth',dId:'dMouth'},
+    {key:'symmetry',sId:'mSym',bId:'bSym',dId:'dSym'},
+    {key:'forehead',sId:'mForehead',bId:'bForehead',dId:'dForehead'}
   ];
-  
   mkeys.forEach(function(m){
     var v=scores[m.key];
-    var se=document.getElementById(m.sId);if(se){se.textContent=v; se.style.color=barColor(v);}
+    var se=document.getElementById(m.sId);if(se){se.textContent=v;se.style.color=clr(v);}
     setBar(m.bId,v);
     var de=document.getElementById(m.dId);if(de)de.textContent=metricDesc(m.key,v);
   });
-  
-  if(!readingDone){
-    readingDone=true;
+  if(!readingDone||Math.abs(scores.total-lastTotal)>7){
+    lastTotal=scores.total;readingDone=true;
     document.getElementById('overallReading').innerHTML=pick('overall',scores.total);
     document.getElementById('rdPersonality').textContent=pick('personality',scores.total);
-    document.getElementById('rdEarly').textContent=pick('early',scores.total);
-    document.getElementById('rdCurrent').textContent=pick('current',scores.total);
-    document.getElementById('rdLate').textContent=pick('late',scores.total);
-
-    let monthlyHTML = '';
-    let fortunes = generateMonthlyFortunes(scores.total);
-    let badgeColors = ['#d32f2f', '#ef6c00', '#2e7d32', '#8b6508']; 
-    
-    for(let i=0; i<12; i++) {
-      let bColor = badgeColors[i % 4];
-      monthlyHTML += `
-        <div class="month-card">
-          <div class="month-badge" style="background-color: ${bColor}">Tháng ${i+1}</div>
-          <div class="month-text">${fortunes[i]}</div>
-        </div>
-      `;
-    }
-    document.getElementById('monthlyGrid').innerHTML = monthlyHTML;
-
-    // Khởi tạo trước kịch bản giọng nói
-    generateReportAudio(scores, g, fortunes);
+    document.getElementById('rdEarly').textContent=pick('early',scores.symmetry);
+    document.getElementById('rdCurrent').textContent=pick('current',scores.faceShape);
+    document.getElementById('rdLate').textContent=pick('late',scores.eyes);
+    renderMonths(scores.total);
+    document.getElementById('audioBar').classList.add('show');
+    document.getElementById('btnReset').style.display='block';
   }
-  
   document.getElementById('scanLine').classList.add('on');
   document.getElementById('idle-msg').classList.add('off');
 }
 
-/* ── 5-SECOND SCAN LOGIC ── */
+function resetUI(){
+  document.getElementById('score-overlay').classList.remove('on');
+  document.getElementById('idle-msg').classList.remove('off');
+  document.getElementById('scanLine').classList.remove('on');
+  document.getElementById('genderPill').classList.remove('on');
+}
+
+/* ── RESET SESSION ── */
+window.resetSession=function(){
+  stopReading();
+  // Reset scan state
+  scanDone=false;readingDone=false;lastTotal=-99;
+  if(scanTimer){clearInterval(scanTimer);scanTimer=null;}
+  document.getElementById('scan-overlay').classList.remove('on');
+  document.getElementById('done-overlay').classList.remove('on');
+  // Reset UI
+  resetUI();
+  document.getElementById('results').classList.remove('show');
+  document.getElementById('panel-idle').style.display='';
+  document.getElementById('audioBar').classList.remove('show');
+  document.getElementById('btnReset').style.display='none';
+  // Show announcement
+  speak('Đã xóa kết quả. Mời người tiếp theo vào khung hình.');
+  // Resume detection
+  isRunning=true;
+};
+
+/* ── 5s SCAN ── */
 function startScanCountdown(){
-  if(scanTimer)return; 
+  if(scanTimer)return;
   var overlay=document.getElementById('scan-overlay');
   var countEl=document.getElementById('scan-count');
   overlay.classList.add('on');
   scanCounter=5;
   countEl.textContent=scanCounter;
-  
-  speakText("Thầy Khởi đang xem, xin đừng cử động, giữ nguyên tư thế.", true);
-
+  speak('Thầy Khởi đang xem, đừng cử động, giữ nguyên tư thế.');
   scanTimer=setInterval(function(){
     scanCounter--;
     countEl.textContent=scanCounter;
@@ -761,55 +779,60 @@ function startScanCountdown(){
 }
 
 function cancelScanCountdown(){
-  if(scanTimer){
-    clearInterval(scanTimer);
-    scanTimer=null;
-    window.speechSynthesis.cancel(); 
-  }
+  if(scanTimer){clearInterval(scanTimer);scanTimer=null;}
   document.getElementById('scan-overlay').classList.remove('on');
 }
 
 function showDone(){
   scanDone=true;
-  document.getElementById('done-overlay').classList.add('on');
-  isRunning=false; 
+  isRunning=false;
   document.getElementById('scanLine').classList.remove('on');
-  
-  // Không cần đọc thông báo này nữa, để người dùng bấm xem kết quả thì Thầy đọc luôn
+  document.getElementById('done-overlay').classList.add('on');
+  speak('Đã phân tích xong. Mời quý khách xem chỉ số bên dưới.');
 }
 
 window.hideDone=function(){
   document.getElementById('done-overlay').classList.remove('on');
   var res=document.getElementById('results');
   if(res)res.scrollIntoView({behavior:'smooth',block:'start'});
-
-  // Khi vừa ẩn lớp overlay DONE, Tự động phát âm thanh toàn bộ
-  readFullReport();
 };
 
 /* ── MODEL LOAD ── */
 async function loadModels(){
-  loadVoices(); 
-  var status=document.getElementById('loader-status');
+  var status=document.getElementById('ld-status');
+  var labels=['jsDelivr CDN','GitHub Raw'];
+  var steps=[
+    {msg:'Tải mô hình phát hiện khuôn mặt...',pct:20,fn:function(url){return faceapi.nets.tinyFaceDetector.loadFromUri(url);}},
+    {msg:'Tải mô hình 68 điểm đặc trưng...',pct:55,fn:function(url){return faceapi.nets.faceLandmark68Net.loadFromUri(url);}},
+    {msg:'Tải mô hình tuổi & giới tính...',pct:85,fn:function(url){return faceapi.nets.ageGenderNet.loadFromUri(url);}}
+  ];
   for(var i=0;i<MODEL_URLS.length;i++){
+    var url=MODEL_URLS[i];
     try{
-      status.textContent='Đang khởi tạo thuật toán...';
-      await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URLS[i]);
-      await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URLS[i]);
-      await faceapi.nets.ageGenderNet.loadFromUri(MODEL_URLS[i]);
-      status.textContent='HOÀN TẤT!';
-      await new Promise(function(r){setTimeout(r,500);});
+      for(var j=0;j<steps.length;j++){
+        status.textContent='['+labels[i]+'] '+steps[j].msg;
+        setLdBar(steps[j].pct);
+        await steps[j].fn(url);
+      }
+      status.textContent='✅ Hệ thống đã kết nối. Sẵn sàng phán tướng!';
+      setLdBar(100);
+      speak('Hệ thống đã kết nối. Thầy Khởi sẵn sàng phán tướng.');
+      await new Promise(function(r){setTimeout(r,700);});
       var loader=document.getElementById('loader');
       loader.classList.add('fade-out');
-      setTimeout(function(){loader.style.display='none';},1000);
+      setTimeout(function(){loader.style.display='none';},900);
       return;
     }catch(err){
-      if(i===MODEL_URLS.length-1){
-        status.textContent='⚠ LỖI TẢI AI. MỞ MẠNG VÀ THỬ LẠI.';
-        document.getElementById('btn-retry').style.display='block';
+      console.warn('Failed from',url,err);
+      if(i<MODEL_URLS.length-1){
+        status.textContent='↻ Chuyển sang nguồn dự phòng...';
+        setLdBar(5);
+        await new Promise(function(r){setTimeout(r,600);});
       }
     }
   }
+  status.textContent='⚠ Lỗi tải model. Kiểm tra kết nối và nhấn THỬ LẠI.';
+  document.getElementById('btn-retry').style.display='block';
 }
 
 /* ── WEBCAM ── */
@@ -817,10 +840,7 @@ var videoEl=null,isRunning=false,frame=0,lastUpdate=0;
 
 async function startCamera(){
   var btn=document.getElementById('btnCam');
-  
-  unlockAudio();
-
-  btn.disabled=true;btn.textContent='ĐANG KẾT NỐI...';
+  btn.disabled=true;btn.textContent='Đang kết nối...';
   try{
     var stream=await navigator.mediaDevices.getUserMedia({
       video:{width:{ideal:480},height:{ideal:640},facingMode:'user'},
@@ -830,23 +850,23 @@ async function startCamera(){
     videoEl.srcObject=stream;
     await new Promise(function(r){videoEl.addEventListener('loadedmetadata',r,{once:true});});
     await videoEl.play();
-    btn.textContent='ĐÃ KÍCH HOẠT CAMERA';btn.classList.add('active');
+    btn.textContent='✓ CAMERA ĐÃ KẾT NỐI';btn.classList.add('active');
     isRunning=true;scanDone=false;
-    
-    speakText("Hệ thống đã kết nối. Mời quý khách đưa mặt vào khung hình.", true);
-
     detectionLoop();
   }catch(err){
-    btn.disabled=false;
-    btn.textContent='✗ LỖI QUYỀN CAMERA';
+    console.error(err);btn.disabled=false;
+    btn.textContent='✗ LỖI — THỬ LẠI';
+    btn.style.background='linear-gradient(135deg,#6a1010,#c82010)';
   }
 }
 
 async function detectionLoop(){
-  if(!videoEl||videoEl.paused||!isRunning){requestAnimationFrame(detectionLoop);return;}
+  if(!videoEl||videoEl.paused){requestAnimationFrame(detectionLoop);return;}
+  if(!isRunning){requestAnimationFrame(detectionLoop);return;}
   frame++;
   var now=Date.now();
-  if(frame%10===0){
+  var skip=window.innerWidth<600?14:9;
+  if(frame%skip===0){
     try{
       var dets=await faceapi
         .detectAllFaces(videoEl,new faceapi.TinyFaceDetectorOptions({inputSize:224,scoreThreshold:0.38}))
@@ -857,14 +877,14 @@ async function detectionLoop(){
       if(dets.length>0){
         if(now-lastUpdate>500){
           lastUpdate=now;
-          var scores=calcScore(dets[0].landmarks,dets[0].gender);
-          if(scores)updateUI(scores,dets[0].gender,dets[0].age);
+          var d=dets[0];
+          var scores=calcScore(d.landmarks,d.gender);
+          if(scores)updateUI(scores,d.gender,d.age);
         }
-        if(!scanDone&&!scanTimer){
-          startScanCountdown();
-        }
+        if(!scanDone&&!scanTimer)startScanCountdown();
       }else{
-        if(!scanDone&&scanTimer){cancelScanCountdown();}
+        if(!scanDone&&scanTimer)cancelScanCountdown();
+        if(now-lastUpdate>1500)resetUI();
       }
     }catch(e){}
   }
@@ -873,7 +893,16 @@ async function detectionLoop(){
 
 /* ── BOOT ── */
 function bootApp(){
-  loadModels();
+  // Load voices early
+  if(window.speechSynthesis){
+    speechSynthesis.getVoices();
+    speechSynthesis.onvoiceschanged=function(){speechSynthesis.getVoices();};
+  }
+  loadModels().catch(function(err){
+    console.error(err);
+    document.getElementById('ld-status').textContent='⚠ Lỗi khởi động. Nhấn THỬ LẠI.';
+    document.getElementById('btn-retry').style.display='block';
+  });
 }
 </script>
 </body>
