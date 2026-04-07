@@ -7,48 +7,42 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet"/>
   <style>
     :root{
-      --bg:        #0f0e1a;
-      --bg-card:   #1a1830;
-      --bg-panel:  #15132a;
-      --bg-panel2: #1e1c35;
-      --gold:      #e8c547;
-      --gold-lt:   #f7e080;
-      --gold-dim:  #9a7c20;
-      --gold-glow: rgba(232,197,71,0.22);
-      --amber:     #f0a030;
-      --teal:      #40d0c0;
-      --rose:      #f08098;
-      --white:     #f5f0e8;
-      --muted:     #8a7a58;
-      --muted2:    #b0a070;
-      --border:    rgba(232,197,71,0.28);
-      --border-dim:rgba(232,197,71,0.12);
-      --green:     #50e060;
-      --shadow:    0 4px 32px rgba(0,0,0,0.5);
+      /* Bảng màu Neon theo ảnh yêu cầu */
+      --bg:        #06020a;
+      --bg-card:   #0d0414;
+      --bg-panel:  #140520;
+      --bg-panel2: #1a0628;
+      
+      --neon-yellow: #ffff00;
+      --neon-cyan:   #00ffff;
+      --neon-pink:   #ff00ff;
+      --neon-green:  #50e060;
+      --grad-text:   linear-gradient(90deg, #ff6b35, #ff007f, #8a2be2);
+      
+      --muted:     #888;
+      --border:    var(--neon-yellow);
     }
     *{margin:0;padding:0;box-sizing:border-box;}
-    html,body{min-height:100vh;font-family:'Cormorant Garamond',Georgia,serif;background:var(--bg);color:var(--white);overflow-x:hidden;}
+    html,body{min-height:100vh;font-family:'Cormorant Garamond',Georgia,serif;background:var(--bg);color:#fff;overflow-x:hidden;}
     #stars{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
     /* ══ LOADER ══ */
     #loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .9s ease;}
     #loader.fade-out{opacity:0;pointer-events:none;}
-    .loader-sigil{font-size:clamp(52px,14vw,76px);color:var(--gold);text-shadow:0 0 40px rgba(232,197,71,.8);animation:pulse 2.5s ease-in-out infinite;user-select:none;}
-    .loader-title{font-family:'Cinzel Decorative',serif;font-size:clamp(17px,5vw,28px);color:var(--gold);letter-spacing:5px;}
-    .loader-sub{font-family:'Cinzel',serif;font-size:clamp(8px,2.5vw,11px);color:var(--muted2);letter-spacing:4px;text-transform:uppercase;text-align:center;padding:0 20px;}
-    #loader-status{font-size:clamp(10px,3vw,13px);color:var(--muted2);letter-spacing:2px;text-align:center;padding:0 20px;min-height:20px;}
-    .loader-track{width:min(280px,78vw);height:1px;background:rgba(232,197,71,.15);position:relative;}
-    #loader-bar{position:absolute;left:0;top:0;height:1px;background:linear-gradient(90deg,var(--gold-dim),var(--gold-lt));box-shadow:0 0 10px var(--gold);width:0%;transition:width .6s ease;}
-    .loader-track::before,.loader-track::after{content:'';position:absolute;top:-3px;width:7px;height:7px;border:1px solid var(--gold-dim);transform:rotate(45deg);}
-    .loader-track::before{left:-4px;}.loader-track::after{right:-4px;}
-    #btn-retry{display:none;background:linear-gradient(135deg,#3a2a06,var(--gold));color:#000;border:none;padding:9px 26px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:3px;border-radius:3px;cursor:pointer;margin-top:4px;}
+    .loader-sigil{font-size:clamp(52px,14vw,76px);color:var(--neon-yellow);text-shadow:0 0 20px var(--neon-yellow);animation:pulse 2.5s ease-in-out infinite;user-select:none;}
+    .loader-title{font-family:'Cinzel Decorative',serif;font-size:clamp(17px,5vw,28px);color:var(--neon-cyan);text-shadow:0 0 10px var(--neon-cyan);letter-spacing:5px;}
+    .loader-sub{font-family:'Cinzel',serif;font-size:clamp(8px,2.5vw,11px);color:var(--neon-pink);letter-spacing:4px;text-transform:uppercase;text-align:center;padding:0 20px;}
+    #loader-status{font-size:clamp(10px,3vw,13px);color:var(--neon-cyan);letter-spacing:2px;text-align:center;padding:0 20px;min-height:20px;}
+    .loader-track{width:min(280px,78vw);height:2px;background:rgba(255,0,255,0.2);position:relative;}
+    #loader-bar{position:absolute;left:0;top:0;height:100%;background:var(--neon-cyan);box-shadow:0 0 10px var(--neon-cyan);width:0%;transition:width .6s ease;}
+    #btn-retry{display:none;background:transparent;color:var(--neon-yellow);border:1px solid var(--neon-yellow);padding:9px 26px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:3px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 10px rgba(255,255,0,0.3);}
 
     /* ══ HEADER ══ */
-    header{position:relative;z-index:10;padding:14px 16px 11px;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(15,14,26,.99) 0%,rgba(15,14,26,.7) 100%);}
-    .hdr-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(232,197,71,.1);border:1px solid var(--border-dim);border-radius:20px;padding:3px 12px;margin-bottom:6px;}
-    .hdr-badge span{font-family:'Cinzel',serif;font-size:8px;color:var(--gold-dim);letter-spacing:4px;text-transform:uppercase;}
-    .hdr-title{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,6vw,36px);font-weight:900;color:var(--gold);text-shadow:0 0 30px rgba(232,197,71,.5);letter-spacing:4px;line-height:1.1;}
-    .hdr-sub{font-family:'Cinzel',serif;font-size:clamp(7px,2vw,9px);color:var(--muted2);letter-spacing:5px;text-transform:uppercase;margin-top:5px;}
+    header{position:relative;z-index:10;padding:14px 16px 11px;text-align:center;border-bottom:2px solid rgba(255,255,0,0.3);background:var(--bg-card);}
+    .hdr-badge{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--neon-pink);border-radius:20px;padding:3px 12px;margin-bottom:6px;box-shadow:0 0 8px rgba(255,0,255,0.4);}
+    .hdr-badge span{font-family:'Cinzel',serif;font-size:8px;color:var(--neon-pink);text-shadow:0 0 5px var(--neon-pink);letter-spacing:4px;text-transform:uppercase;}
+    .hdr-title{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,6vw,36px);font-weight:900;color:var(--neon-yellow);text-shadow:0 0 20px rgba(255,255,0,.8);letter-spacing:4px;line-height:1.1;}
+    .hdr-sub{font-family:'Cinzel',serif;font-size:clamp(7px,2vw,9px);color:var(--neon-cyan);text-shadow:0 0 5px var(--neon-cyan);letter-spacing:5px;text-transform:uppercase;margin-top:5px;}
 
     /* ══ LAYOUT ══ */
     main{position:relative;z-index:5;display:grid;grid-template-columns:1fr 400px;max-width:1300px;margin:0 auto;padding:16px;gap:0;min-height:calc(100vh - 90px);}
@@ -56,191 +50,183 @@
     /* ══ CAMERA SIDE ══ */
     .camera-side{padding:12px 16px 12px 0;display:flex;flex-direction:column;align-items:center;gap:12px;}
 
-    /* *** PORTRAIT frame 3:4 *** */
+    /* Khung Camera Neon */
     .cam-frame{
       position:relative;width:100%;
       max-width:min(380px, 100%);
-      aspect-ratio:3/4;          /* ← chiều dọc */
-      background:#090814;
+      aspect-ratio:3/4;
+      background:#000;
       border-radius:14px;overflow:hidden;
-      border:1px solid var(--border);
-      box-shadow:0 0 0 1px rgba(0,0,0,.8), 0 8px 40px rgba(0,0,0,.6), 0 0 60px rgba(232,197,71,.06);
+      border:2px solid var(--neon-yellow);
+      box-shadow:0 0 15px rgba(255,255,0,0.5), inset 0 0 15px rgba(255,255,0,0.2);
     }
-    .crnr{position:absolute;width:28px;height:28px;border-color:var(--gold);border-style:solid;z-index:20;pointer-events:none;}
+    .crnr{position:absolute;width:28px;height:28px;border-color:var(--neon-cyan);border-style:solid;z-index:20;pointer-events:none;box-shadow:0 0 8px var(--neon-cyan);}
     .crnr-tl{top:10px;left:10px;border-width:2px 0 0 2px;border-radius:4px 0 0 0;}
     .crnr-tr{top:10px;right:10px;border-width:2px 2px 0 0;border-radius:0 4px 0 0;}
     .crnr-bl{bottom:10px;left:10px;border-width:0 0 2px 2px;border-radius:0 0 0 4px;}
     .crnr-br{bottom:10px;right:10px;border-width:0 2px 2px 0;border-radius:0 0 4px 0;}
 
-    /* Scan bar dọc */
-    .scan{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(232,197,71,.8) 50%,transparent);z-index:15;top:-3px;opacity:0;transition:opacity .3s;pointer-events:none;}
-    .scan.on{opacity:1;animation:scanMove 1.2s linear infinite;}
+    /* Scan bar */
+    .scan{position:absolute;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,var(--neon-pink),transparent);box-shadow:0 0 10px var(--neon-pink);z-index:15;top:-4px;opacity:0;transition:opacity .3s;pointer-events:none;}
+    .scan.on{opacity:1;animation:scanMove 1.5s linear infinite;}
 
-    #video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block;}
+    #video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block;opacity:0.85;}
     #faceCanvas{position:absolute;top:0;left:0;width:100%;height:100%;transform:scaleX(-1);pointer-events:none;z-index:10;}
+    
     #idle-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:12;pointer-events:none;transition:opacity .4s;}
     #idle-msg.off{opacity:0;pointer-events:none;}
-    .idle-icon{font-size:44px;color:var(--gold-dim);animation:pulse 3s ease-in-out infinite;}
-    .idle-text{font-family:'Cinzel',serif;font-size:11px;color:var(--muted2);letter-spacing:2px;text-align:center;line-height:1.9;}
+    .idle-icon{font-size:44px;color:var(--neon-yellow);text-shadow:0 0 15px var(--neon-yellow);animation:pulse 2s ease-in-out infinite;}
+    .idle-text{font-family:'Cinzel',serif;font-size:12px;color:var(--neon-cyan);text-shadow:0 0 8px var(--neon-cyan);letter-spacing:2px;text-align:center;line-height:1.9;font-weight:bold;}
 
     /* Score overlay */
-    #score-overlay{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:18;text-align:center;opacity:0;transition:opacity .5s;pointer-events:none;}
+    #score-overlay{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:18;text-align:center;opacity:0;transition:opacity .5s;pointer-events:none;background:rgba(0,0,0,0.6);padding:5px 20px;border-radius:10px;border:1px solid var(--neon-pink);}
     #score-overlay.on{opacity:1;}
-    .score-num{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(40px,10vw,62px);line-height:1;transition:color .5s,text-shadow .5s;}
-    .score-unit{font-family:'Cinzel',serif;font-size:8px;letter-spacing:4px;color:var(--muted2);margin-top:2px;}
+    .score-num{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(40px,10vw,62px);line-height:1;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 8px rgba(255,0,127,0.7));}
+    .score-unit{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--neon-yellow);margin-top:2px;text-shadow:0 0 5px var(--neon-yellow);}
 
-    /* Scan countdown overlay */
-    #scan-overlay{position:absolute;inset:0;background:rgba(9,8,20,.82);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:25;}
+    /* Scan countdown overlay (Thầy Khởi đang xem) */
+    #scan-overlay{position:absolute;inset:0;background:rgba(5,2,10,.85);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:25;}
     #scan-overlay.on{display:flex;}
-    .scan-ring{width:80px;height:80px;border-radius:50%;border:3px solid rgba(232,197,71,.2);border-top-color:var(--gold);animation:spin 1s linear infinite;}
-    #scan-count{font-family:'Cinzel Decorative',serif;font-size:42px;color:var(--gold);text-shadow:0 0 20px rgba(232,197,71,.6);line-height:1;}
-    .scan-label{font-family:'Cinzel',serif;font-size:10px;color:var(--muted2);letter-spacing:4px;text-transform:uppercase;}
+    .scan-ring{width:90px;height:90px;border-radius:50%;border:4px solid rgba(0,255,255,.2);border-top-color:var(--neon-cyan);animation:spin 1s linear infinite;box-shadow:0 0 15px rgba(0,255,255,0.4);}
+    #scan-count{font-family:'Cinzel Decorative',serif;font-size:52px;color:var(--neon-cyan);text-shadow:0 0 20px var(--neon-cyan);line-height:1;position:absolute;top:50%;transform:translateY(-70%);}
+    .scan-label{font-family:'Arial',sans-serif;font-size:15px;color:var(--neon-pink);text-shadow:0 0 10px var(--neon-pink);letter-spacing:1px;text-transform:uppercase;font-weight:bold;text-align:center;line-height:1.6;margin-top:20px;}
 
     /* Done overlay */
-    #done-overlay{position:absolute;inset:0;background:rgba(9,8,20,.88);display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:26;}
+    #done-overlay{position:absolute;inset:0;background:rgba(5,2,10,.9);display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:26;}
     #done-overlay.on{display:flex;animation:fadeIn .4s ease;}
-    .done-check{font-size:52px;animation:popIn .4s ease;}
-    .done-title{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,4vw,20px);color:var(--gold);letter-spacing:3px;text-align:center;padding:0 16px;}
-    .done-sub{font-family:'Cinzel',serif;font-size:10px;color:var(--muted2);letter-spacing:3px;text-align:center;text-transform:uppercase;}
-    .done-btn{margin-top:6px;background:linear-gradient(135deg,#3a2a06,var(--gold));color:#000;border:none;padding:10px 28px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:4px;border-radius:3px;cursor:pointer;touch-action:manipulation;animation:pulse 2s ease-in-out infinite;}
+    .done-check{font-size:52px;text-shadow:0 0 20px var(--neon-green);animation:popIn .4s ease;}
+    .done-title{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,4vw,20px);color:var(--neon-yellow);text-shadow:0 0 10px var(--neon-yellow);letter-spacing:3px;text-align:center;}
+    .done-btn{margin-top:10px;background:transparent;border:2px solid var(--neon-cyan);color:var(--neon-cyan);box-shadow:0 0 10px var(--neon-cyan);padding:10px 28px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:4px;border-radius:6px;cursor:pointer;animation:pulse 2s infinite;}
 
-    /* Gender pill */
-    .gender-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid var(--border);border-radius:20px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:var(--gold);background:rgba(232,197,71,.07);opacity:0;transition:opacity .5s;}
+    /* Nút kích hoạt Camera (Giống nút Cặp Lê VIP) */
+    .cam-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;width:100%;max-width:380px;}
+    .btn-cam{
+      background:transparent;
+      border:2px solid var(--neon-pink);
+      color:var(--neon-green);
+      text-shadow:0 0 10px var(--neon-green);
+      box-shadow:0 0 12px rgba(255,0,255,0.4), inset 0 0 8px rgba(255,0,255,0.2);
+      padding:13px 0;width:100%;
+      font-family:'Arial',sans-serif;font-size:clamp(12px,3vw,14px);font-weight:800;letter-spacing:2px;border-radius:8px;cursor:pointer;transition:all .3s;text-transform:uppercase;
+    }
+    .btn-cam:hover:not(:disabled){background:rgba(255,0,255,0.1);box-shadow:0 0 20px rgba(255,0,255,0.7), inset 0 0 15px rgba(255,0,255,0.4);}
+    .btn-cam:active:not(:disabled){transform:scale(.97);}
+    .btn-cam:disabled{opacity:.4;cursor:not-allowed;border-color:#555;color:#555;box-shadow:none;}
+    .btn-cam.active{border-color:var(--neon-cyan);color:var(--neon-cyan);box-shadow:0 0 15px var(--neon-cyan), inset 0 0 10px var(--neon-cyan);}
+
+    .gender-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid var(--neon-yellow);border-radius:20px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:var(--neon-yellow);background:rgba(255,255,0,.05);box-shadow:0 0 8px rgba(255,255,0,0.3);opacity:0;transition:opacity .5s;}
     .gender-pill.on{opacity:1;}
 
-    /* Controls */
-    .cam-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;width:100%;max-width:380px;}
-    .btn-cam{background:linear-gradient(135deg,#4a320a,var(--gold));color:#000;border:none;padding:11px 0;width:100%;font-family:'Cinzel',serif;font-size:clamp(10px,2.5vw,12px);font-weight:700;letter-spacing:3px;border-radius:4px;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(232,197,71,.2);touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
-    .btn-cam:hover:not(:disabled){background:linear-gradient(135deg,var(--gold),var(--gold-lt));}
-    .btn-cam:active:not(:disabled){transform:scale(.97);}
-    .btn-cam:disabled{opacity:.4;cursor:not-allowed;}
-    .btn-cam.active{background:linear-gradient(135deg,#0a2a0a,#1a5a1a);color:var(--green);box-shadow:0 0 20px rgba(80,224,96,.15);}
-
     /* ══ ANALYSIS SIDE ══ */
-    .analysis-side{border-left:1px solid var(--border);padding:12px 0 12px 16px;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 95px);overflow-y:auto;position:sticky;top:0;}
-    .analysis-side::-webkit-scrollbar{width:3px;}
-    .analysis-side::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
+    .analysis-side{border-left:2px solid rgba(255,255,0,0.2);padding:12px 0 12px 16px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 95px);overflow-y:auto;position:sticky;top:0;}
+    .analysis-side::-webkit-scrollbar{width:4px;}
+    .analysis-side::-webkit-scrollbar-thumb{background:var(--neon-pink);border-radius:2px;}
 
-    .sect-title{font-family:'Cinzel',serif;font-size:9px;color:var(--muted2);letter-spacing:5px;text-transform:uppercase;display:flex;align-items:center;gap:8px;}
-    .sect-title::before,.sect-title::after{content:'';flex:1;height:1px;background:var(--border-dim);}
+    .sect-title{font-family:'Cinzel',serif;font-size:11px;color:var(--neon-yellow);text-shadow:0 0 8px var(--neon-yellow);letter-spacing:4px;text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+    .sect-title::before,.sect-title::after{content:'';flex:1;height:1px;background:rgba(255,255,0,0.3);}
 
-    /* Grade */
-    .grade-card{background:linear-gradient(135deg,var(--bg-card),var(--bg-panel2));border:1px solid var(--border);border-radius:12px;padding:18px 14px;text-align:center;position:relative;overflow:hidden;}
-    .grade-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 120%,rgba(232,197,71,.1) 0%,transparent 55%);pointer-events:none;}
-    .grade-letter{font-family:'Cinzel Decorative',serif;font-size:clamp(52px,12vw,72px);font-weight:900;line-height:1;transition:color .6s,text-shadow .6s;}
-    .grade-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--gold);margin-top:5px;text-transform:uppercase;}
-    .golden-row{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:8px;}
-    .golden-lbl{font-family:'Cinzel',serif;font-size:8px;color:var(--muted2);letter-spacing:2px;}
-    .golden-pct{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--gold-lt);}
+    /* Chung cho các thẻ Card (Nền tối, viền Vàng Neon) */
+    .grade-card, .master-block, .metrics-block {
+      background: var(--bg-card);
+      border: 2px solid var(--neon-yellow);
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(255,255,0,0.3), inset 0 0 8px rgba(255,255,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Grade Card */
+    .grade-card{padding:18px 14px;text-align:center;}
+    .grade-letter{font-family:'Cinzel Decorative',serif;font-size:clamp(52px,12vw,72px);font-weight:900;line-height:1;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 10px rgba(255,0,127,0.7));}
+    .grade-title{font-family:'Cinzel',serif;font-size:12px;letter-spacing:4px;color:var(--neon-pink);text-shadow:0 0 8px var(--neon-pink);margin-top:8px;text-transform:uppercase;font-weight:bold;}
+    .golden-row{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:8px;background:rgba(0,255,255,0.1);padding:5px;border-radius:6px;border:1px solid rgba(0,255,255,0.3);}
+    .golden-lbl{font-family:'Cinzel',serif;font-size:9px;color:var(--neon-cyan);letter-spacing:2px;}
+    .golden-pct{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:var(--neon-yellow);text-shadow:0 0 8px var(--neon-yellow);}
 
     /* ══ MASTER READING BLOCK ══ */
-    .master-block{
-      background:linear-gradient(135deg,var(--bg-card),var(--bg-panel2));
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:16px 14px;
-      position:relative;
-      overflow:hidden;
-    }
-    .master-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+    .master-block{padding:16px 14px;}
     .master-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
-    .master-icon{font-size:20px;}
-    .master-title{font-family:'Cinzel Decorative',serif;font-size:clamp(11px,3vw,14px);color:var(--gold);letter-spacing:3px;}
-    .master-badge{margin-left:auto;background:rgba(232,197,71,.15);border:1px solid var(--border-dim);border-radius:10px;padding:2px 8px;font-family:'Cinzel',serif;font-size:7px;color:var(--gold-dim);letter-spacing:2px;}
+    .master-icon{font-size:20px;text-shadow:0 0 10px #fff;}
+    .master-title{font-family:'Arial',sans-serif;font-weight:bold;font-size:clamp(12px,3vw,14px);color:var(--neon-pink);text-shadow:0 0 10px var(--neon-pink);letter-spacing:2px;text-transform:uppercase;}
+    .master-badge{margin-left:auto;background:transparent;border:1px solid var(--neon-cyan);border-radius:10px;padding:3px 8px;font-family:'Cinzel',serif;font-size:8px;color:var(--neon-cyan);text-shadow:0 0 5px var(--neon-cyan);letter-spacing:2px;}
 
     /* Overall reading */
-    .overall-reading{
-      background:rgba(232,197,71,.05);
-      border:1px solid var(--border-dim);
-      border-radius:8px;
-      padding:12px;
-      margin-bottom:12px;
-      font-size:clamp(12px,3vw,14px);
-      color:var(--white);
-      line-height:1.85;
-      font-style:italic;
-    }
-    .overall-reading b{color:var(--gold-lt);font-style:normal;font-weight:600;}
+    .overall-reading{background:rgba(0,255,255,.05);border:1px solid rgba(0,255,255,0.3);border-radius:8px;padding:12px;margin-bottom:12px;font-size:clamp(13px,3vw,15px);color:var(--neon-cyan);line-height:1.7;text-shadow:0 0 2px rgba(0,255,255,0.4);}
+    .overall-reading b{color:var(--neon-yellow);text-shadow:0 0 5px var(--neon-yellow);font-weight:bold;}
 
-    /* Destiny grid (4 cells) */
-    .destiny-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-    .destiny-cell{background:rgba(255,255,255,.04);border:1px solid var(--border-dim);border-radius:8px;padding:10px;}
-    .dc-icon{font-size:16px;display:block;margin-bottom:4px;}
-    .dc-title{font-family:'Cinzel',serif;font-size:8px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
-    .dc-text{font-size:clamp(10px,2.5vw,12px);color:var(--muted2);line-height:1.75;}
+    /* Destiny grid */
+    .destiny-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .destiny-cell{background:transparent;border:1px solid var(--neon-pink);box-shadow:inset 0 0 8px rgba(255,0,255,0.1);border-radius:8px;padding:12px;}
+    .dc-icon{font-size:18px;display:block;margin-bottom:4px;}
+    .dc-title{font-family:'Arial',sans-serif;font-weight:bold;font-size:10px;color:var(--neon-yellow);text-shadow:0 0 5px var(--neon-yellow);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+    .dc-text{font-size:clamp(11px,2.5vw,13px);color:var(--neon-cyan);line-height:1.6;}
 
     /* ══ METRICS BLOCK ══ */
-    .metrics-block{background:linear-gradient(135deg,var(--bg-card),var(--bg-panel2));border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;}
-    .metrics-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--teal),transparent);}
-    .metric-row{display:flex;flex-direction:column;gap:4px;}
+    .metrics-block{padding:14px;display:flex;flex-direction:column;gap:12px;}
+    .metric-row{display:flex;flex-direction:column;gap:5px;background:rgba(255,0,255,0.05);padding:8px;border-radius:6px;border:1px solid rgba(255,0,255,0.2);}
     .mr-header{display:flex;justify-content:space-between;align-items:center;}
-    .mr-name{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);}
-    .mr-score{font-family:'Cinzel',serif;font-size:15px;font-weight:700;transition:color .5s;min-width:30px;text-align:right;}
-    .bar-bg{height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;}
-    .bar-fill{height:100%;border-radius:2px;width:0%;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
-    .mr-desc{font-size:9px;color:var(--muted);line-height:1.65;font-style:italic;padding-top:1px;}
+    .mr-name{font-family:'Arial',sans-serif;font-weight:bold;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--neon-pink);text-shadow:0 0 5px var(--neon-pink);}
+    .mr-score{font-family:'Impact',sans-serif;font-size:18px;font-weight:400;color:var(--neon-cyan);text-shadow:0 0 8px var(--neon-cyan);letter-spacing:1px;min-width:30px;text-align:right;}
+    .bar-bg{height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;}
+    .bar-fill{height:100%;border-radius:3px;width:0%;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+    .mr-desc{font-size:11px;color:#ddd;line-height:1.5;padding-top:2px;}
 
     /* Reference faces */
-    .ref-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-    .ref-card{background:var(--bg-card);border:1px solid var(--border-dim);border-radius:8px;padding:8px 6px;text-align:center;}
-    .ref-svg{width:48px;height:58px;margin:0 auto 5px;display:block;}
-    .ref-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--muted2);}
+    .ref-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .ref-card{background:var(--bg-card);border:1px solid var(--neon-cyan);box-shadow:0 0 8px rgba(0,255,255,0.3);border-radius:8px;padding:10px 6px;text-align:center;}
+    .ref-svg{width:50px;height:60px;margin:0 auto 5px;display:block;filter:drop-shadow(0 0 5px rgba(255,255,255,0.4));}
+    .ref-lbl{font-family:'Arial',sans-serif;font-weight:bold;font-size:9px;letter-spacing:2px;}
 
     /* Panel idle */
-    #panel-idle{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 14px;gap:12px;text-align:center;}
-    .idle-sym{font-size:34px;color:var(--gold-dim);animation:pulse 3.5s ease-in-out infinite;}
-    .idle-p{font-family:'Cinzel',serif;font-size:10px;color:var(--muted2);letter-spacing:2px;line-height:1.9;}
-    #results{display:none;flex-direction:column;gap:12px;}
+    #panel-idle{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 14px;gap:12px;text-align:center;border:1px dashed var(--neon-pink);border-radius:12px;}
+    .idle-sym{font-size:34px;color:var(--neon-pink);text-shadow:0 0 10px var(--neon-pink);animation:pulse 3.5s ease-in-out infinite;}
+    .idle-p{font-family:'Arial',sans-serif;font-size:12px;color:var(--neon-cyan);letter-spacing:1px;line-height:1.8;}
+    #results{display:none;flex-direction:column;gap:14px;}
     #results.show{display:flex;}
 
-    footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:1px solid var(--border-dim);font-family:'Cinzel',serif;font-size:8px;color:var(--gold-dim);letter-spacing:4px;}
+    footer{position:relative;z-index:5;text-align:center;padding:12px;border-top:1px solid rgba(255,255,0,0.3);font-family:'Arial',sans-serif;font-weight:bold;font-size:9px;color:var(--neon-yellow);text-shadow:0 0 5px var(--neon-yellow);letter-spacing:3px;}
 
     /* ══ KEYFRAMES ══ */
-    @keyframes pulse{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
-    @keyframes scanMove{0%{top:-3px}100%{top:100%}}
+    @keyframes pulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+    @keyframes scanMove{0%{top:-4px}100%{top:100%}}
     @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     @keyframes popIn{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
-    @keyframes shimmer{0%{opacity:.6}50%{opacity:1}100%{opacity:.6}}
 
     /* ══ RESPONSIVE ══ */
     @media(max-width:900px){
       main{grid-template-columns:1fr;padding:10px;gap:0;}
       .camera-side{padding:8px 0;}
-      .cam-frame{max-width:min(340px,95vw);}
-      .analysis-side{border-left:none;border-top:1px solid var(--border);padding:14px 0 0;max-height:none;position:static;overflow-y:visible;}
+      .cam-frame{max-width:min(350px,95vw);}
+      .analysis-side{border-left:none;border-top:2px solid rgba(255,255,0,0.3);padding:18px 0 0;max-height:none;position:static;overflow-y:visible;}
     }
     @media(max-width:480px){
       .destiny-grid{grid-template-columns:1fr;}
-      .btn-cam{font-size:11px;}
+      .btn-cam{font-size:13px;padding:14px 0;}
     }
   </style>
 </head>
 <body>
 <canvas id="stars"></canvas>
 
-<!-- ── LOADER ── -->
 <div id="loader">
   <div class="loader-sigil">☯</div>
-  <div class="loader-title">Tướng Số AI</div>
-  <div class="loader-sub">Thầy Xem Tướng · Tỷ Lệ Vàng Phi</div>
+  <div class="loader-title">TƯỚNG SỐ AI</div>
+  <div class="loader-sub">Hệ Thống Phân Tích Thông Minh</div>
   <div id="loader-status">Đang khởi tạo...</div>
   <div class="loader-track"><div id="loader-bar"></div></div>
   <button id="btn-retry" onclick="retryLoad()">↺ THỬ LẠI</button>
 </div>
 
-<!-- ── HEADER ── -->
 <header>
   <div class="hdr-badge"><span>⚜ AI TƯỚNG SỐ HỌC ⚜</span></div>
-  <div class="hdr-title">Tướng Số AI</div>
-  <div class="hdr-sub">Phân tích khuôn mặt · Tỷ lệ vàng Phi · Luận giải vận mệnh</div>
+  <div class="hdr-title">TƯỚNG SỐ AI</div>
+  <div class="hdr-sub">Phân tích khuôn mặt · Tỷ lệ vàng Phi</div>
 </header>
 
-<!-- ── MAIN ── -->
 <main>
   <div class="camera-side">
 
-    <!-- Camera frame PORTRAIT 3:4 -->
     <div class="cam-frame" id="camFrame">
       <div class="crnr crnr-tl"></div><div class="crnr crnr-tr"></div>
       <div class="crnr crnr-bl"></div><div class="crnr crnr-br"></div>
@@ -249,37 +235,31 @@
       <video id="video" autoplay muted playsinline webkit-playsinline></video>
       <canvas id="faceCanvas"></canvas>
 
-      <!-- Idle -->
       <div id="idle-msg">
         <div class="idle-icon">◉</div>
         <div class="idle-text">Hướng mặt thẳng vào camera<br>Giữ nguyên để quét tướng số</div>
       </div>
 
-      <!-- Scan countdown -->
       <div id="scan-overlay">
         <div class="scan-ring"></div>
         <div id="scan-count">5</div>
-        <div class="scan-label">Đang quét tướng mặt...</div>
+        <div class="scan-label">Thầy Khởi đang xem<br>đừng cử động giữ nguyên tư thế</div>
       </div>
 
-      <!-- Done -->
       <div id="done-overlay">
         <div class="done-check">✅</div>
-        <div class="done-title">Đã quét xong!</div>
-        <div class="done-sub">Mời quý khách xem chỉ số bên dưới</div>
-        <button class="done-btn" onclick="hideDone()">▼ XEM KẾT QUẢ</button>
+        <div class="done-title">ĐÃ QUÉT XONG!</div>
+        <button class="done-btn" onclick="hideDone()">▼ XEM KẾT QUẢ VẬN MỆNH</button>
       </div>
 
-      <!-- Score -->
       <div id="score-overlay">
         <div class="score-num" id="scoreNum">—</div>
-        <div class="score-unit">TƯỚNG SỐ / 100</div>
+        <div class="score-unit">ĐIỂM TƯỚNG SỐ</div>
       </div>
     </div>
 
-    <!-- Controls -->
     <div class="cam-controls">
-      <button class="btn-cam" id="btnCam" onclick="startCamera()">▶ KÍCH HOẠT CAMERA</button>
+      <button class="btn-cam" id="btnCam" onclick="startCamera()">KÍCH HOẠT CAMERA VIP</button>
     </div>
     <div class="gender-pill" id="genderPill" style="margin-top:2px;">
       <span id="gIcon">⚥</span>
@@ -287,73 +267,65 @@
       <span id="gAge"></span>
     </div>
 
-  </div><!-- /camera-side -->
-
-  <!-- ── ANALYSIS SIDE ── -->
-  <div class="analysis-side">
+  </div><div class="analysis-side">
     <div id="panel-idle">
       <div class="idle-sym">☽ ✦ ☾</div>
-      <div class="idle-p">Chưa phát hiện khuôn mặt<br>Kích hoạt camera để bắt đầu<br>phân tích tướng số</div>
+      <div class="idle-p">Hệ thống chưa quét được khuôn mặt<br>Kích hoạt Camera để AI tiến hành phân tích</div>
     </div>
 
     <div id="results">
 
-      <!-- Grade -->
       <div class="grade-card">
-        <div class="grade-letter" id="gradeLetter" style="color:var(--gold)">—</div>
+        <div class="grade-letter" id="gradeLetter">—</div>
         <div class="grade-title" id="gradeTitle">Đang phân tích...</div>
         <div class="golden-row">
-          <span class="golden-lbl">TỶ LỆ VÀNG PHI</span>
+          <span class="golden-lbl">TỶ LỆ VÀNG PHI:</span>
           <span class="golden-pct" id="goldenPct">—%</span>
         </div>
       </div>
 
-      <!-- Reference -->
       <div class="sect-title">Chuẩn Tham Chiếu</div>
       <div class="ref-row">
         <div class="ref-card">
           <svg class="ref-svg" viewBox="0 0 56 66" fill="none">
-            <ellipse cx="28" cy="30" rx="20" ry="24" stroke="#e8c547" stroke-width="1.2" fill="none"/>
-            <line x1="28" y1="6" x2="28" y2="54" stroke="#e8c547" stroke-width=".4" stroke-dasharray="2,3" opacity=".4"/>
-            <line x1="8" y1="26" x2="48" y2="26" stroke="#e8c547" stroke-width=".4" stroke-dasharray="2,3" opacity=".4"/>
-            <ellipse cx="21" cy="26" rx="4.5" ry="2.5" stroke="#e8c547" stroke-width=".9" fill="none"/>
-            <ellipse cx="35" cy="26" rx="4.5" ry="2.5" stroke="#e8c547" stroke-width=".9" fill="none"/>
-            <path d="M22 44 Q28 48 34 44" stroke="#e8c547" stroke-width="1.1" fill="none"/>
-            <path d="M16 21 Q21 19 26 21" stroke="#e8c547" stroke-width=".9" fill="none"/>
-            <path d="M30 21 Q35 19 40 21" stroke="#e8c547" stroke-width=".9" fill="none"/>
-            <text x="28" y="63" text-anchor="middle" font-family="Cinzel,serif" font-size="5" fill="#9a7c20" letter-spacing="2">1.618</text>
+            <ellipse cx="28" cy="30" rx="20" ry="24" stroke="#00ffff" stroke-width="1.5" fill="none"/>
+            <line x1="28" y1="6" x2="28" y2="54" stroke="#00ffff" stroke-width=".6" stroke-dasharray="2,3" opacity=".6"/>
+            <line x1="8" y1="26" x2="48" y2="26" stroke="#00ffff" stroke-width=".6" stroke-dasharray="2,3" opacity=".6"/>
+            <ellipse cx="21" cy="26" rx="4.5" ry="2.5" stroke="#00ffff" stroke-width="1" fill="none"/>
+            <ellipse cx="35" cy="26" rx="4.5" ry="2.5" stroke="#00ffff" stroke-width="1" fill="none"/>
+            <path d="M22 44 Q28 48 34 44" stroke="#00ffff" stroke-width="1.5" fill="none"/>
+            <path d="M16 21 Q21 19 26 21" stroke="#00ffff" stroke-width="1" fill="none"/>
+            <path d="M30 21 Q35 19 40 21" stroke="#00ffff" stroke-width="1" fill="none"/>
+            <text x="28" y="63" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="5" fill="#00ffff" letter-spacing="2">1.618</text>
           </svg>
-          <div class="ref-lbl">NAM CHUẨN</div>
+          <div class="ref-lbl" style="color:#00ffff; text-shadow:0 0 5px #00ffff;">NAM CHUẨN</div>
         </div>
         <div class="ref-card">
           <svg class="ref-svg" viewBox="0 0 56 66" fill="none">
-            <ellipse cx="28" cy="29" rx="18" ry="25" stroke="#f08098" stroke-width="1.2" fill="none"/>
-            <line x1="28" y1="4" x2="28" y2="54" stroke="#f08098" stroke-width=".4" stroke-dasharray="2,3" opacity=".4"/>
-            <line x1="10" y1="25" x2="46" y2="25" stroke="#f08098" stroke-width=".4" stroke-dasharray="2,3" opacity=".4"/>
-            <ellipse cx="21" cy="25" rx="5" ry="3.2" stroke="#f08098" stroke-width=".9" fill="none"/>
-            <ellipse cx="35" cy="25" rx="5" ry="3.2" stroke="#f08098" stroke-width=".9" fill="none"/>
-            <path d="M21 42 Q28 47 35 42" stroke="#f08098" stroke-width="1.1" fill="none"/>
-            <path d="M16 20 Q21 17 26 20" stroke="#f08098" stroke-width=".9" fill="none"/>
-            <path d="M30 20 Q35 17 40 20" stroke="#f08098" stroke-width=".9" fill="none"/>
-            <text x="28" y="63" text-anchor="middle" font-family="Cinzel,serif" font-size="5" fill="#a06070" letter-spacing="2">1.618</text>
+            <ellipse cx="28" cy="29" rx="18" ry="25" stroke="#ff00ff" stroke-width="1.5" fill="none"/>
+            <line x1="28" y1="4" x2="28" y2="54" stroke="#ff00ff" stroke-width=".6" stroke-dasharray="2,3" opacity=".6"/>
+            <line x1="10" y1="25" x2="46" y2="25" stroke="#ff00ff" stroke-width=".6" stroke-dasharray="2,3" opacity=".6"/>
+            <ellipse cx="21" cy="25" rx="5" ry="3.2" stroke="#ff00ff" stroke-width="1" fill="none"/>
+            <ellipse cx="35" cy="25" rx="5" ry="3.2" stroke="#ff00ff" stroke-width="1" fill="none"/>
+            <path d="M21 42 Q28 47 35 42" stroke="#ff00ff" stroke-width="1.5" fill="none"/>
+            <path d="M16 20 Q21 17 26 20" stroke="#ff00ff" stroke-width="1" fill="none"/>
+            <path d="M30 20 Q35 17 40 20" stroke="#ff00ff" stroke-width="1" fill="none"/>
+            <text x="28" y="63" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="5" fill="#ff00ff" letter-spacing="2">1.618</text>
           </svg>
-          <div class="ref-lbl" style="color:#f08098">NỮ CHUẨN</div>
+          <div class="ref-lbl" style="color:#ff00ff; text-shadow:0 0 5px #ff00ff;">NỮ CHUẨN</div>
         </div>
       </div>
 
-      <!-- ══ MASTER READING ══ -->
       <div class="sect-title">Luận Giải Tướng Số</div>
       <div class="master-block">
         <div class="master-header">
           <span class="master-icon">🔮</span>
           <span class="master-title">Thầy Phán Tổng Quát</span>
-          <span class="master-badge">AI TƯỚNG SỐ</span>
+          <span class="master-badge">VIP</span>
         </div>
-        <!-- Overall verdict -->
         <div class="overall-reading" id="overallReading">
-          Đang chờ phân tích khuôn mặt...
+          Đang chờ AI phân tích cấu trúc...
         </div>
-        <!-- 4-destiny grid: tính cách + tiền vận + vận hạn + hậu vận -->
         <div class="destiny-grid">
           <div class="destiny-cell">
             <span class="dc-icon">🌟</span>
@@ -378,12 +350,11 @@
         </div>
       </div>
 
-      <!-- ══ METRICS BLOCK ══ -->
       <div class="sect-title">Phân Tích Chi Tiết</div>
       <div class="metrics-block">
         <div class="master-header" style="margin-bottom:4px;">
           <span class="master-icon">📐</span>
-          <span class="master-title" style="font-size:11px;">Chỉ Số Tỷ Lệ Vàng Phi</span>
+          <span class="master-title" style="font-size:12px; color:var(--neon-yellow); text-shadow:0 0 8px var(--neon-yellow);">Chỉ Số Tỷ Lệ Vàng Phi</span>
         </div>
         <div class="metric-row">
           <div class="mr-header"><span class="mr-name">Hình Dáng Khuôn Mặt</span><span class="mr-score" id="mFace">—</span></div>
@@ -417,13 +388,10 @@
         </div>
       </div>
 
-    </div><!-- /results -->
-  </div><!-- /analysis-side -->
-</main>
+    </div></div></main>
 
-<footer>⬡ TỶ LỆ VÀNG PHI 1.618 · TƯỚNG SỐ AI · XEM TƯỚNG NHƯ THẦY ⬡</footer>
+<footer>⬡ HỆ THỐNG TƯỚNG SỐ AI CHUYÊN NGHIỆP ⬡</footer>
 
-<!-- ══ LOAD face-api.js multi-CDN ══ -->
 <script>
 (function(){
   var CDNS=[
@@ -434,7 +402,7 @@
   var i=0;
   function tryLoad(){
     if(i>=CDNS.length){
-      document.getElementById('loader-status').textContent='⚠ Không tải được thư viện. Kiểm tra WiFi và nhấn THỬ LẠI.';
+      document.getElementById('loader-status').textContent='⚠ Lỗi kết nối. Kiểm tra mạng và thử lại.';
       document.getElementById('btn-retry').style.display='block';
       return;
     }
@@ -448,25 +416,24 @@
   window.retryLoad=function(){
     i=0;
     document.getElementById('btn-retry').style.display='none';
-    document.getElementById('loader-status').textContent='Đang thử lại...';
+    document.getElementById('loader-status').textContent='Đang kết nối lại...';
     document.getElementById('loader-bar').style.width='0%';
     tryLoad();
   };
 })();
 </script>
 
-<!-- ══ APP ══ -->
 <script>
 /* ── STARFIELD ── */
 (function(){
   var c=document.getElementById('stars'),ctx=c.getContext('2d'),st=[];
   function rs(){
     c.width=window.innerWidth;c.height=window.innerHeight;st=[];
-    for(var i=0;i<140;i++)st.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.1+.2,a:Math.random()*.55+.06,sp:Math.random()*.4+.04,t:Math.random()*Math.PI*2});
+    for(var i=0;i<120;i++)st.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5+.5,a:Math.random()*.55+.1,sp:Math.random()*.5+.1,t:Math.random()*Math.PI*2});
   }
   function dr(){
     ctx.clearRect(0,0,c.width,c.height);
-    st.forEach(function(s){s.t+=s.sp*.018;var a=s.a*(.4+.6*Math.sin(s.t));ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(232,197,71,'+a+')';ctx.fill();});
+    st.forEach(function(s){s.t+=s.sp*.02;var a=s.a*(.3+.7*Math.sin(s.t));ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,0,255,'+a+')';ctx.fill();});
     requestAnimationFrame(dr);
   }
   window.addEventListener('resize',rs);rs();dr();
@@ -512,18 +479,15 @@ var DB={
   overall:{
     hi:[
       "Đây là khuôn mặt <b>QUÝ TƯỚNG THƯỢNG PHẨM</b> — tỷ lệ vàng Phi gần đạt chuẩn tuyệt đối. Thần thái sáng suốt, khí chất lãnh đạo thiên bẩm. Người này mệnh có quý nhân, tài lộc hanh thông, sự nghiệp rực rỡ. Tiền vận thuận lợi, trung vận thăng tiến, hậu vận an nhàn hưởng phúc.",
-      "Khuôn mặt <b>PHÚ QUÝ SONG TOÀN</b> — các vùng ngũ quan đều đạt chuẩn tỷ lệ vàng. Mắt sáng thần linh, mũi thẳng tài lộc, miệng khẩu phúc dồi dào. Đây là người thông tuệ, bản lĩnh, được trời phú cho khả năng lãnh đạo và thu hút quý nhân phù trợ suốt đời.",
-      "Tướng mạo <b>ĐẶC BIỆT QUÝ PHÁ</b> — tỷ lệ khuôn mặt đạt mức hiếm thấy. Trán rộng thể hiện trí tuệ vượt trội, mắt thần quang chiếu sáng, ngũ quan hài hòa phong thủy. Cuộc đời này được ông trời ưu ái, gặp nhiều may mắn và cơ hội lớn trong sự nghiệp lẫn tình duyên."
+      "Khuôn mặt <b>PHÚ QUÝ SONG TOÀN</b> — các vùng ngũ quan đều đạt chuẩn tỷ lệ vàng. Mắt sáng thần linh, mũi thẳng tài lộc, miệng khẩu phúc dồi dào. Đây là người thông tuệ, bản lĩnh, được trời phú cho khả năng lãnh đạo và thu hút quý nhân phù trợ suốt đời."
     ],
     md:[
       "Khuôn mặt <b>HẢO TƯỚNG TRUNG CẤP</b> — tỷ lệ vàng Phi đạt mức trung bình khá. Các đường nét ngũ quan khá hài hòa, thể hiện người có phúc lộc ổn định. Cần kiên trì nỗ lực để phát huy hết tiềm năng sẵn có, vận may đến muộn nhưng bền vững lâu dài.",
-      "Tướng số <b>TRUNG BÌNH KHÁ</b> — khuôn mặt cân đối, một số vùng đạt tỷ lệ vàng tốt. Người này có tính cách thẳng thắn, trọng nghĩa khí, được bạn bè tin yêu. Vận hạn hiện tại đang trong giai đoạn tích lũy, cần kiên nhẫn chờ thời cơ thuận lợi.",
-      "Khuôn mặt <b>BÌNH THƯỜNG ĐẾN KHÁ</b> — tỷ lệ phi đạt phần lớn nhưng chưa toàn hảo. Cuộc sống ổn định, ít sóng gió, tiền tài không thiếu hụt. Nếu biết phát huy điểm mạnh và khắc chế điểm yếu, vận mệnh hoàn toàn có thể cải thiện đáng kể."
+      "Tướng số <b>TRUNG BÌNH KHÁ</b> — khuôn mặt cân đối, một số vùng đạt tỷ lệ vàng tốt. Người này có tính cách thẳng thắn, trọng nghĩa khí, được bạn bè tin yêu. Vận hạn hiện tại đang trong giai đoạn tích lũy, cần kiên nhẫn chờ thời cơ thuận lợi."
     ],
     lo:[
       "Khuôn mặt <b>CẦN TU DƯỠNG ĐỨC HẠNH</b> — tỷ lệ vàng Phi chưa đạt chuẩn nhiều vùng. Tuy nhiên đây không phải tướng xấu tuyệt đối — tích đức, hành thiện và rèn luyện bản thân có thể cải được số phận. Ý chí quyết tâm mới là yếu tố quyết định vận mệnh.",
-      "Tướng số <b>LÀO KHỔ RÈN Ý CHÍ</b> — khuôn mặt có nhiều thử thách tỷ lệ. Nhưng lịch sử cho thấy nhiều vĩ nhân có tướng mạo bình thường mà vẫn thành công nhờ ý chí sắt đá. Phúc đức tại mẫu — tu thân tích đức là con đường thay đổi vận mệnh.",
-      "Khuôn mặt <b>THỬ THÁCH VẬN MỆNH</b> — tỷ lệ phi còn nhiều điểm chưa đạt chuẩn. Người mang tướng này thường trải qua nhiều gian nan để trưởng thành. Hãy xem đây là sức mạnh — sự kiên cường trong nghịch cảnh chính là tài sản quý giá nhất."
+      "Tướng số <b>LAO KHỔ RÈN Ý CHÍ</b> — khuôn mặt có nhiều thử thách tỷ lệ. Nhưng lịch sử cho thấy nhiều vĩ nhân có tướng mạo bình thường mà vẫn thành công nhờ ý chí sắt đá. Phúc đức tại mẫu — tu thân tích đức là con đường thay đổi vận mệnh."
     ]
   }
 };
@@ -572,23 +536,19 @@ function calcScore(lm,gender){
   return{total,faceShape:Math.round(s1),eyes:Math.round(s2),nose:Math.round(s3),mouth:Math.round(s4),symmetry:Math.round(s5),forehead:Math.round(s6),phi:Math.round(scoreR(faceH/faceW,PHI,0.13))};
 }
 
-/* ── COLORS ── */
-function clr(s){
-  if(s>=88)return'#ffd700';if(s>=74)return'#e8c547';
-  if(s>=60)return'#f0a030';if(s>=45)return'#c08030';return'#906040';
-}
+/* ── BAR COLORS (NEON THEME) ── */
 function barGrad(s){
-  if(s>=88)return'linear-gradient(90deg,#9a6f00,#ffd700)';
-  if(s>=74)return'linear-gradient(90deg,#6a4f10,#e8c547)';
-  if(s>=60)return'linear-gradient(90deg,#a05010,#f0a030)';
-  return'linear-gradient(90deg,#6a3010,#c07030)';
+  if(s>=80) return 'linear-gradient(90deg, #008888, #00ffff)'; // Cyan
+  if(s>=60) return 'linear-gradient(90deg, #116611, #50e060)'; // Green
+  return 'linear-gradient(90deg, #880088, #ff00ff)'; // Pink
 }
+
 function grade(s){
-  if(s>=93)return{l:'S',t:'PHÚ QUÝ SONG TOÀN',c:'#ffd700'};
-  if(s>=83)return{l:'A',t:'QUÝ TƯỚNG THƯỢNG PHẨM',c:'#e8c547'};
-  if(s>=71)return{l:'B',t:'HẢO TƯỚNG TRUNG CẤP',c:'#f0a030'};
-  if(s>=56)return{l:'C',t:'TƯỚNG BÌNH THƯỜNG',c:'#b08030'};
-  return{l:'D',t:'CẦN TU DƯỠNG ĐỨC HẠNH',c:'#907050'};
+  if(s>=93)return{l:'S',t:'PHÚ QUÝ SONG TOÀN'};
+  if(s>=83)return{l:'A',t:'QUÝ TƯỚNG THƯỢNG PHẨM'};
+  if(s>=71)return{l:'B',t:'HẢO TƯỚNG TRUNG CẤP'};
+  if(s>=56)return{l:'C',t:'TƯỚNG BÌNH THƯỜNG'};
+  return{l:'D',t:'CẦN TU DƯỠNG ĐỨC HẠNH'};
 }
 
 /* ── CANVAS ── */
@@ -600,22 +560,36 @@ function drawFace(dets,vw,vh){
   dets.forEach(function(det){
     var box=det.detection.box,pts=det.landmarks.positions;
     if(!pts||pts.length<68)return;
+    
+    // Viền khung màu Vàng Neon
     ctx.save();
-    ctx.strokeStyle='rgba(232,197,71,0.9)';ctx.lineWidth=1.8;
-    ctx.shadowColor='#e8c547';ctx.shadowBlur=16;
+    ctx.strokeStyle='#ffff00';ctx.lineWidth=2;
+    ctx.shadowColor='#ffff00';ctx.shadowBlur=15;
     ctx.strokeRect(box.x,box.y,box.width,box.height);
     ctx.restore();
+    
     var cs=16;
-    ctx.strokeStyle='#ffd700';ctx.lineWidth=2.8;ctx.shadowColor='#ffd700';ctx.shadowBlur=10;
+    ctx.strokeStyle='#00ffff';ctx.lineWidth=3;ctx.shadowColor='#00ffff';ctx.shadowBlur=10;
     [[box.x,box.y,1,1],[box.x+box.width,box.y,-1,1],[box.x,box.y+box.height,1,-1],[box.x+box.width,box.y+box.height,-1,-1]].forEach(function(c){
       ctx.beginPath();ctx.moveTo(c[0]+c[2]*cs,c[1]);ctx.lineTo(c[0],c[1]);ctx.lineTo(c[0],c[1]+c[3]*cs);ctx.stroke();
     });
     ctx.shadowBlur=0;
-    [{rng:[0,16],col:'rgba(232,197,71,0.35)',r:1.4},{rng:[17,26],col:'rgba(200,155,50,0.65)',r:1.5},{rng:[27,35],col:'rgba(255,180,60,0.65)',r:1.5},{rng:[36,41],col:'rgba(80,200,255,0.65)',r:1.6},{rng:[42,47],col:'rgba(80,200,255,0.65)',r:1.6},{rng:[48,67],col:'rgba(255,100,130,0.65)',r:1.5}].forEach(function(rg){
+    
+    // Đổ màu các điểm trên mặt bằng màu Neon
+    [{rng:[0,16],col:'rgba(0,255,255,0.6)',r:1.4},
+     {rng:[17,26],col:'rgba(255,0,255,0.7)',r:1.5},
+     {rng:[27,35],col:'rgba(80,224,96,0.7)',r:1.5},
+     {rng:[36,41],col:'rgba(255,255,0,0.7)',r:1.6},
+     {rng:[42,47],col:'rgba(255,255,0,0.7)',r:1.6},
+     {rng:[48,67],col:'rgba(255,0,127,0.7)',r:1.5}].forEach(function(rg){
       ctx.fillStyle=rg.col;
-      for(var i=rg.rng[0];i<=rg.rng[1]&&i<pts.length;i++){ctx.beginPath();ctx.arc(pts[i].x,pts[i].y,rg.r,0,Math.PI*2);ctx.fill();}
+      for(var i=rg.rng[0];i<=rg.rng[1]&&i<pts.length;i++){
+        ctx.beginPath();ctx.arc(pts[i].x,pts[i].y,rg.r,0,Math.PI*2);ctx.fill();
+      }
     });
-    ctx.setLineDash([3,4]);ctx.lineWidth=0.8;ctx.strokeStyle='rgba(232,197,71,0.25)';
+    
+    // Đường gióng
+    ctx.setLineDash([4,5]);ctx.lineWidth=1;ctx.strokeStyle='rgba(255,0,255,0.5)';
     var eyeY=(pts[39].y+pts[42].y)/2;
     ctx.beginPath();ctx.moveTo(box.x,eyeY);ctx.lineTo(box.x+box.width,eyeY);ctx.stroke();
     var cx=(pts[27].x+pts[33].x)/2;
@@ -637,19 +611,23 @@ function setBar(id,val){
 function updateUI(scores,gender,age){
   document.getElementById('panel-idle').style.display='none';
   document.getElementById('results').classList.add('show');
+  
   var so=document.getElementById('score-overlay');so.classList.add('on');
   var sn=document.getElementById('scoreNum');
-  sn.textContent=scores.total;sn.style.color=clr(scores.total);
-  sn.style.textShadow='0 0 20px '+clr(scores.total)+',0 0 40px '+clr(scores.total)+'80';
+  sn.textContent=scores.total; 
+  // Loại bỏ đổi màu inline để giữ gradient CSS cho con số lớn
+  
   var g=grade(scores.total);
   var gl=document.getElementById('gradeLetter');
-  gl.textContent=g.l;gl.style.color=g.c;gl.style.textShadow='0 0 30px '+g.c;
+  gl.textContent=g.l; 
   document.getElementById('gradeTitle').textContent=g.t;
   document.getElementById('goldenPct').textContent=scores.phi+'%';
+  
   var pill=document.getElementById('genderPill');pill.classList.add('on');
   document.getElementById('gIcon').textContent=gender==='male'?'♂':'♀';
   document.getElementById('gText').textContent=gender==='male'?'Nam':'Nữ';
   if(age)document.getElementById('gAge').textContent='· ~'+Math.round(age)+' tuổi';
+  
   var mkeys=[
     {key:'faceShape',sId:'mFace',bId:'bFace',dId:'dFace'},
     {key:'eyes',sId:'mEyes',bId:'bEyes',dId:'dEyes'},
@@ -658,12 +636,14 @@ function updateUI(scores,gender,age){
     {key:'symmetry',sId:'mSym',bId:'bSym',dId:'dSym'},
     {key:'forehead',sId:'mForehead',bId:'bForehead',dId:'dForehead'}
   ];
+  
   mkeys.forEach(function(m){
     var v=scores[m.key];
-    var se=document.getElementById(m.sId);if(se){se.textContent=v;se.style.color=clr(v);}
+    var se=document.getElementById(m.sId);if(se){se.textContent=v;}
     setBar(m.bId,v);
     var de=document.getElementById(m.dId);if(de)de.textContent=metricDesc(m.key,v);
   });
+  
   if(!readingDone||Math.abs(scores.total-lastTotal)>7){
     lastTotal=scores.total;readingDone=true;
     document.getElementById('overallReading').innerHTML=pick('overall',scores.total);
@@ -672,6 +652,7 @@ function updateUI(scores,gender,age){
     document.getElementById('rdCurrent').textContent=pick('current',scores.faceShape);
     document.getElementById('rdLate').textContent=pick('late',scores.eyes);
   }
+  
   document.getElementById('scanLine').classList.add('on');
   document.getElementById('idle-msg').classList.add('off');
 }
@@ -685,7 +666,7 @@ function resetUI(){
 
 /* ── 5-SECOND SCAN LOGIC ── */
 function startScanCountdown(){
-  if(scanTimer)return; // already running
+  if(scanTimer)return; 
   var overlay=document.getElementById('scan-overlay');
   var countEl=document.getElementById('scan-count');
   overlay.classList.add('on');
@@ -711,13 +692,12 @@ function cancelScanCountdown(){
 function showDone(){
   scanDone=true;
   document.getElementById('done-overlay').classList.add('on');
-  isRunning=false; // stop detection
+  isRunning=false; 
   document.getElementById('scanLine').classList.remove('on');
 }
 
 window.hideDone=function(){
   document.getElementById('done-overlay').classList.remove('on');
-  // scroll to results on mobile
   var res=document.getElementById('results');
   if(res)res.scrollIntoView({behavior:'smooth',block:'start'});
 };
@@ -728,29 +708,28 @@ async function loadModels(){
   var bar=document.getElementById('loader-bar');
   for(var i=0;i<MODEL_URLS.length;i++){
     var url=MODEL_URLS[i];
-    var labels=['jsDelivr CDN','GitHub Raw'];
+    var labels=['jsDelivr','GitHub'];
     try{
-      status.textContent='['+labels[i]+'] Tải mô hình nhận diện...';bar.style.width='15%';
+      status.textContent='['+labels[i]+'] Đang kết nối AI...';bar.style.width='20%';
       await faceapi.nets.tinyFaceDetector.loadFromUri(url);
-      status.textContent='['+labels[i]+'] Tải mô hình 68 điểm...';bar.style.width='50%';
+      status.textContent='['+labels[i]+'] Cấu trúc 68 điểm...';bar.style.width='60%';
       await faceapi.nets.faceLandmark68Net.loadFromUri(url);
-      status.textContent='['+labels[i]+'] Tải mô hình tuổi/giới...';bar.style.width='80%';
+      status.textContent='['+labels[i]+'] Đồng bộ dữ liệu...';bar.style.width='85%';
       await faceapi.nets.ageGenderNet.loadFromUri(url);
-      status.textContent='✓ Sẵn sàng!';bar.style.width='100%';
+      status.textContent='✓ KẾT NỐI THÀNH CÔNG!';bar.style.width='100%';
       await new Promise(function(r){setTimeout(r,600);});
       var loader=document.getElementById('loader');
       loader.classList.add('fade-out');
       setTimeout(function(){loader.style.display='none';},1000);
       return;
     }catch(err){
-      console.warn('Failed from',url,err);
       if(i<MODEL_URLS.length-1){
-        status.textContent='↻ Chuyển sang nguồn dự phòng...';
+        status.textContent='↻ Lỗi! Đang chuyển server...';
         await new Promise(function(r){setTimeout(r,700);});
       }
     }
   }
-  status.textContent='⚠ Lỗi tải model. Kiểm tra kết nối và nhấn THỬ LẠI.';
+  status.textContent='⚠ LỖI TẢI AI. MỞ 4G/WIFI VÀ THỬ LẠI.';
   document.getElementById('btn-retry').style.display='block';
 }
 
@@ -760,7 +739,7 @@ var faceDetectedAt=0;
 
 async function startCamera(){
   var btn=document.getElementById('btnCam');
-  btn.disabled=true;btn.textContent='Đang kết nối...';
+  btn.disabled=true;btn.textContent='ĐANG KẾT NỐI...';
   try{
     var stream=await navigator.mediaDevices.getUserMedia({
       video:{width:{ideal:480},height:{ideal:640},facingMode:'user'},
@@ -770,13 +749,13 @@ async function startCamera(){
     videoEl.srcObject=stream;
     await new Promise(function(r){videoEl.addEventListener('loadedmetadata',r,{once:true});});
     await videoEl.play();
-    btn.textContent='✓ CAMERA ĐÃ KẾT NỐI';btn.classList.add('active');
+    btn.textContent='ĐÃ KÍCH HOẠT CAMERA';btn.classList.add('active');
     isRunning=true;scanDone=false;faceDetectedAt=0;
     detectionLoop();
   }catch(err){
-    console.error(err);btn.disabled=false;
-    btn.textContent='✗ LỖI — THỬ LẠI';
-    btn.style.background='linear-gradient(135deg,#4a1010,#8a2020)';btn.style.color='#f05050';
+    btn.disabled=false;
+    btn.textContent='✗ LỖI QUYỀN CAMERA';
+    btn.style.borderColor='red';btn.style.color='red';
   }
 }
 
@@ -801,13 +780,11 @@ async function detectionLoop(){
           var scores=calcScore(d.landmarks,d.gender);
           if(scores)updateUI(scores,d.gender,d.age);
         }
-        // Start 5s countdown when face first detected
         if(!scanDone&&!scanTimer){
           faceDetectedAt=now;
           startScanCountdown();
         }
       }else{
-        // Face lost — cancel countdown
         if(!scanDone&&scanTimer){cancelScanCountdown();}
         if(now-lastUpdate>1500)resetUI();
       }
@@ -819,8 +796,7 @@ async function detectionLoop(){
 /* ── BOOT ── */
 function bootApp(){
   loadModels().catch(function(err){
-    console.error(err);
-    document.getElementById('loader-status').textContent='⚠ Lỗi khởi động. Nhấn THỬ LẠI.';
+    document.getElementById('loader-status').textContent='⚠ LỖI KHỞI ĐỘNG HỆ THỐNG.';
     document.getElementById('btn-retry').style.display='block';
   });
 }
