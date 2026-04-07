@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet"/>
   <style>
     :root{
-      /* Bảng màu Neon theo ảnh yêu cầu */
+      /* Bảng màu Neon */
       --bg:        #06020a;
       --bg-card:   #0d0414;
       --bg-panel:  #140520;
@@ -84,7 +84,7 @@
     .score-num{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(40px,10vw,62px);line-height:1;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 8px rgba(255,0,127,0.7));}
     .score-unit{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--neon-yellow);margin-top:2px;text-shadow:0 0 5px var(--neon-yellow);}
 
-    /* Scan countdown overlay (Thầy Khởi đang xem) */
+    /* Scan countdown overlay */
     #scan-overlay{position:absolute;inset:0;background:rgba(5,2,10,.85);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:25;}
     #scan-overlay.on{display:flex;}
     .scan-ring{width:90px;height:90px;border-radius:50%;border:4px solid rgba(0,255,255,.2);border-top-color:var(--neon-cyan);animation:spin 1s linear infinite;box-shadow:0 0 15px rgba(0,255,255,0.4);}
@@ -98,7 +98,7 @@
     .done-title{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,4vw,20px);color:var(--neon-yellow);text-shadow:0 0 10px var(--neon-yellow);letter-spacing:3px;text-align:center;}
     .done-btn{margin-top:10px;background:transparent;border:2px solid var(--neon-cyan);color:var(--neon-cyan);box-shadow:0 0 10px var(--neon-cyan);padding:10px 28px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:4px;border-radius:6px;cursor:pointer;animation:pulse 2s infinite;}
 
-    /* Nút kích hoạt Camera (Giống nút Cặp Lê VIP) */
+    /* Nút kích hoạt Camera */
     .cam-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;width:100%;max-width:380px;}
     .btn-cam{
       background:transparent;
@@ -125,7 +125,7 @@
     .sect-title{font-family:'Cinzel',serif;font-size:11px;color:var(--neon-yellow);text-shadow:0 0 8px var(--neon-yellow);letter-spacing:4px;text-transform:uppercase;display:flex;align-items:center;gap:8px;}
     .sect-title::before,.sect-title::after{content:'';flex:1;height:1px;background:rgba(255,255,0,0.3);}
 
-    /* Chung cho các thẻ Card (Nền tối, viền Vàng Neon) */
+    /* Thẻ Card */
     .grade-card, .master-block, .metrics-block {
       background: var(--bg-card);
       border: 2px solid var(--neon-yellow);
@@ -226,7 +226,6 @@
 
 <main>
   <div class="camera-side">
-
     <div class="cam-frame" id="camFrame">
       <div class="crnr crnr-tl"></div><div class="crnr crnr-tr"></div>
       <div class="crnr crnr-bl"></div><div class="crnr crnr-br"></div>
@@ -261,20 +260,21 @@
     <div class="cam-controls">
       <button class="btn-cam" id="btnCam" onclick="startCamera()">KÍCH HOẠT CAMERA VIP</button>
     </div>
+    
     <div class="gender-pill" id="genderPill" style="margin-top:2px;">
       <span id="gIcon">⚥</span>
       <span id="gText">—</span>
       <span id="gAge"></span>
     </div>
-
-  </div><div class="analysis-side">
+  </div>
+  
+  <div class="analysis-side">
     <div id="panel-idle">
       <div class="idle-sym">☽ ✦ ☾</div>
       <div class="idle-p">Hệ thống chưa quét được khuôn mặt<br>Kích hoạt Camera để AI tiến hành phân tích</div>
     </div>
 
     <div id="results">
-
       <div class="grade-card">
         <div class="grade-letter" id="gradeLetter">—</div>
         <div class="grade-title" id="gradeTitle">Đang phân tích...</div>
@@ -387,8 +387,9 @@
           <div class="mr-desc" id="dForehead">Đang chờ dữ liệu...</div>
         </div>
       </div>
-
-    </div></div></main>
+    </div>
+  </div>
+</main>
 
 <footer>⬡ HỆ THỐNG TƯỚNG SỐ AI CHUYÊN NGHIỆP ⬡</footer>
 
@@ -538,9 +539,9 @@ function calcScore(lm,gender){
 
 /* ── BAR COLORS (NEON THEME) ── */
 function barGrad(s){
-  if(s>=80) return 'linear-gradient(90deg, #008888, #00ffff)'; // Cyan
-  if(s>=60) return 'linear-gradient(90deg, #116611, #50e060)'; // Green
-  return 'linear-gradient(90deg, #880088, #ff00ff)'; // Pink
+  if(s>=80) return 'linear-gradient(90deg, #008888, #00ffff)';
+  if(s>=60) return 'linear-gradient(90deg, #116611, #50e060)';
+  return 'linear-gradient(90deg, #880088, #ff00ff)';
 }
 
 function grade(s){
@@ -561,7 +562,6 @@ function drawFace(dets,vw,vh){
     var box=det.detection.box,pts=det.landmarks.positions;
     if(!pts||pts.length<68)return;
     
-    // Viền khung màu Vàng Neon
     ctx.save();
     ctx.strokeStyle='#ffff00';ctx.lineWidth=2;
     ctx.shadowColor='#ffff00';ctx.shadowBlur=15;
@@ -575,7 +575,6 @@ function drawFace(dets,vw,vh){
     });
     ctx.shadowBlur=0;
     
-    // Đổ màu các điểm trên mặt bằng màu Neon
     [{rng:[0,16],col:'rgba(0,255,255,0.6)',r:1.4},
      {rng:[17,26],col:'rgba(255,0,255,0.7)',r:1.5},
      {rng:[27,35],col:'rgba(80,224,96,0.7)',r:1.5},
@@ -588,7 +587,6 @@ function drawFace(dets,vw,vh){
       }
     });
     
-    // Đường gióng
     ctx.setLineDash([4,5]);ctx.lineWidth=1;ctx.strokeStyle='rgba(255,0,255,0.5)';
     var eyeY=(pts[39].y+pts[42].y)/2;
     ctx.beginPath();ctx.moveTo(box.x,eyeY);ctx.lineTo(box.x+box.width,eyeY);ctx.stroke();
@@ -615,7 +613,6 @@ function updateUI(scores,gender,age){
   var so=document.getElementById('score-overlay');so.classList.add('on');
   var sn=document.getElementById('scoreNum');
   sn.textContent=scores.total; 
-  // Loại bỏ đổi màu inline để giữ gradient CSS cho con số lớn
   
   var g=grade(scores.total);
   var gl=document.getElementById('gradeLetter');
