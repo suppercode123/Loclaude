@@ -4,64 +4,46 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <title>⚜ Thầy Khởi Phán Tướng AI</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg:#fdf8ee;
-  --bg2:#fff9f0;
-  --card:#fffdf5;
-  --card2:#fef9e8;
-  --gold:#c8960a;
-  --gold-lt:#f0b90b;
-  --gold-dk:#8a6400;
-  --gold-glow:rgba(200,150,10,.18);
-  --red:#c0180c;
-  --red-lt:#e82010;
-  --green:#0a8020;
-  --green-lt:#12a030;
-  --orange:#d06000;
-  --orange-lt:#f07010;
-  --blue:#0050a0;
-  --border:#e8c547;
-  --border-dim:rgba(200,150,10,.22);
-  --text:#1a1200;
-  --text2:#3a2800;
-  --muted:#7a6030;
-  --muted2:#a08040;
-  --shadow:0 4px 20px rgba(200,150,10,.15);
-  --shadow2:0 8px 40px rgba(200,150,10,.22);
+  --bg:#fdf8ee;--bg2:#fff9f0;--card:#fffdf5;--card2:#fef9e8;
+  --gold:#c8960a;--gold-lt:#f0b90b;--gold-dk:#8a6400;--gold-glow:rgba(200,150,10,.18);
+  --red:#c0180c;--red-lt:#e82010;--green:#0a8020;--green-lt:#12a030;
+  --orange:#d06000;--orange-lt:#f07010;--blue:#0050a0;
+  --border:#e8c547;--border-dim:rgba(200,150,10,.22);
+  --text:#1a1200;--text2:#3a2800;--muted:#7a6030;--muted2:#a08040;
+  --shadow:0 4px 20px rgba(200,150,10,.15);--shadow2:0 8px 40px rgba(200,150,10,.22);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{min-height:100vh;font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+html,body{min-height:100vh;font-family:'Be Vietnam Pro','Noto Serif',sans-serif;font-size:15px;background:var(--bg);color:var(--text);overflow-x:hidden;}
 
 /* ══ LOADER ══ */
 #loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .8s ease;}
 #loader.fade-out{opacity:0;pointer-events:none;}
 .ld-sigil{font-size:clamp(54px,14vw,80px);color:var(--gold-lt);text-shadow:0 0 30px rgba(240,185,11,.6);animation:pulse 2.5s ease-in-out infinite;user-select:none;}
-.ld-title{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,5vw,26px);color:var(--gold-dk);letter-spacing:5px;text-align:center;}
-.ld-sub{font-size:clamp(9px,2.5vw,12px);color:var(--muted2);letter-spacing:3px;text-transform:uppercase;text-align:center;padding:0 20px;}
-#ld-status{font-size:clamp(11px,3vw,13px);color:var(--muted);letter-spacing:1px;text-align:center;padding:0 20px;min-height:22px;font-weight:500;}
+.ld-title{font-family:'Cinzel Decorative',serif;font-size:clamp(17px,5vw,26px);color:var(--gold-dk);letter-spacing:5px;text-align:center;}
+.ld-sub{font-size:clamp(11px,2.5vw,13px);color:var(--muted2);letter-spacing:3px;text-transform:uppercase;text-align:center;padding:0 20px;}
+#ld-status{font-size:clamp(12px,3vw,14px);color:var(--muted);letter-spacing:1px;text-align:center;padding:0 20px;min-height:22px;font-weight:500;}
 .ld-bar-wrap{width:min(300px,82vw);background:rgba(200,150,10,.12);border-radius:6px;height:10px;overflow:hidden;border:1px solid var(--border-dim);position:relative;}
 #ld-bar{height:100%;background:linear-gradient(90deg,var(--gold-dk),var(--gold-lt));border-radius:6px;width:0%;transition:width .5s ease;position:relative;}
-#ld-bar::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.4) 50%,transparent 100%);animation:shimmer 1.5s linear infinite;}
-#ld-pct{font-family:'Cinzel',serif;font-size:11px;color:var(--gold-dk);letter-spacing:2px;margin-top:2px;text-align:center;}
-#btn-retry{display:none;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border:none;padding:11px 28px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:3px;border-radius:6px;cursor:pointer;box-shadow:var(--shadow);margin-top:4px;}
+#ld-bar::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4) 50%,transparent);animation:shimmer 1.5s linear infinite;}
+#ld-pct{font-family:'Cinzel',serif;font-size:12px;color:var(--gold-dk);letter-spacing:2px;margin-top:2px;text-align:center;}
+#btn-retry{display:none;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border:none;padding:11px 28px;font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:3px;border-radius:6px;cursor:pointer;box-shadow:var(--shadow);margin-top:4px;}
 #btn-retry:active{transform:scale(.97);}
 
 /* ══ HEADER ══ */
 header{position:relative;z-index:10;padding:14px 16px 12px;text-align:center;border-bottom:3px solid var(--gold-lt);background:linear-gradient(135deg,#fff9e0,#ffeea0,#fff9e0);box-shadow:0 4px 20px rgba(200,150,10,.2);}
 .hdr-top{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px;}
-.hdr-badge{background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border-radius:20px;padding:2px 12px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;}
-.hdr-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,5.5vw,32px);font-weight:900;color:var(--gold-dk);text-shadow:2px 2px 0 rgba(200,150,10,.2);letter-spacing:3px;line-height:1.1;}
-.hdr-sub{font-size:clamp(8px,2vw,10px);color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:4px;}
+.hdr-badge{background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border-radius:20px;padding:3px 14px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;}
+.hdr-title{font-family:'Cinzel Decorative',serif;font-size:clamp(19px,5.5vw,32px);font-weight:900;color:var(--gold-dk);text-shadow:2px 2px 0 rgba(200,150,10,.2);letter-spacing:3px;line-height:1.1;}
+.hdr-sub{font-size:clamp(11px,2.5vw,13px);color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:4px;}
 
 /* ══ LAYOUT ══ */
-main{position:relative;z-index:5;display:grid;grid-template-columns:1fr 420px;max-width:1320px;margin:0 auto;padding:16px;gap:0;min-height:calc(100vh - 92px);}
+main{position:relative;z-index:5;display:grid;grid-template-columns:1fr 440px;max-width:1340px;margin:0 auto;padding:16px;gap:0;min-height:calc(100vh - 92px);}
 
 /* ══ CAMERA SIDE ══ */
 .camera-side{padding:12px 14px 12px 0;display:flex;flex-direction:column;align-items:center;gap:12px;}
-
-/* Portrait 3:4 frame */
 .cam-frame{position:relative;width:100%;max-width:min(360px,100%);aspect-ratio:3/4;background:#1a1200;border-radius:16px;overflow:hidden;border:3px solid var(--gold-lt);box-shadow:var(--shadow2),inset 0 0 30px rgba(0,0,0,.5);}
 .crnr{position:absolute;width:30px;height:30px;border-color:var(--gold-lt);border-style:solid;z-index:20;pointer-events:none;}
 .crnr-tl{top:10px;left:10px;border-width:3px 0 0 3px;border-radius:4px 0 0 0;}
@@ -75,121 +57,155 @@ main{position:relative;z-index:5;display:grid;grid-template-columns:1fr 420px;ma
 #idle-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:12;pointer-events:none;transition:opacity .4s;background:rgba(20,14,0,.7);}
 #idle-msg.off{opacity:0;pointer-events:none;}
 .idle-icon{font-size:48px;animation:pulse 3s ease-in-out infinite;}
-.idle-text{font-family:'Cinzel',serif;font-size:11px;color:rgba(255,220,100,.85);letter-spacing:2px;text-align:center;line-height:2;}
-
-/* Scan overlay */
+.idle-text{font-family:'Cinzel',serif;font-size:13px;color:rgba(255,220,100,.85);letter-spacing:2px;text-align:center;line-height:2;}
 #scan-overlay{position:absolute;inset:0;background:rgba(10,7,0,.85);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:25;}
 #scan-overlay.on{display:flex;}
 .scan-ring{width:90px;height:90px;border-radius:50%;border:4px solid rgba(240,185,11,.2);border-top-color:var(--gold-lt);animation:spin 1s linear infinite;}
 #scan-count{font-family:'Cinzel Decorative',serif;font-size:56px;color:var(--gold-lt);text-shadow:0 0 30px rgba(240,185,11,.8);line-height:1;}
-.scan-label{font-family:'Cinzel',serif;font-size:11px;color:rgba(255,220,100,.85);letter-spacing:3px;text-transform:uppercase;text-align:center;padding:0 16px;line-height:1.8;}
-
-/* Score overlay */
+.scan-label{font-family:'Cinzel',serif;font-size:13px;color:rgba(255,220,100,.85);letter-spacing:3px;text-transform:uppercase;text-align:center;padding:0 16px;line-height:1.8;}
 #score-overlay{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:18;text-align:center;opacity:0;transition:opacity .5s;pointer-events:none;}
 #score-overlay.on{opacity:1;}
 .score-num{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(44px,11vw,66px);line-height:1;transition:color .5s,text-shadow .5s;}
-.score-unit{font-family:'Cinzel',serif;font-size:8px;letter-spacing:4px;color:rgba(255,220,100,.7);margin-top:2px;}
-
-/* Done overlay */
+.score-unit{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:rgba(255,220,100,.7);margin-top:2px;}
 #done-overlay{position:absolute;inset:0;background:rgba(10,7,0,.9);display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:26;}
 #done-overlay.on{display:flex;animation:fadeIn .4s ease;}
 .done-check{font-size:60px;animation:popIn .5s ease;}
-.done-title{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,4.5vw,22px);color:var(--gold-lt);letter-spacing:3px;text-align:center;padding:0 16px;}
-.done-sub{font-family:'Cinzel',serif;font-size:10px;color:rgba(255,220,100,.7);letter-spacing:3px;text-align:center;line-height:1.8;}
-.done-btn{margin-top:4px;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border:none;padding:11px 30px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:4px;border-radius:6px;cursor:pointer;touch-action:manipulation;animation:pulse 2s ease-in-out infinite;box-shadow:0 4px 20px rgba(200,150,10,.4);}
+.done-title{font-family:'Cinzel Decorative',serif;font-size:clamp(15px,4.5vw,22px);color:var(--gold-lt);letter-spacing:3px;text-align:center;padding:0 16px;}
+.done-sub{font-family:'Cinzel',serif;font-size:12px;color:rgba(255,220,100,.7);letter-spacing:3px;text-align:center;line-height:1.8;}
+.done-btn{margin-top:4px;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border:none;padding:13px 32px;font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:4px;border-radius:6px;cursor:pointer;touch-action:manipulation;animation:pulse 2s ease-in-out infinite;box-shadow:0 4px 20px rgba(200,150,10,.4);}
 
 /* Controls */
-.cam-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;width:100%;max-width:360px;}
-.btn-primary{flex:1;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border:none;padding:12px 16px;font-family:'Cinzel',serif;font-size:clamp(10px,2.5vw,12px);font-weight:700;letter-spacing:3px;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:var(--shadow);touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+.cam-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;width:100%;max-width:380px;}
+.btn-primary{flex:1;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border:none;padding:13px 16px;font-family:'Cinzel',serif;font-size:clamp(11px,2.5vw,13px);font-weight:700;letter-spacing:3px;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:var(--shadow);touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
 .btn-primary:hover:not(:disabled){background:linear-gradient(135deg,var(--gold-lt),#ffcf00);}
 .btn-primary:active:not(:disabled){transform:scale(.97);}
 .btn-primary:disabled{opacity:.4;cursor:not-allowed;}
 .btn-primary.active{background:linear-gradient(135deg,#084a0a,var(--green-lt));color:#fff;box-shadow:0 0 20px rgba(18,160,48,.25);}
-.btn-reset{background:linear-gradient(135deg,#8a1010,var(--red-lt));color:#fff;border:none;padding:12px 18px;font-family:'Cinzel',serif;font-size:clamp(9px,2vw,11px);font-weight:700;letter-spacing:2px;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 4px 16px rgba(200,24,12,.2);touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+.btn-reset{background:linear-gradient(135deg,#8a1010,var(--red-lt));color:#fff;border:none;padding:13px 18px;font-family:'Cinzel',serif;font-size:clamp(10px,2vw,12px);font-weight:700;letter-spacing:2px;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 4px 16px rgba(200,24,12,.2);touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
 .btn-reset:active{transform:scale(.97);}
-.gender-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:2px solid var(--border);border-radius:20px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:var(--gold-dk);background:rgba(200,150,10,.08);opacity:0;transition:opacity .5s;font-weight:700;}
+.gender-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border:2px solid var(--border);border-radius:20px;font-family:'Cinzel',serif;font-size:13px;letter-spacing:2px;color:var(--gold-dk);background:rgba(200,150,10,.08);opacity:0;transition:opacity .5s;font-weight:700;}
 .gender-pill.on{opacity:1;}
 
-/* ══ AUDIO CONTROLS ══ */
-.audio-bar{display:none;align-items:center;gap:8px;background:linear-gradient(135deg,var(--card),var(--card2));border:2px solid var(--border-dim);border-radius:10px;padding:10px 14px;width:100%;max-width:360px;}
+/* ══ AUDIO BAR — REDESIGNED ══ */
+.audio-bar{display:none;flex-direction:column;gap:8px;background:linear-gradient(135deg,#fff4d0,#ffe888);border:2px solid var(--gold-lt);border-radius:14px;padding:14px 16px;width:100%;max-width:380px;box-shadow:0 4px 20px rgba(200,150,10,.25);}
 .audio-bar.show{display:flex;}
-.audio-btn{background:linear-gradient(135deg,var(--blue),#0070d0);color:#fff;border:none;padding:8px 14px;border-radius:6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:2px;cursor:pointer;touch-action:manipulation;flex:1;transition:all .25s;}
+.audio-bar-title{font-family:'Cinzel',serif;font-size:11px;color:var(--gold-dk);letter-spacing:3px;text-transform:uppercase;text-align:center;font-weight:700;}
+.audio-row{display:flex;gap:8px;}
+.audio-btn{flex:1;background:linear-gradient(135deg,#0050a0,#0078d4);color:#fff;border:none;padding:11px 10px;border-radius:8px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:2px;cursor:pointer;touch-action:manipulation;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:5px;}
 .audio-btn:active{transform:scale(.97);}
 .audio-btn.stop{background:linear-gradient(135deg,#8a1010,var(--red-lt));}
-.audio-icon{font-size:14px;}
+.audio-btn.playing{background:linear-gradient(135deg,#065018,var(--green-lt));animation:pulse 1.5s ease-in-out infinite;}
+.audio-icon{font-size:16px;}
+#voiceStatus{font-size:12px;color:var(--muted);text-align:center;letter-spacing:1px;min-height:18px;font-style:italic;}
+#voiceStatus.speaking{color:var(--green);font-weight:600;}
 
 /* ══ ANALYSIS SIDE ══ */
-.analysis-side{border-left:2px solid var(--border-dim);padding:12px 0 12px 16px;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 96px);overflow-y:auto;position:sticky;top:0;}
-.analysis-side::-webkit-scrollbar{width:4px;}
+.analysis-side{border-left:2px solid var(--border-dim);padding:12px 0 12px 16px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 96px);overflow-y:auto;position:sticky;top:0;}
+.analysis-side::-webkit-scrollbar{width:5px;}
 .analysis-side::-webkit-scrollbar-thumb{background:var(--gold-lt);border-radius:3px;}
-
-.sect-title{font-family:'Cinzel',serif;font-size:9px;color:var(--muted);letter-spacing:5px;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin:2px 0;}
+.sect-title{font-family:'Cinzel',serif;font-size:11px;color:var(--muted);letter-spacing:5px;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin:2px 0;}
 .sect-title::before,.sect-title::after{content:'';flex:1;height:1px;background:var(--border-dim);}
 
 /* Grade card */
-.grade-card{background:linear-gradient(135deg,#fff9e0,#ffeea0);border:2px solid var(--gold-lt);border-radius:12px;padding:18px 14px;text-align:center;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+.grade-card{background:linear-gradient(135deg,#fff9e0,#ffeea0);border:2px solid var(--gold-lt);border-radius:12px;padding:20px 14px;text-align:center;position:relative;overflow:hidden;box-shadow:var(--shadow);}
 .grade-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold-lt),transparent);}
 .grade-letter{font-family:'Cinzel Decorative',serif;font-size:clamp(54px,12vw,74px);font-weight:900;line-height:1;transition:color .6s;}
-.grade-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--gold-dk);margin-top:5px;text-transform:uppercase;font-weight:700;}
+.grade-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:var(--gold-dk);margin-top:5px;text-transform:uppercase;font-weight:700;}
 .golden-row{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:8px;}
-.golden-lbl{font-family:'Cinzel',serif;font-size:8px;color:var(--muted2);letter-spacing:2px;}
-.golden-pct{font-family:'Cinzel',serif;font-size:15px;font-weight:900;color:var(--gold-dk);}
+.golden-lbl{font-family:'Cinzel',serif;font-size:10px;color:var(--muted2);letter-spacing:2px;}
+.golden-pct{font-family:'Cinzel',serif;font-size:17px;font-weight:900;color:var(--gold-dk);}
 
 /* Master block */
-.master-block{background:linear-gradient(135deg,var(--card),var(--card2));border:2px solid var(--border-dim);border-radius:12px;padding:16px 14px;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+.master-block{background:linear-gradient(135deg,var(--card),var(--card2));border:2px solid var(--border-dim);border-radius:12px;padding:18px 16px;position:relative;overflow:hidden;box-shadow:var(--shadow);}
 .master-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold-lt),transparent);}
 .master-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-.master-icon{font-size:20px;}
-.master-title{font-family:'Cinzel Decorative',serif;font-size:clamp(12px,3vw,15px);color:var(--gold-dk);letter-spacing:2px;}
-.master-badge{margin-left:auto;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border-radius:10px;padding:2px 8px;font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;}
-.overall-reading{background:linear-gradient(135deg,rgba(200,150,10,.06),rgba(200,150,10,.12));border:1px solid var(--border-dim);border-left:4px solid var(--gold-lt);border-radius:0 8px 8px 0;padding:12px;margin-bottom:12px;font-size:clamp(12px,3vw,14px);color:var(--text2);line-height:1.9;font-style:italic;}
+.master-icon{font-size:22px;}
+.master-title{font-family:'Cinzel Decorative',serif;font-size:clamp(13px,3vw,16px);color:var(--gold-dk);letter-spacing:2px;}
+.master-badge{margin-left:auto;background:linear-gradient(135deg,var(--gold-dk),var(--gold-lt));color:#fff;border-radius:10px;padding:3px 10px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;}
+.overall-reading{background:linear-gradient(135deg,rgba(200,150,10,.06),rgba(200,150,10,.12));border:1px solid var(--border-dim);border-left:4px solid var(--gold-lt);border-radius:0 8px 8px 0;padding:14px;margin-bottom:14px;font-size:clamp(14px,3.5vw,16px);color:var(--text2);line-height:2;font-family:'Noto Serif',serif;font-style:italic;}
 .overall-reading b{color:var(--red);font-style:normal;font-weight:700;}
 .overall-reading em{color:var(--green);font-style:normal;font-weight:600;}
 
 /* Destiny 2x2 */
-.destiny-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.destiny-cell{background:var(--card);border:1px solid var(--border-dim);border-radius:8px;padding:10px;}
-.dc-icon{font-size:16px;display:block;margin-bottom:3px;}
-.dc-title{font-family:'Cinzel',serif;font-size:8px;color:var(--gold-dk);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;font-weight:700;}
-.dc-text{font-size:clamp(10px,2.5vw,12px);color:var(--text2);line-height:1.75;}
+.destiny-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.destiny-cell{background:var(--card);border:1px solid var(--border-dim);border-radius:10px;padding:12px;}
+.dc-icon{font-size:18px;display:block;margin-bottom:4px;}
+.dc-title{font-family:'Cinzel',serif;font-size:10px;color:var(--gold-dk);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-weight:700;}
+.dc-text{font-size:clamp(13px,3vw,14px);color:var(--text2);line-height:1.8;font-family:'Be Vietnam Pro',sans-serif;}
 
 /* Metrics block */
-.metrics-block{background:linear-gradient(135deg,var(--card),var(--card2));border:2px solid var(--border-dim);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow);}
-.metrics-block::before{content:'';display:block;font-family:'Cinzel',serif;font-size:8px;color:var(--muted);letter-spacing:3px;}
-.metric-row{display:flex;flex-direction:column;gap:4px;}
+.metrics-block{background:linear-gradient(135deg,var(--card),var(--card2));border:2px solid var(--border-dim);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow);}
+.metric-row{display:flex;flex-direction:column;gap:5px;}
 .mr-header{display:flex;justify-content:space-between;align-items:center;}
-.mr-name{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);font-weight:600;}
-.mr-score{font-family:'Cinzel',serif;font-size:16px;font-weight:900;transition:color .5s;min-width:32px;text-align:right;}
-.bar-bg{height:6px;background:rgba(200,150,10,.12);border-radius:3px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:3px;width:0%;transition:width 1.3s cubic-bezier(.4,0,.2,1);}
-.mr-desc{font-size:9px;color:var(--muted);line-height:1.65;font-style:italic;}
+.mr-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);font-weight:600;}
+.mr-score{font-family:'Cinzel',serif;font-size:18px;font-weight:900;transition:color .5s;min-width:36px;text-align:right;}
+.bar-bg{height:7px;background:rgba(200,150,10,.12);border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;width:0%;transition:width 1.3s cubic-bezier(.4,0,.2,1);}
+.mr-desc{font-size:clamp(12px,2.8vw,13px);color:var(--muted);line-height:1.7;font-style:italic;font-family:'Noto Serif',serif;}
 
 /* 12-month block */
-.month-block{background:linear-gradient(135deg,var(--card),var(--card2));border:2px solid var(--border-dim);border-radius:12px;padding:14px;box-shadow:var(--shadow);}
-.month-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;}
-.month-cell{background:var(--card);border:1px solid var(--border-dim);border-radius:8px;padding:8px 10px;}
-.mc-month{font-family:'Cinzel',serif;font-size:8px;color:var(--gold-dk);letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:3px;}
-.mc-star{font-size:12px;margin-bottom:2px;display:block;}
-.mc-text{font-size:9px;color:var(--text2);line-height:1.7;}
-.mc-tag{display:inline-block;margin-top:3px;padding:1px 6px;border-radius:10px;font-size:8px;font-weight:700;font-family:'Cinzel',serif;letter-spacing:1px;}
+.month-block{background:linear-gradient(135deg,var(--card),var(--card2));border:2px solid var(--border-dim);border-radius:12px;padding:16px;box-shadow:var(--shadow);}
+.month-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px;}
+.month-cell{background:var(--card);border:1px solid var(--border-dim);border-radius:10px;padding:12px 14px;}
+.mc-month{font-family:'Cinzel',serif;font-size:11px;color:var(--gold-dk);letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:4px;}
+.mc-star{font-size:18px;margin-bottom:4px;display:block;}
+.mc-text{font-size:clamp(13px,3vw,14px);color:var(--text2);line-height:1.85;font-family:'Be Vietnam Pro',sans-serif;}
+.mc-tag{display:inline-block;margin-top:6px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;font-family:'Cinzel',serif;letter-spacing:1px;}
 .mc-tag.good{background:rgba(10,128,32,.12);color:var(--green);border:1px solid rgba(10,128,32,.2);}
 .mc-tag.ok{background:rgba(200,150,10,.12);color:var(--gold-dk);border:1px solid var(--border-dim);}
 .mc-tag.care{background:rgba(200,24,12,.1);color:var(--red);border:1px solid rgba(200,24,12,.2);}
+
+/* ══ BIRTH DATE SECTION ══ */
+.birth-block{background:linear-gradient(135deg,#f0f8ff,#e8f4fd);border:2px solid rgba(0,80,160,.2);border-radius:14px;padding:18px 16px;box-shadow:0 4px 20px rgba(0,80,160,.1);}
+.birth-block::before{content:'';display:block;position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#0078d4,transparent);border-radius:14px 14px 0 0;}
+.birth-block{position:relative;overflow:hidden;}
+.birth-input-wrap{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+.birth-label{font-family:'Cinzel',serif;font-size:11px;color:#0050a0;letter-spacing:2px;font-weight:700;text-transform:uppercase;}
+.birth-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.birth-field{display:flex;flex-direction:column;gap:4px;}
+.birth-field label{font-size:11px;color:var(--muted2);font-family:'Cinzel',serif;letter-spacing:2px;text-align:center;}
+.birth-field input{background:#fff;border:2px solid rgba(0,80,160,.2);border-radius:8px;padding:10px 8px;font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:#0050a0;text-align:center;width:100%;outline:none;transition:border-color .3s;}
+.birth-field input:focus{border-color:#0078d4;box-shadow:0 0 0 3px rgba(0,120,212,.15);}
+.birth-field input::placeholder{color:#aaa;font-size:14px;}
+.btn-birth{width:100%;background:linear-gradient(135deg,#0050a0,#0078d4);color:#fff;border:none;padding:13px 20px;font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:3px;border-radius:8px;cursor:pointer;margin-top:4px;transition:all .3s;box-shadow:0 4px 16px rgba(0,80,160,.25);touch-action:manipulation;}
+.btn-birth:active{transform:scale(.98);}
+.btn-birth:hover{background:linear-gradient(135deg,#0060c0,#0090f0);}
+#birthResults{display:none;flex-direction:column;gap:12px;margin-top:14px;}
+#birthResults.show{display:flex;}
+.life-path-card{background:linear-gradient(135deg,#001a3a,#003070);border:2px solid rgba(0,120,212,.4);border-radius:12px;padding:18px;text-align:center;color:#fff;}
+.lp-number{font-family:'Cinzel Decorative',serif;font-size:52px;font-weight:900;color:#f0b90b;text-shadow:0 0 30px rgba(240,185,11,.6);line-height:1;}
+.lp-name{font-family:'Cinzel',serif;font-size:13px;letter-spacing:4px;color:rgba(255,220,100,.9);margin-top:4px;text-transform:uppercase;}
+.lp-desc{font-size:14px;color:rgba(220,220,255,.9);line-height:1.9;margin-top:10px;font-family:'Be Vietnam Pro',sans-serif;}
+.py-card{background:linear-gradient(135deg,#1a0a30,#2d1060);border:2px solid rgba(140,80,200,.3);border-radius:12px;padding:14px;}
+.py-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.py-num{font-family:'Cinzel Decorative',serif;font-size:36px;font-weight:900;color:#c088ff;text-shadow:0 0 20px rgba(160,80,255,.5);line-height:1;}
+.py-info{flex:1;}
+.py-title{font-family:'Cinzel',serif;font-size:11px;color:rgba(200,170,255,.8);letter-spacing:3px;text-transform:uppercase;}
+.py-sub{font-size:13px;color:rgba(220,200,255,.9);line-height:1.7;margin-top:4px;}
+.birth-month-grid{display:grid;grid-template-columns:1fr;gap:8px;}
+.bmc{background:rgba(255,255,255,.06);border:1px solid rgba(0,120,212,.2);border-radius:10px;padding:12px 14px;}
+.bmc-month{font-family:'Cinzel',serif;font-size:11px;color:#60a8ff;letter-spacing:2px;font-weight:700;text-transform:uppercase;margin-bottom:4px;}
+.bmc-num{font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:#f0b90b;float:right;margin-top:-2px;}
+.bmc-text{font-size:clamp(13px,3vw,14px);color:rgba(220,220,255,.85);line-height:1.85;font-family:'Be Vietnam Pro',sans-serif;clear:both;}
+.bmc-tag{display:inline-block;margin-top:5px;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;font-family:'Cinzel',serif;}
+.bmc-tag.great{background:rgba(240,185,11,.2);color:#f0b90b;border:1px solid rgba(240,185,11,.3);}
+.bmc-tag.good{background:rgba(96,168,255,.15);color:#60a8ff;border:1px solid rgba(96,168,255,.3);}
+.bmc-tag.care{background:rgba(255,80,80,.12);color:#ff8080;border:1px solid rgba(255,80,80,.25);}
+.bmc-tag.ok{background:rgba(160,160,160,.12);color:#aaa;border:1px solid rgba(160,160,160,.2);}
+.birth-month-block{background:linear-gradient(135deg,#001230,#001a50);border:2px solid rgba(0,120,212,.25);border-radius:12px;padding:16px;}
+.bm-title{font-family:'Cinzel Decorative',serif;font-size:13px;color:#60a8ff;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
 
 /* Ref row */
 .ref-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .ref-card{background:var(--card);border:1px solid var(--border-dim);border-radius:8px;padding:8px 6px;text-align:center;}
 .ref-svg{width:48px;height:58px;margin:0 auto 4px;display:block;}
-.ref-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--muted2);}
-
-/* Panel idle */
+.ref-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--muted2);}
 #panel-idle{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 14px;gap:14px;text-align:center;}
 .idle-sym{font-size:38px;color:var(--gold-lt);animation:pulse 3.5s ease-in-out infinite;}
-.idle-p{font-family:'Cinzel',serif;font-size:10px;color:var(--muted2);letter-spacing:2px;line-height:2;}
-#results{display:none;flex-direction:column;gap:12px;}
+.idle-p{font-family:'Cinzel',serif;font-size:12px;color:var(--muted2);letter-spacing:2px;line-height:2;}
+#results{display:none;flex-direction:column;gap:14px;}
 #results.show{display:flex;}
-
-footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:2px solid var(--border-dim);font-family:'Cinzel',serif;font-size:8px;color:var(--muted);letter-spacing:4px;background:linear-gradient(135deg,#fff9e0,#ffeea0);}
+footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:2px solid var(--border-dim);font-family:'Cinzel',serif;font-size:10px;color:var(--muted);letter-spacing:4px;background:linear-gradient(135deg,#fff9e0,#ffeea0);}
 
 /* ══ KEYFRAMES ══ */
 @keyframes pulse{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
@@ -208,7 +224,7 @@ footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:2px
 }
 @media(max-width:480px){
   .destiny-grid{grid-template-columns:1fr;}
-  .month-grid{grid-template-columns:1fr;}
+  .birth-fields{grid-template-columns:1fr 1fr 1fr;}
 }
 </style>
 </head>
@@ -227,50 +243,41 @@ footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:2px
 
 <!-- ══ HEADER ══ -->
 <header>
-  <div class="hdr-top">
-    <div class="hdr-badge">⚜ AI TƯỚNG SỐ HỌC ⚜</div>
-  </div>
+  <div class="hdr-top"><div class="hdr-badge">⚜ AI TƯỚNG SỐ HỌC ⚜</div></div>
   <div class="hdr-title">Thầy Khởi Phán Tướng AI</div>
   <div class="hdr-sub">Phân tích khuôn mặt · Tỷ lệ vàng Phi 1.618 · Luận giải vận mệnh</div>
 </header>
 
 <main>
-
 <!-- ══ CAMERA SIDE ══ -->
 <div class="camera-side">
-
   <div class="cam-frame" id="camFrame">
     <div class="crnr crnr-tl"></div><div class="crnr crnr-tr"></div>
     <div class="crnr crnr-bl"></div><div class="crnr crnr-br"></div>
     <div class="scan" id="scanLine"></div>
     <video id="video" autoplay muted playsinline webkit-playsinline></video>
     <canvas id="faceCanvas"></canvas>
-
     <div id="idle-msg">
       <div class="idle-icon">👁️</div>
       <div class="idle-text">Hướng mặt thẳng vào camera<br>Giữ nguyên để quét tướng số</div>
     </div>
-
     <div id="scan-overlay">
       <div class="scan-ring"></div>
       <div id="scan-count">5</div>
       <div class="scan-label">Thầy Khởi đang xem<br>đừng cử động, giữ nguyên tư thế</div>
     </div>
-
     <div id="done-overlay">
       <div class="done-check">✅</div>
       <div class="done-title">Đã quét xong!</div>
       <div class="done-sub">Mời quý khách xem chỉ số bên dưới</div>
       <button class="done-btn" onclick="hideDone()">▼ XEM KẾT QUẢ</button>
     </div>
-
     <div id="score-overlay">
       <div class="score-num" id="scoreNum">—</div>
       <div class="score-unit">TƯỚNG SỐ / 100</div>
     </div>
   </div>
 
-  <!-- Buttons -->
   <div class="cam-controls">
     <button class="btn-primary" id="btnCam" onclick="startCamera()">▶ KÍCH HOẠT CAMERA</button>
     <button class="btn-reset" id="btnReset" onclick="resetSession()" style="display:none;">🗑 XÓA — QUÉT NGƯỜI KHÁC</button>
@@ -279,13 +286,20 @@ footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:2px
     <span id="gIcon">⚥</span><span id="gText">—</span><span id="gAge"></span>
   </div>
 
-  <!-- Audio controls -->
+  <!-- ══ AUDIO BAR — ENHANCED ══ -->
   <div class="audio-bar" id="audioBar">
-    <button class="audio-btn" onclick="readFullReport()"><span class="audio-icon">🔊</span> ĐỌC TOÀN BỘ BÁO CÁO</button>
-    <button class="audio-btn stop" onclick="stopReading()"><span class="audio-icon">⏹</span> DỪNG</button>
+    <div class="audio-bar-title">🔊 GIỌNG THẦY KHỞI PHÁN</div>
+    <div class="audio-row">
+      <button class="audio-btn" id="btnRead" onclick="readFullReport()">
+        <span class="audio-icon">▶</span> ĐỌC TOÀN BỘ
+      </button>
+      <button class="audio-btn stop" onclick="stopReading()">
+        <span class="audio-icon">⏹</span> DỪNG
+      </button>
+    </div>
+    <div id="voiceStatus">Nhấn nút để nghe lời phán...</div>
   </div>
-
-</div><!-- /camera-side -->
+</div>
 
 <!-- ══ ANALYSIS SIDE ══ -->
 <div class="analysis-side">
@@ -295,7 +309,6 @@ footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:2px
   </div>
 
   <div id="results">
-
     <!-- Grade -->
     <div class="grade-card">
       <div class="grade-letter" id="gradeLetter" style="color:var(--gold-dk)">—</div>
@@ -317,8 +330,6 @@ footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:2px
           <ellipse cx="21" cy="26" rx="4.5" ry="2.5" stroke="#c8960a" stroke-width=".9" fill="none"/>
           <ellipse cx="35" cy="26" rx="4.5" ry="2.5" stroke="#c8960a" stroke-width=".9" fill="none"/>
           <path d="M22 44 Q28 48 34 44" stroke="#c8960a" stroke-width="1.1" fill="none"/>
-          <path d="M16 21 Q21 19 26 21" stroke="#c8960a" stroke-width=".9" fill="none"/>
-          <path d="M30 21 Q35 19 40 21" stroke="#c8960a" stroke-width=".9" fill="none"/>
           <text x="28" y="63" text-anchor="middle" font-family="Cinzel,serif" font-size="5" fill="#8a6400" letter-spacing="2">1.618</text>
         </svg>
         <div class="ref-lbl">NAM CHUẨN</div>
@@ -331,8 +342,6 @@ footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:2px
           <ellipse cx="21" cy="25" rx="5" ry="3.2" stroke="#c0180c" stroke-width=".9" fill="none"/>
           <ellipse cx="35" cy="25" rx="5" ry="3.2" stroke="#c0180c" stroke-width=".9" fill="none"/>
           <path d="M21 42 Q28 47 35 42" stroke="#c0180c" stroke-width="1.1" fill="none"/>
-          <path d="M16 20 Q21 17 26 20" stroke="#c0180c" stroke-width=".9" fill="none"/>
-          <path d="M30 20 Q35 17 40 20" stroke="#c0180c" stroke-width=".9" fill="none"/>
           <text x="28" y="63" text-anchor="middle" font-family="Cinzel,serif" font-size="5" fill="#c0180c" letter-spacing="2">1.618</text>
         </svg>
         <div class="ref-lbl" style="color:#c0180c">NỮ CHUẨN</div>
@@ -377,7 +386,7 @@ footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:2px
     <div class="metrics-block">
       <div class="master-header" style="margin-bottom:4px;">
         <span class="master-icon">📐</span>
-        <span class="master-title" style="font-size:11px;">Tỷ Lệ Vàng Phi · Ngũ Quan</span>
+        <span class="master-title" style="font-size:13px;">Tỷ Lệ Vàng Phi · Ngũ Quan</span>
       </div>
       <div class="metric-row"><div class="mr-header"><span class="mr-name">Hình Dáng Khuôn Mặt</span><span class="mr-score" id="mFace">—</span></div><div class="bar-bg"><div class="bar-fill" id="bFace"></div></div><div class="mr-desc" id="dFace">Đang chờ...</div></div>
       <div class="metric-row"><div class="mr-header"><span class="mr-name">Đôi Mắt · Thần Quang</span><span class="mr-score" id="mEyes">—</span></div><div class="bar-bg"><div class="bar-fill" id="bEyes"></div></div><div class="mr-desc" id="dEyes">Đang chờ...</div></div>
@@ -392,20 +401,48 @@ footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:2px
     <div class="month-block">
       <div class="master-header" style="margin-bottom:0;">
         <span class="master-icon">📅</span>
-        <span class="master-title" style="font-size:11px;">Vận Hạn Từng Tháng Năm 2025</span>
+        <span class="master-title" style="font-size:13px;">Vận Hạn Từng Tháng Năm 2025–2026</span>
       </div>
-      <div class="month-grid" id="monthGrid">
-        <!-- Filled by JS -->
-      </div>
+      <div class="month-grid" id="monthGrid"></div>
     </div>
 
   </div><!-- /results -->
+
+  <!-- ══ BIRTH DATE SECTION — ALWAYS VISIBLE ══ -->
+  <div class="sect-title">Phân Tích Ngày Tháng Năm Sinh</div>
+  <div class="birth-block">
+    <div class="master-header" style="margin-bottom:8px;">
+      <span class="master-icon">🗓️</span>
+      <span class="master-title" style="font-size:13px;color:#0050a0;">Số Học Vận Mệnh</span>
+      <span class="master-badge" style="background:linear-gradient(135deg,#0050a0,#0078d4);">NUMEROLOGY</span>
+    </div>
+    <p style="font-size:13px;color:var(--muted2);line-height:1.7;margin-bottom:10px;">Nhập ngày tháng năm sinh để xem Số Chủ Đạo, Năm Vận và dự đoán chi tiết từng tháng theo Thần Số Học.</p>
+    <div class="birth-input-wrap">
+      <div class="birth-fields">
+        <div class="birth-field">
+          <label>NGÀY</label>
+          <input type="number" id="bDay" min="1" max="31" placeholder="DD" maxlength="2"/>
+        </div>
+        <div class="birth-field">
+          <label>THÁNG</label>
+          <input type="number" id="bMonth" min="1" max="12" placeholder="MM" maxlength="2"/>
+        </div>
+        <div class="birth-field">
+          <label>NĂM</label>
+          <input type="number" id="bYear" min="1900" max="2015" placeholder="YYYY" maxlength="4"/>
+        </div>
+      </div>
+      <button class="btn-birth" onclick="analyzeBirth()">✦ PHÂN TÍCH VẬN MỆNH ✦</button>
+    </div>
+    <div id="birthResults"></div>
+  </div>
+
 </div><!-- /analysis-side -->
 </main>
 
 <footer>⬡ THẦY KHỞI PHÁN TƯỚNG AI · TỶ LỆ VÀNG PHI 1.618 · XEM TƯỚNG NHƯ THẦY ⬡</footer>
 
-<!-- ══ LOAD face-api.js multi-CDN ══ -->
+<!-- face-api.js -->
 <script>
 (function(){
   var CDNS=[
@@ -437,7 +474,6 @@ footer{position:relative;z-index:5;text-align:center;padding:10px;border-top:2px
 })();
 </script>
 
-<!-- ══ APP ══ -->
 <script>
 var MODEL_URLS=[
   'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights',
@@ -445,71 +481,165 @@ var MODEL_URLS=[
 ];
 var PHI=1.618033988;
 
-/* ── LOADING BAR ── */
 function setLdBar(pct){
   document.getElementById('ld-bar').style.width=pct+'%';
   document.getElementById('ld-pct').textContent=pct+'%';
 }
 
-/* ── TEXT DATA ── */
+/* ══ TEXT DATA — EXPANDED ══ */
 var MONTHS=['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 var MONTH_ICONS=['❄️','🌸','🌿','🌺','☀️','🔥','🌊','⛅','🍂','🌾','🌙','⭐'];
 
 var DB={
   personality:{
-    hi:["Khí chất cao quý, nhân hậu đức độ — mệnh có quý nhân phù trợ trọn đời.","Thông tuệ xuất chúng, lãnh đạo thiên bẩm, sự nghiệp hiển hách vinh danh.","Tướng phú quý vẹn toàn, tâm địa thiện lương, được bốn phương kính nể."],
-    md:["Cần cù kiên nhẫn — vận may đến muộn nhưng bền vững chắc chắn.","Tính tình thẳng thắn, trọng nghĩa tình, bạn bè tốt đồng hành.","Tư chất thông minh, nỗ lực ắt đạt thành tựu xứng đáng."],
-    lo:["Lao khổ rèn ý chí — tích đức hành thiện có thể cải số phận.","Chí hướng mạnh mẽ, vượt thử thách để gặt hái thành công.","Tướng số là khởi điểm — nội tâm tu dưỡng quyết định vận mệnh."]
+    hi:[
+      "Khí chất cao quý, nhân hậu đức độ — mệnh có quý nhân phù trợ trọn đời. Bản tính rộng lượng, sẵn lòng giúp đỡ người khác nên được lòng mọi người. Đây là tướng của bậc lãnh đạo thiên bẩm, dễ được cất nhắc trong sự nghiệp.",
+      "Thông tuệ xuất chúng, tư duy nhạy bén, khả năng lãnh đạo và định hướng tuyệt vời. Cảm xúc phong phú, biết đồng cảm, dễ tạo dựng mối quan hệ sâu sắc bền lâu. Người này thường trở thành trụ cột trong gia đình và xã hội.",
+      "Tướng phú quý vẹn toàn, tâm địa thiện lương, được bốn phương kính nể tin tưởng. Không chỉ thành công trong sự nghiệp mà còn hạnh phúc trong tình duyên và gia đạo. Đây là tướng hiếm gặp — thiên phú về cả trí tuệ lẫn phúc đức."
+    ],
+    md:[
+      "Cần cù kiên nhẫn — vận may đến muộn nhưng bền vững chắc chắn và không dễ mất đi. Người thực tế, không thích hào nhoáng, chú trọng vào giá trị thực chất trong mọi việc. Tính trung thực và đáng tin cậy là vũ khí lớn nhất trên con đường sự nghiệp.",
+      "Tính tình thẳng thắn, trọng nghĩa tình, bạn bè tốt luôn đồng hành trong khó khăn. Dù vận mệnh đôi lúc thăng trầm nhưng bản lĩnh vững vàng giúp vượt qua mọi thử thách. Người này có khả năng biến khó khăn thành cơ hội phát triển đáng kể.",
+      "Tư chất thông minh, học hỏi nhanh, nỗ lực ắt đạt thành tựu xứng đáng với công sức. Cần chú ý mở rộng các mối quan hệ xã hội để có thêm quý nhân hỗ trợ. Nếu kiên trì và định hướng đúng, con đường phía trước rất rộng mở."
+    ],
+    lo:[
+      "Lao khổ rèn ý chí — tích đức hành thiện có thể cải số phận một cách tốt đẹp. Người này có sức chịu đựng phi thường và khả năng phục hồi mạnh mẽ sau mỗi thất bại. Kinh nghiệm gian nan từ quá khứ chính là kho báu quý giá cho tương lai.",
+      "Chí hướng mạnh mẽ, không khuất phục nghịch cảnh, vượt mọi thử thách để gặt hái thành công. Cần tu dưỡng tâm tính, tránh nóng vội và cẩn thận trong các quyết định quan trọng. Lịch sử đã chứng minh nhiều vĩ nhân tướng mạo bình thường vẫn thành danh nhờ ý chí.",
+      "Tướng số là khởi điểm — nội tâm tu dưỡng và hành động đúng đắn quyết định vận mệnh. Cần tránh những cám dỗ ngắn hạn và đầu tư vào việc xây dựng nền tảng bền vững lâu dài. Chú trọng sức khỏe và tinh thần để có đủ năng lượng vượt qua những giai đoạn khó khăn."
+    ]
   },
   early:{
-    hi:["Tiền vận hanh thông, gia đình hòa thuận, học hành xuất sắc.","Thuở nhỏ được yêu thương, nền tảng vững chắc, tương lai rộng mở.","Thời trẻ gặp thầy giỏi, học vấn rộng mở, tiền đồ rực rỡ."],
-    md:["Tiền vận vất vả nhưng tích lũy kinh nghiệm quý báu.","Tuổi trẻ nhiều thử thách, rèn ý chí bản lĩnh vững vàng.","Tiền vận trung bình, kiên trì xây dựng nền tảng bền vững."],
-    lo:["Tiền vận gian nan rèn ý chí kiên cường — hậu vận bù đắp.","Thuở nhỏ khó khăn — chính thử thách tạo nên tính cách mạnh.","Tiền vận vất vả, học cân bằng và tìm hỗ trợ từ người thân."]
+    hi:[
+      "Tiền vận hanh thông, gia đình hòa thuận, học hành xuất sắc được thầy cô yêu mến. Từ nhỏ đã thể hiện tố chất lãnh đạo và khả năng tư duy vượt trội so với bạn bè đồng trang lứa. Nền tảng vững chắc từ thuở ấu thơ là bệ phóng cho những thành công về sau.",
+      "Thuở nhỏ được yêu thương, nền tảng giáo dục vững chắc, tương lai rộng mở nhiều triển vọng. Gia đình có điều kiện hỗ trợ tốt, giúp phát triển tài năng một cách toàn diện và sâu sắc. Những kỷ niệm đẹp thời ấu thơ là nguồn cảm hứng và sức mạnh trong cuộc sống.",
+      "Thời trẻ gặp thầy giỏi, học vấn rộng mở, tiền đồ rực rỡ với nhiều cơ hội quý báu. Sự đầu tư đúng đắn trong giai đoạn này tạo ra nền tảng vững chắc cho toàn bộ cuộc đời. Đây là tướng của người hội tụ đủ thiên thời địa lợi nhân hòa từ bước đầu."
+    ],
+    md:[
+      "Tiền vận vất vả nhưng tích lũy kinh nghiệm quý báu, trưởng thành sớm hơn bạn bè cùng lứa. Những khó khăn thuở nhỏ rèn giũa tính cách mạnh mẽ và khả năng thích ứng linh hoạt. Chính nhờ vượt qua gian nan sớm mà sau này ứng phó tốt với mọi tình huống.",
+      "Tuổi trẻ nhiều thử thách, rèn ý chí bản lĩnh vững vàng và tinh thần tự lập mạnh mẽ. Dù không được thuận lợi từ đầu nhưng sự kiên trì và ý chí vươn lên là điểm sáng nổi bật. Những bài học từ giai đoạn này trở thành vốn quý không thể mua được bằng tiền.",
+      "Tiền vận trung bình, kiên trì xây dựng nền tảng bền vững từng bước một, không nôn nóng. Cần tận dụng tốt các cơ hội học hỏi và mở rộng kiến thức trong giai đoạn đầu đời. Sự chắc chắn và nhẫn nại là phẩm chất đáng quý giúp tiến xa trên con đường dài."
+    ],
+    lo:[
+      "Tiền vận gian nan rèn ý chí kiên cường — hậu vận sẽ bù đắp xứng đáng cho những cố gắng. Những thử thách sớm giúp hình thành tính cách mạnh mẽ và khả năng vượt khó đáng nể. Người trải qua nhiều khó khăn từ nhỏ thường có nền tảng tâm lý vững hơn người thuận lợi.",
+      "Thuở nhỏ khó khăn — chính những thử thách đó tạo nên tính cách mạnh mẽ và đặc biệt. Cần học cách chuyển hóa nỗi đau thành động lực và kinh nghiệm thay vì để nó kéo lùi. Sự cảm thông và thấu hiểu người khác là món quà đặc biệt từ những năm tháng gian nan.",
+      "Tiền vận vất vả, cần học cân bằng và tìm hỗ trợ từ người thân cùng những người tin tưởng. Đừng cô đơn một mình trong khó khăn — mở lòng đón nhận sự giúp đỡ là bước khôn ngoan. Nếu vượt qua được giai đoạn đầu, cuộc sống phía trước sẽ rộng mở và tươi sáng hơn nhiều."
+    ]
   },
   current:{
-    hi:["Vận khí đỉnh cao, tài lộc dồi dào, cơ hội liên tiếp.","Sự nghiệp thăng tiến rực rỡ — đây là giai đoạn vàng son.","Mạnh dạn nắm bắt cơ hội — thành công trong tầm tay."],
-    md:["Vận hạn trung bình, kiên nhẫn nắm bắt thời cơ đúng lúc.","Thời điểm tích lũy, chuẩn bị cho bước ngoặt lớn.","Vận đang chuyển tích cực, giữ vững tinh thần kiên trì."],
-    lo:["Vận hạn cần chú ý, thận trọng quyết định quan trọng.","Giai đoạn thử lửa — giữ bình tĩnh, tìm lời khuyên đúng đắn.","Có trở ngại nhất thời, nhẫn nại tích đức để vượt qua."]
+    hi:[
+      "Vận khí đỉnh cao, tài lộc dồi dào, cơ hội liên tiếp xuất hiện — đây là thời điểm hành động. Sự nghiệp đang ở giai đoạn vàng son, mọi quyết định đúng đắn đều mang lại kết quả vượt mong đợi. Nắm bắt ngay các cơ hội đang đến, đặc biệt trong lĩnh vực đầu tư và mở rộng quan hệ.",
+      "Sự nghiệp thăng tiến rực rỡ — đây là giai đoạn vàng son không nên để lãng phí bất kỳ ngày nào. Tiền tài dồi dào, tình cảm viên mãn, sức khỏe tốt — ba yếu tố cùng hội tụ là điều hiếm có. Hãy dùng vận khí tốt này để xây dựng nền tảng vững chắc cho những giai đoạn tiếp theo.",
+      "Mạnh dạn nắm bắt cơ hội — thành công trong tầm tay nếu quyết đoán và hành động nhanh. Quý nhân đang ở quanh bạn, hãy mở lòng đón nhận sự hỗ trợ và xây dựng mối quan hệ sâu sắc. Đây là thời điểm để thể hiện tài năng và khẳng định vị thế trong lĩnh vực của mình."
+    ],
+    md:[
+      "Vận hạn trung bình, cần kiên nhẫn nắm bắt thời cơ đúng lúc và tích lũy năng lực. Không nên quá nôn nóng hay thay đổi hướng đi đột ngột trong giai đoạn này. Tập trung cải thiện kỹ năng, xây dựng uy tín và mở rộng mạng lưới quan hệ tốt sẽ có ích về sau.",
+      "Thời điểm tích lũy quan trọng, chuẩn bị kỹ càng cho bước ngoặt lớn sắp đến. Vận may chưa đến hết nhưng nền tảng đang được củng cố vững chắc từng ngày. Kiên nhẫn và nhất quán trong mọi việc là chìa khóa để chuyển hóa thế cục hiện tại thành thành công.",
+      "Vận đang chuyển tích cực dần, giữ vững tinh thần kiên trì và không bỏ cuộc giữa chừng. Chú ý giữ gìn sức khỏe và cân bằng giữa công việc, gia đình và bản thân trong giai đoạn này. Cơ hội tốt đang dần hé lộ — hãy chuẩn bị sẵn sàng để đón nhận khi thời cơ chín muồi."
+    ],
+    lo:[
+      "Vận hạn cần chú ý, thận trọng trong các quyết định quan trọng về tài chính và nhân sự. Tránh đầu tư mạo hiểm và không nên tin tưởng người mới quen chưa được kiểm chứng rõ ràng. Giai đoạn này thích hợp để học hỏi, hoàn thiện bản thân hơn là ra quyết định lớn.",
+      "Giai đoạn thử lửa quan trọng — giữ bình tĩnh, tìm lời khuyên đúng đắn trước khi hành động. Sức khỏe và tinh thần cần được chú ý đặc biệt, tránh áp lực quá mức kéo dài. Đây là thời gian để nhìn lại, điều chỉnh chiến lược và chuẩn bị tốt hơn cho tương lai.",
+      "Có trở ngại nhất thời, nhẫn nại tích đức để vượt qua giai đoạn khó khăn này. Đừng để những thất bại ngắn hạn làm mờ đi mục tiêu dài hạn quan trọng. Tìm kiếm sự hỗ trợ từ những người tin cậy và chuyên gia có kinh nghiệm trong lĩnh vực cần thiết."
+    ]
   },
   late:{
-    hi:["Hậu vận cực tốt — an nhàn hưởng phúc, con cháu hiếu thảo.","Về già được kính trọng, sức khỏe tốt, thọ lâu phúc hậu.","Hậu vận rực rỡ, tiếng thơm lưu truyền, gia đạo hưng thịnh."],
-    md:["Hậu vận ổn định, cuộc sống bình yên, con cháu thành đạt.","Về già có người chăm sóc, tâm hồn thanh thản, an lành.","Hậu vận ấm áp, gia đình hòa thuận, hạnh phúc bền vững."],
-    lo:["Hậu vận cần tích đức để cải thiện, chú trọng gia đình.","Tuổi già giữ gìn sức khỏe, củng cố mối quan hệ tốt đẹp.","Kiên trì tu dưỡng đức hạnh, cơ hội cải mệnh còn đó."]
+    hi:[
+      "Hậu vận cực tốt — an nhàn hưởng phúc, con cháu hiếu thảo, cuộc sống đủ đầy hạnh phúc. Tuổi già đến với sức khỏe tốt, tâm hồn thanh thản và được mọi người kính trọng yêu quý. Những gì gieo trồng trong đời sẽ cho trái ngọt vào giai đoạn cuối đời tốt đẹp này.",
+      "Về già được kính trọng, sức khỏe dồi dào, thọ lâu phúc hậu và con đàn cháu đống. Tài sản tích lũy cả đời được bảo toàn và truyền lại cho thế hệ sau một cách viên mãn. Đây là tướng của người có phúc lớn — cuộc đời viên mãn từ đầu đến cuối.",
+      "Hậu vận rực rỡ, tiếng thơm lưu truyền, gia đạo hưng thịnh và danh tiếng được ghi nhận. Con cháu thành đạt, hiếu thảo, mang lại niềm tự hào lớn cho gia đình và dòng họ. Tuổi già sống giữa tình yêu thương của người thân là phần thưởng xứng đáng nhất."
+    ],
+    md:[
+      "Hậu vận ổn định, cuộc sống bình yên, con cháu thành đạt và gia đình êm ấm hạnh phúc. Về già có đủ điều kiện sống thoải mái và được chăm sóc chu đáo bởi những người thân yêu. Tâm hồn thanh thản và cuộc sống giản dị là hạnh phúc đích thực của giai đoạn này.",
+      "Về già có người chăm sóc chu đáo, tâm hồn thanh thản, an lành không lo toan vật chất. Mối quan hệ gia đình bền chặt và tình bạn sâu sắc là tài sản quý nhất lúc tuổi già. Những điều đơn giản trong cuộc sống hàng ngày mang lại niềm vui chân thật và bền vững.",
+      "Hậu vận ấm áp, gia đình hòa thuận, hạnh phúc bền vững dù không quá hiển hách. Sức khỏe được giữ gìn tốt nhờ lối sống lành mạnh và tinh thần lạc quan tích cực. Đây là tướng của người biết sống trọn vẹn từng khoảnh khắc và biết ơn cuộc đời."
+    ],
+    lo:[
+      "Hậu vận cần tích đức để cải thiện, chú trọng gia đình và xây dựng mối quan hệ bền chặt. Đầu tư thời gian cho sức khỏe và tinh thần từ sớm để có nền tảng tốt khi về già. Những điều tốt đẹp gieo trồng từ hôm nay sẽ nở hoa rực rỡ trong những năm tháng cuối đời.",
+      "Tuổi già cần giữ gìn sức khỏe kỹ càng, củng cố mối quan hệ tốt đẹp với người thân. Tránh những lo toan không cần thiết và học cách buông bỏ những điều không thể kiểm soát. Tìm niềm vui trong những điều nhỏ bé hàng ngày là bí quyết sống hạnh phúc ở tuổi già.",
+      "Kiên trì tu dưỡng đức hạnh, cơ hội cải mệnh và tạo hậu vận tốt vẫn còn trong tầm tay. Mỗi hành động tử tế và mỗi lời nói tích cực đều góp phần xây dựng phúc lộc cho tương lai. Đừng bao giờ từ bỏ hy vọng — vận mệnh luôn có thể thay đổi theo chiều hướng tốt hơn."
+    ]
   },
   metrics:{
-    faceShape:{hi:"Khuôn mặt tỷ lệ vàng hoàn hảo, hình oval chuẩn Phi — tướng phú quý hiển hách.",md:"Khuôn mặt cân đối, tỷ lệ hài hòa — cuộc sống ổn định sung túc.",lo:"Khuôn mặt chưa đạt tỷ lệ lý tưởng — cần rèn luyện phát huy tiềm năng."},
-    eyes:{hi:"Đôi mắt sáng, khoảng cách lý tưởng — thông minh, quý nhân phù trợ.",md:"Đôi mắt bình thường — nội tâm phong phú, cần phát huy trực giác thiên bẩm.",lo:"Đôi mắt cần chú ý — rèn luyện tập trung và nhìn nhận đa chiều."},
-    nose:{hi:"Mũi thẳng đứng đắn, đầu mũi tròn — tài lộc dồi dào, kinh doanh phát đạt.",md:"Mũi cân đối — tài lộc ổn định, biết tính toán, vật chất không thiếu.",lo:"Mũi chưa đạt chuẩn — cẩn thận tài chính, tránh đầu cơ mạo hiểm."},
-    mouth:{hi:"Miệng chuẩn, môi đầy đặn — khẩu phúc tốt, giao tiếp thành công.",md:"Miệng cân đối — giao tiếp tốt, khéo léo trong quan hệ xã hội.",lo:"Miệng chưa đạt tỷ lệ — chú ý lời ăn tiếng nói, tránh gây hiểu lầm."},
-    symmetry:{hi:"Đối xứng tuyệt vời — nội tâm cân bằng, sức khỏe bền vững.",md:"Đối xứng khá tốt — tính cách ổn định, cuộc sống bình ổn hạnh phúc.",lo:"Còn bất đối xứng — cần cân bằng nội tâm và các mối quan hệ."},
-    forehead:{hi:"Trán rộng phẳng, ngũ quan chuẩn — thông tuệ sáng tạo, quan lộc hanh thông.",md:"Trán và ngũ quan cân đối — trí tuệ tốt, sự nghiệp từng bước vững vàng.",lo:"Ngũ quan chưa hoàn hảo — phát huy thế mạnh và không ngừng học hỏi."}
+    faceShape:{
+      hi:"Khuôn mặt tỷ lệ vàng hoàn hảo, hình oval chuẩn Phi — tướng phú quý hiển hách hiếm có. Hình dáng khuôn mặt cân đối hoàn hảo thể hiện khí chất cao quý và mệnh vận thượng phẩm.",
+      md:"Khuôn mặt cân đối, tỷ lệ hài hòa — cuộc sống ổn định sung túc không thiếu hụt. Đây là tướng của người sống thực tế, biết cân bằng và tạo dựng cuộc sống vừa ý.",
+      lo:"Khuôn mặt chưa đạt tỷ lệ lý tưởng — cần rèn luyện phát huy tiềm năng còn ẩn giấu. Tỷ lệ khuôn mặt chỉ là một phần, quan trọng hơn là tu dưỡng nội tâm và hành động đúng đắn."
+    },
+    eyes:{
+      hi:"Đôi mắt sáng, khoảng cách lý tưởng theo tỷ lệ Phi — thông minh, quý nhân phù trợ suốt đời. Thần quang trong sáng thể hiện trí tuệ nhạy bén và khả năng nhìn xa trông rộng đặc biệt.",
+      md:"Đôi mắt cân đối — nội tâm phong phú, cần phát huy trực giác thiên bẩm và sự nhạy cảm. Ánh mắt thể hiện tâm tính trung thực, đáng tin cậy và giàu cảm xúc chân thành.",
+      lo:"Đôi mắt cần chú ý đặc biệt — rèn luyện tập trung và nhìn nhận sự vật đa chiều sẽ giúp ích nhiều. Khoảng cách mắt chưa đạt chuẩn có thể ảnh hưởng đến sự rõ ràng trong tư duy và phán đoán."
+    },
+    nose:{
+      hi:"Mũi thẳng đứng đắn, đầu mũi tròn đầy — tài lộc dồi dào, kinh doanh phát đạt như ý. Cầu mũi cao và đường mũi thẳng thể hiện ý chí mạnh mẽ và khả năng tích lũy tài sản bền vững.",
+      md:"Mũi cân đối theo tỷ lệ Phi — tài lộc ổn định, biết tính toán, vật chất không thiếu hụt. Đây là tướng mũi của người biết chi tiêu hợp lý và quản lý tài chính một cách khéo léo.",
+      lo:"Mũi chưa đạt chuẩn tỷ lệ — cẩn thận tài chính, tránh đầu cơ mạo hiểm và vay nợ lớn. Nên tham khảo ý kiến chuyên gia tài chính trước khi đưa ra quyết định đầu tư quan trọng."
+    },
+    mouth:{
+      hi:"Miệng chuẩn tỷ lệ, môi đầy đặn — khẩu phúc tốt, giao tiếp thành công và lời nói có sức nặng. Đây là tướng của người có tài ăn nói, thuyết phục và xây dựng mối quan hệ xã hội rộng rãi.",
+      md:"Miệng cân đối — giao tiếp tốt, khéo léo trong quan hệ xã hội và biết cách ứng xử phù hợp. Lời nói ôn hòa và thái độ chân thành là điểm mạnh giúp tạo dựng uy tín lâu dài.",
+      lo:"Miệng chưa đạt tỷ lệ chuẩn — chú ý lời ăn tiếng nói, tránh gây hiểu lầm trong giao tiếp. Rèn luyện kỹ năng lắng nghe và diễn đạt rõ ràng sẽ cải thiện đáng kể chất lượng các mối quan hệ."
+    },
+    symmetry:{
+      hi:"Đối xứng tuyệt vời theo chuẩn tỷ lệ Phi — nội tâm cân bằng, sức khỏe bền vững, tâm hồn an lạc. Khuôn mặt đối xứng cao thể hiện sự hài hòa giữa lý trí và cảm xúc trong cuộc sống hàng ngày.",
+      md:"Đối xứng khá tốt — tính cách ổn định, cuộc sống bình ổn hạnh phúc và không nhiều biến cố. Sự cân bằng này giúp duy trì các mối quan hệ bền vững và ổn định trong dài hạn.",
+      lo:"Còn bất đối xứng — cần cân bằng nội tâm, điều chỉnh suy nghĩ và cải thiện các mối quan hệ. Thực hành thiền định, yoga hoặc các bài tập cân bằng thân tâm sẽ mang lại lợi ích đáng kể."
+    },
+    forehead:{
+      hi:"Trán rộng phẳng, ngũ quan chuẩn — thông tuệ sáng tạo xuất chúng, quan lộc hanh thông rực rỡ. Trán cao thể hiện khả năng tư duy trừu tượng và tầm nhìn chiến lược vượt trội so với người thường.",
+      md:"Trán và ngũ quan cân đối — trí tuệ tốt, sự nghiệp từng bước vững vàng và ổn định. Khả năng học hỏi nhanh và thích nghi tốt là lợi thế trong môi trường làm việc thay đổi.",
+      lo:"Ngũ quan chưa hoàn hảo — phát huy thế mạnh cá nhân và không ngừng học hỏi mỗi ngày. Trí tuệ và kiến thức là tài sản có thể tích lũy, không bị giới hạn bởi tướng số bẩm sinh."
+    }
   },
   overall:{
-    hi:["Đây là khuôn mặt <b>QUÝ TƯỚNG THƯỢNG PHẨM</b> — tỷ lệ vàng Phi gần đạt chuẩn tuyệt đối. Thần thái sáng suốt, khí chất lãnh đạo thiên bẩm. Mệnh có quý nhân, <em>tài lộc hanh thông</em>, sự nghiệp rực rỡ. Tiền vận thuận lợi, trung vận thăng tiến, hậu vận an nhàn hưởng phúc.",
-     "Khuôn mặt <b>PHÚ QUÝ SONG TOÀN</b> — các vùng ngũ quan đều đạt chuẩn tỷ lệ vàng. Mắt sáng thần linh, mũi thẳng tài lộc, miệng khẩu phúc dồi dào. Người thông tuệ, bản lĩnh, được trời phú <em>khả năng lãnh đạo và thu hút quý nhân</em> phù trợ suốt đời.",
-     "Tướng mạo <b>ĐẶC BIỆT QUÝ PHÁ</b> — tỷ lệ khuôn mặt đạt mức hiếm thấy. Trán rộng trí tuệ vượt trội, mắt thần quang chiếu sáng, ngũ quan hài hòa phong thủy. Cuộc đời được ông trời ưu ái, <em>gặp nhiều may mắn và cơ hội lớn</em> trong sự nghiệp lẫn tình duyên."],
-    md:["Khuôn mặt <b>HẢO TƯỚNG TRUNG CẤP</b> — tỷ lệ vàng Phi đạt mức trung bình khá. Các đường nét ngũ quan khá hài hòa, thể hiện người có <em>phúc lộc ổn định</em>. Cần kiên trì nỗ lực để phát huy hết tiềm năng, vận may đến muộn nhưng bền vững.",
-     "Tướng số <b>TRUNG BÌNH KHÁ</b> — khuôn mặt cân đối, một số vùng đạt tỷ lệ vàng tốt. Người có tính cách thẳng thắn, trọng nghĩa khí, được bạn bè tin yêu. Vận hạn hiện tại đang <em>tích lũy, cần kiên nhẫn chờ thời cơ</em> thuận lợi.",
-     "Khuôn mặt <b>BÌNH THƯỜNG ĐẾN KHÁ</b> — tỷ lệ phi đạt phần lớn nhưng chưa toàn hảo. Cuộc sống ổn định, ít sóng gió, tiền tài không thiếu hụt. Biết phát huy điểm mạnh, <em>vận mệnh hoàn toàn có thể cải thiện</em> đáng kể."],
-    lo:["Khuôn mặt <b>CẦN TU DƯỠNG ĐỨC HẠNH</b> — tỷ lệ vàng Phi chưa đạt nhiều vùng. Nhưng đây không phải tướng xấu tuyệt đối — <em>tích đức, hành thiện và rèn luyện</em> có thể cải được số phận.",
-     "Tướng số <b>LÀO KHỔ RÈN Ý CHÍ</b> — khuôn mặt có nhiều thử thách tỷ lệ. Lịch sử cho thấy nhiều vĩ nhân tướng mạo bình thường mà <em>vẫn thành công nhờ ý chí sắt đá</em>.",
-     "Khuôn mặt <b>THỬ THÁCH VẬN MỆNH</b> — tỷ lệ phi còn nhiều điểm chưa đạt. Người mang tướng này trải qua gian nan để trưởng thành. <em>Sự kiên cường trong nghịch cảnh</em> chính là tài sản quý giá nhất."]
+    hi:[
+      "Đây là khuôn mặt <b>QUÝ TƯỚNG THƯỢNG PHẨM</b> — tỷ lệ vàng Phi gần đạt chuẩn tuyệt đối, hiếm gặp trong vạn người. Thần thái sáng suốt, khí chất lãnh đạo thiên bẩm, mệnh có quý nhân vây quanh và <em>tài lộc hanh thông</em> đổ về liên tục. Sự nghiệp rực rỡ từ trung vận trở đi, càng đầu tư bản thân thì thành tựu càng lớn. Tiền vận thuận lợi xây nền, trung vận thăng tiến đột phá, hậu vận an nhàn hưởng phúc dồi dào.",
+      "Khuôn mặt <b>PHÚ QUÝ SONG TOÀN</b> — các vùng ngũ quan đều đạt chuẩn tỷ lệ vàng Phi, thể hiện phúc lộc vẹn toàn. Mắt sáng thần linh nhìn xa trông rộng, mũi thẳng tài lộc sung túc, miệng khẩu phúc dồi dào thu hút vận may. Người này thông tuệ, bản lĩnh, được trời phú <em>khả năng lãnh đạo và thu hút quý nhân</em> phù trợ suốt cuộc đời. Trong tình duyên cũng viên mãn, gia đạo hưng thịnh và con cái thành đạt theo cha mẹ.",
+      "Tướng mạo <b>ĐẶC BIỆT QUÝ PHÁ</b> — tỷ lệ khuôn mặt đạt mức hiếm thấy trong số nhiều người được xem. Trán rộng trí tuệ vượt trội, mắt thần quang chiếu sáng, ngũ quan hài hòa theo phong thủy học cổ truyền. Cuộc đời được ông trời ưu ái, <em>gặp nhiều may mắn và cơ hội lớn</em> trong sự nghiệp lẫn tình duyên không ngừng. Hãy tận dụng tốt những điều kiện thiên bẩm tuyệt vời này bằng hành động và sự chuẩn bị kỹ lưỡng."
+    ],
+    md:[
+      "Khuôn mặt <b>HẢO TƯỚNG TRUNG CẤP</b> — tỷ lệ vàng Phi đạt mức trung bình khá, nhiều vùng hài hòa cân đối. Các đường nét ngũ quan khá đẹp, thể hiện người có <em>phúc lộc ổn định</em> và cuộc sống không thiếu thốn. Cần kiên trì nỗ lực để phát huy hết tiềm năng, vận may đến muộn nhưng rất bền vững và chắc chắn. Thành công không phải tự nhiên mà đến — đây là tướng của người cần nỗ lực nhưng nhất định sẽ được đền đáp xứng đáng.",
+      "Tướng số <b>TRUNG BÌNH KHÁ</b> — khuôn mặt cân đối, một số vùng đạt tỷ lệ vàng tốt đáng ghi nhận. Người có tính cách thẳng thắn, trọng nghĩa khí, được bạn bè tin yêu và đồng nghiệp tôn trọng. Vận hạn hiện tại đang <em>tích lũy, cần kiên nhẫn chờ thời cơ</em> thuận lợi rồi hành động quyết đoán. Đừng nản lòng khi chưa thấy kết quả ngay — mọi hạt giống tốt đều cần thời gian để nảy mầm và lớn mạnh.",
+      "Khuôn mặt <b>BÌNH THƯỜNG ĐẾN KHÁ</b> — tỷ lệ phi đạt phần lớn nhưng chưa toàn hảo ở một số điểm. Cuộc sống ổn định, ít sóng gió lớn, tiền tài không thiếu hụt nếu biết quản lý hợp lý. Biết phát huy điểm mạnh và bổ sung điểm yếu, <em>vận mệnh hoàn toàn có thể cải thiện</em> đáng kể theo thời gian. Tư duy tích cực và hành động kiên định mỗi ngày là con đường ngắn nhất đến cuộc sống mơ ước."
+    ],
+    lo:[
+      "Khuôn mặt <b>CẦN TU DƯỠNG ĐỨC HẠNH</b> — tỷ lệ vàng Phi chưa đạt nhiều vùng nhưng đây không phải tướng xấu tuyệt đối. <em>Tích đức, hành thiện và rèn luyện</em> không ngừng có thể cải được số phận theo hướng tích cực. Nhiều bậc thành nhân trong lịch sử xuất phát từ điều kiện khó khăn nhưng nhờ ý chí vẫn vươn lên mạnh mẽ. Hãy xem đây là thử thách giúp bạn mạnh mẽ hơn, không phải rào cản không thể vượt qua.",
+      "Tướng số <b>LÀO KHỔ RÈN Ý CHÍ</b> — khuôn mặt có nhiều thử thách tỷ lệ nhưng tiềm năng bên trong rất lớn. Lịch sử cho thấy nhiều vĩ nhân tướng mạo bình thường mà <em>vẫn thành công nhờ ý chí sắt đá</em> không khuất phục. Sức mạnh thực sự không nằm ở ngoại hình mà nằm ở quyết tâm, sự kiên định và lòng dũng cảm hành động. Đây là cơ hội để chứng minh rằng vận mệnh có thể thay đổi bằng chính đôi tay và trí tuệ của mình.",
+      "Khuôn mặt <b>THỬ THÁCH VẬN MỆNH</b> — tỷ lệ phi còn nhiều điểm chưa đạt nhưng đó không phải là kết thúc. Người mang tướng này trải qua gian nan để trưởng thành và tích lũy sức mạnh phi thường. <em>Sự kiên cường trong nghịch cảnh</em> chính là tài sản quý giá nhất không ai có thể lấy đi. Với nỗ lực đúng hướng và tâm thế đúng đắn, cuộc đời của bạn hoàn toàn có thể viết lại theo chiều hướng tươi sáng hơn."
+    ]
   }
 };
 
-/* 12-month predictions seeded by total score */
+/* ══ 12-MONTH PREDICTIONS — EXPANDED ══ */
 function genMonths(totalScore){
   var now=new Date();
-  var curMonth=now.getMonth(); // 0-indexed
+  var curMonth=now.getMonth();
   var tiers=[
-    {tag:'good',label:'Hanh thông',texts:['Tài lộc hanh thông, gặp quý nhân hỗ trợ, sự nghiệp thuận lợi.','Đây là tháng vàng — mạnh dạn ra quyết định và nắm bắt cơ hội.','Tiền tài đổ vào, gia đạo hòa thuận, sức khỏe dồi dào.']},
-    {tag:'ok',label:'Bình thường',texts:['Vận hạn bình ổn, không có biến động lớn, cần duy trì nhịp sống.','Tháng tích lũy — chuẩn bị cho giai đoạn bứt phá sắp tới.','Giữ vững tinh thần, không nên mạo hiểm, ổn định là chìa khóa.']},
-    {tag:'care',label:'Cần chú ý',texts:['Tháng cần cẩn trọng — tránh đầu tư lớn, chú ý sức khỏe.','Coi chừng tiểu nhân — giữ miệng, tránh tranh cãi không đáng.','Vận hạn có phần khó khăn, nhẫn nại và kiên trì vượt qua.']}
+    {tag:'good',label:'Hanh thông',texts:[
+      'Tài lộc hanh thông, gặp quý nhân hỗ trợ đúng lúc, cơ hội sự nghiệp xuất hiện rõ rệt. Đây là tháng tốt để ký kết hợp đồng, mở rộng kinh doanh hoặc đầu tư vào các lĩnh vực tiềm năng. Tình cảm cũng viên mãn — mối quan hệ được vun đắp và phát triển theo chiều hướng tích cực.',
+      'Tháng vàng son — mạnh dạn ra quyết định quan trọng và nắm bắt cơ hội chín muồi trước mắt. Tài chính cải thiện rõ rệt, có thể nhận được khoản thu nhập ngoài dự kiến hoặc thưởng bất ngờ. Năng lượng dồi dào giúp hoàn thành nhiều công việc tồn đọng một cách hiệu quả.',
+      'Tiền tài đổ vào đều đặn, gia đạo hòa thuận, sức khỏe dồi dào và tinh thần sảng khoái. Mọi kế hoạch đang triển khai đều tiến triển thuận lợi và vượt chỉ tiêu đề ra từ trước. Đây là thời điểm lý tưởng để mở rộng mạng lưới quan hệ và đặt nền tảng cho thành công dài hạn.',
+      'Sự nghiệp bứt phá mạnh mẽ, được cấp trên ghi nhận và đánh giá cao những đóng góp của bạn. Cơ hội thăng tiến hoặc nhận dự án quan trọng xuất hiện — hãy sẵn sàng và tự tin nắm lấy. Gia đình cũng có tin vui, không khí đầm ấm và hạnh phúc bao trùm ngôi nhà.',
+      'Vận mệnh xoay chiều thuận lợi, mọi rào cản cũ dần được tháo gỡ một cách tự nhiên. Được sự hỗ trợ mạnh mẽ từ người thân và đồng nghiệp tin cậy trong các dự án quan trọng. Tháng này đặc biệt tốt cho các quyết định về nhà đất, hôn nhân và các đầu tư dài hạn.'
+    ]},
+    {tag:'ok',label:'Bình thường',texts:[
+      'Vận hạn bình ổn, không có biến động lớn — duy trì nhịp sống ổn định và kiên trì với kế hoạch. Tập trung hoàn thiện công việc hiện tại thay vì xáo trộn hướng đi trong tháng này. Đây là thời gian tốt để học hỏi, nâng cao kỹ năng và chuẩn bị cho bước ngoặt sắp tới.',
+      'Tháng tích lũy quan trọng — chuẩn bị tốt về kiến thức, mối quan hệ và tài chính cho giai đoạn bứt phá. Không nên mong đợi kết quả ngay lập tức, hãy kiên nhẫn với từng bước đi nhỏ hàng ngày. Chú ý chăm sóc sức khỏe và dành thời gian cho gia đình để tái nạp năng lượng.',
+      'Giữ vững tinh thần, không nên mạo hiểm đột xuất, ổn định là chìa khóa của tháng này. Mọi quyết định cần cân nhắc kỹ trước khi hành động — tránh bốc đồng hoặc nghe theo người khác mà không suy nghĩ. Tháng bình thường nhưng vẫn có những niềm vui nho nhỏ đáng trân trọng trong cuộc sống.',
+      'Tiến độ chậm nhưng chắc — mỗi bước tiến nhỏ đều có giá trị và đang xây dựng nên thành công lớn. Tránh so sánh bản thân với người khác, tập trung vào hành trình của riêng mình là khôn ngoan nhất. Dành thời gian suy ngẫm và điều chỉnh chiến lược để sẵn sàng cho cơ hội tiếp theo.',
+      'Tháng trung bình nhưng có nhiều bài học giá trị nếu biết quan sát và học hỏi từ mọi tình huống. Mối quan hệ cần được chú ý và vun đắp — một cuộc gặp gỡ thân thiện có thể mở ra cơ hội bất ngờ. Chú ý cân bằng giữa công việc và cuộc sống cá nhân để duy trì sức khỏe lâu dài.'
+    ]},
+    {tag:'care',label:'Cần chú ý',texts:[
+      'Tháng cần cẩn trọng đặc biệt — tránh đầu tư lớn, vay nợ mới và chú ý sức khỏe cẩn thận. Kiểm tra lại các hợp đồng và thỏa thuận hiện có trước khi ký kết thêm bất cứ điều gì mới. Giữ tâm lý bình tĩnh và không để áp lực bên ngoài ảnh hưởng đến các quyết định quan trọng.',
+      'Coi chừng tiểu nhân thị phi — giữ miệng cẩn thận, tránh tranh cãi không cần thiết với đồng nghiệp. Thông tin quan trọng cần kiểm chứng kỹ trước khi tin tưởng và hành động theo. Tháng này nên giữ khoảng cách với những người có ý định không tốt đang xung quanh.',
+      'Vận hạn có phần khó khăn tạm thời — nhẫn nại, kiên trì và nhớ rằng đây chỉ là giai đoạn qua đi. Tập trung vào những gì bạn có thể kiểm soát được và buông bỏ những gì nằm ngoài tầm tay. Sức khỏe cần chú ý đặc biệt — đừng bỏ qua các triệu chứng khác thường của cơ thể.',
+      'Cẩn thận trong các giao dịch tài chính và không tiết lộ thông tin cá nhân cho người không tin tưởng. Tránh đưa ra quyết định lớn khi đang trong trạng thái cảm xúc không ổn định hoặc mệt mỏi. Đây là thời điểm cần hỏi ý kiến người đáng tin trước khi hành động về những vấn đề quan trọng.',
+      'Tháng cần thận trọng trong mọi mặt — công việc, tài chính và các mối quan hệ đều cần sự tỉnh táo. Dành thêm thời gian cho bản thân để nghỉ ngơi, phục hồi năng lượng và sắp xếp lại suy nghĩ. Nhớ rằng sau mưa trời lại sáng — giai đoạn khó khăn này sẽ qua và tạo nền cho thành công tiếp theo.'
+    ]}
   ];
   var arr=[];
   for(var m=0;m<12;m++){
     var idx=(m+curMonth)%12;
-    // seed based on score + month
     var seed=(totalScore*7+m*13+idx*3)%100;
     var tier;
     if(totalScore>=75) tier=seed<55?0:(seed<80?1:2);
@@ -526,7 +656,7 @@ function renderMonths(totalScore){
   var arr=genMonths(totalScore);
   var html='';
   arr.forEach(function(m){
-    html+='<div class="month-cell"><div class="mc-month">'+m.month+'</div><span class="mc-star">'+m.icon+'</span><div class="mc-text">'+m.text+'</div><span class="mc-tag '+m.tag+'">'+m.label+'</span></div>';
+    html+='<div class="month-cell"><div class="mc-month">'+m.month+'<span class="mc-star">'+m.icon+'</span></div><div class="mc-text">'+m.text+'</div><span class="mc-tag '+m.tag+'">'+m.label+'</span></div>';
   });
   document.getElementById('monthGrid').innerHTML=html;
 }
@@ -541,7 +671,173 @@ function metricDesc(key,score){
   return DB.metrics[key][tier];
 }
 
-/* ── SCORING ── */
+/* ══ NUMEROLOGY / BIRTH DATE ══ */
+function reduceNum(n){
+  while(n>9&&n!==11&&n!==22&&n!==33){
+    var s=0;var str=String(n);
+    for(var i=0;i<str.length;i++) s+=parseInt(str[i])||0;
+    n=s;
+  }
+  return n;
+}
+
+var LP_DATA={
+  1:{name:'SỐ 1 — TIÊN PHONG LÃNH ĐẠO',color:'#e8a000',
+    desc:'Số chủ đạo 1 tượng trưng cho sự độc lập, tiên phong và ý chí mạnh mẽ vượt trội. Bạn là người sinh ra để dẫn dắt, có tầm nhìn xa và khả năng tạo ra những điều mới mẻ độc đáo. Sự tự tin và quyết đoán là vũ khí lớn nhất — hãy tin vào bản năng và không ngại thử sức với những thử thách to lớn. Thành công đến khi bạn dám bước đi một mình trên con đường chưa ai đặt chân.',
+    lucky:'Số may: 1, 10, 19, 28 | Màu: Đỏ, Vàng | Ngày tốt: Thứ Hai'},
+  2:{name:'SỐ 2 — HÒA HỢP NGOẠI GIAO',color:'#c0507a',
+    desc:'Số chủ đạo 2 thể hiện sự nhạy cảm tinh tế, khả năng đồng cảm sâu sắc và tài năng hòa giải tuyệt vời. Bạn luôn nhìn thấy hai mặt của mọi vấn đề và có khả năng kết nối con người với nhau một cách tự nhiên. Thành công đến từ hợp tác, teamwork và xây dựng mối quan hệ bền chặt. Hãy tin vào trực giác nhạy bén và đừng cố tình lấn át hay kiểm soát người khác.',
+    lucky:'Số may: 2, 11, 20, 29 | Màu: Cam, Hồng | Ngày tốt: Thứ Hai'},
+  3:{name:'SỐ 3 — SÁNG TẠO BIỂU ĐẠT',color:'#e06000',
+    desc:'Số chủ đạo 3 tràn ngập năng lượng sáng tạo, khả năng giao tiếp cuốn hút và tinh thần lạc quan rực rỡ. Bạn có tài năng nghệ thuật thiên bẩm và khả năng truyền cảm hứng cho người xung quanh một cách dễ dàng. Con đường thành công của bạn nằm ở việc biểu đạt bản thân một cách chân thực và đầy sáng tạo. Tránh phân tán năng lượng vào quá nhiều hướng — tập trung là chìa khóa để tỏa sáng.',
+    lucky:'Số may: 3, 12, 21, 30 | Màu: Vàng, Xanh lá | Ngày tốt: Thứ Tư'},
+  4:{name:'SỐ 4 — KIÊN ĐỊNH NỀN TẢNG',color:'#606060',
+    desc:'Số chủ đạo 4 là biểu tượng của sự ổn định, kỷ luật và khả năng xây dựng nền tảng vững chắc lâu dài. Bạn là người đáng tin cậy tuyệt đối, cần cù chịu khó và có khả năng biến kế hoạch thành thực tế cụ thể. Thành công đến từ sự kiên trì, tổ chức khoa học và không ngại làm việc chăm chỉ mỗi ngày. Học cách linh hoạt hơn và đừng quá cứng nhắc trong những tình huống cần thích nghi nhanh.',
+    lucky:'Số may: 4, 13, 22, 31 | Màu: Xanh lam, Xanh lá | Ngày tốt: Thứ Bảy'},
+  5:{name:'SỐ 5 — TỰ DO PHIÊU LƯU',color:'#0080a0',
+    desc:'Số chủ đạo 5 tượng trưng cho sự tự do, năng động và khát khao trải nghiệm vô bờ bến. Bạn là người đa tài đa năng, thích thay đổi và có khả năng thích nghi với bất kỳ môi trường nào. Con đường thành công của bạn là sự đa dạng, linh hoạt và không ngại mạo hiểm có tính toán. Hãy học cách hoàn thành những điều đã bắt đầu trước khi chuyển sang hướng mới tiếp theo.',
+    lucky:'Số may: 5, 14, 23 | Màu: Xanh thiên, Bạc | Ngày tốt: Thứ Tư'},
+  6:{name:'SỐ 6 — TÌNH YÊU GIA ĐÌNH',color:'#c05000',
+    desc:'Số chủ đạo 6 là biểu tượng của tình yêu vô điều kiện, trách nhiệm và sự chăm sóc chân thành. Bạn có trái tim rộng lớn, luôn đặt gia đình và người thân lên trên hết trong mọi quyết định. Sức mạnh của bạn nằm ở khả năng chữa lành, dạy dỗ và nuôi dưỡng những người xung quanh. Hãy học cách đặt giới hạn lành mạnh để không kiệt sức vì chăm lo cho người khác quá nhiều.',
+    lucky:'Số may: 6, 15, 24 | Màu: Xanh lá, Hồng | Ngày tốt: Thứ Sáu'},
+  7:{name:'SỐ 7 — TRÍ TUỆ TÂM LINH',color:'#5050c0',
+    desc:'Số chủ đạo 7 là con số của tri thức uyên thâm, chiều sâu tâm linh và khả năng nghiên cứu xuất sắc. Bạn có tư duy phân tích sắc bén, trực giác mạnh và thích khám phá những bí ẩn chiều sâu của vạn vật. Con đường thành công là theo đuổi chuyên môn sâu trong lĩnh vực bạn đam mê nhất. Học cách mở lòng chia sẻ với người khác — cô đơn quá mức sẽ cản trở tiềm năng vô hạn của bạn.',
+    lucky:'Số may: 7, 16, 25 | Màu: Tím, Xanh lam | Ngày tốt: Thứ Bảy'},
+  8:{name:'SỐ 8 — QUYỀN LỰC VẬT CHẤT',color:'#8a1a00',
+    desc:'Số chủ đạo 8 tượng trưng cho sức mạnh vô hạn, tham vọng to lớn và khả năng tạo dựng sự giàu có thực sự. Bạn sinh ra để lãnh đạo trong kinh doanh, tài chính và có khả năng quản lý nguồn lực xuất sắc. Thành công đến khi bạn dám nghĩ lớn, hành động mạnh và không để thất bại tạm thời làm nản lòng. Hãy dùng quyền lực và tài sản tích lũy được để tạo ra giá trị thực sự cho xã hội.',
+    lucky:'Số may: 8, 17, 26 | Màu: Đen, Vàng đồng | Ngày tốt: Thứ Bảy'},
+  9:{name:'SỐ 9 — NHÂN ĐẠO HOÀN THÀNH',color:'#0a7050',
+    desc:'Số chủ đạo 9 là con số hoàn hảo — tượng trưng cho sự từ bi, trí tuệ bao la và tinh thần nhân đạo sâu sắc. Bạn có tầm nhìn rộng lớn vượt qua lợi ích cá nhân và luôn nghĩ đến cộng đồng xung quanh. Con đường thành công là cống hiến và phục vụ — bạn được đánh đổi vật chất để lấy ý nghĩa và di sản lớn lao. Học cách buông bỏ những gì không còn phục vụ cho sứ mệnh cao cả của mình.',
+    lucky:'Số may: 9, 18, 27 | Màu: Đỏ, Vàng | Ngày tốt: Thứ Ba'}
+};
+
+var PY_DATA={
+  1:{name:'NĂM CÁ NHÂN 1 — KHỞI ĐẦU MỚI',
+    desc:'Đây là năm mở đầu chu kỳ 9 năm mới — thời điểm tốt nhất để khởi đầu dự án mới, mở ra hướng đi mới táo bạo. Hãy dũng cảm thay đổi, đặt mục tiêu rõ ràng và hành động ngay hôm nay. Mọi sự trì hoãn trong năm này sẽ kéo dài thêm 9 năm nữa — cơ hội tốt chỉ đến một lần.',
+    focus:'Sự nghiệp, Định hướng mới, Phát triển bản thân'},
+  2:{name:'NĂM CÁ NHÂN 2 — HỢP TÁC XÂY DỰNG',
+    desc:'Năm của việc xây dựng mối quan hệ và phát triển qua hợp tác chân thành. Hãy kiên nhẫn với tiến độ chậm — mọi thứ đang âm thầm lớn mạnh bền vững theo thời gian. Chú trọng tình cảm gia đình, tình bạn và các đối tác kinh doanh đáng tin cậy.',
+    focus:'Tình cảm, Hợp tác, Gia đình'},
+  3:{name:'NĂM CÁ NHÂN 3 — SÁNG TẠO BIỂU ĐẠT',
+    desc:'Năm của niềm vui, sáng tạo và giao tiếp rộng rãi với thế giới xung quanh. Hãy thể hiện tài năng, chia sẻ ý tưởng và đừng ngại tỏa sáng trước đám đông. Cơ hội đến qua mạng lưới quan hệ và những cuộc gặp gỡ bất ngờ thú vị.',
+    focus:'Giao tiếp, Sáng tạo, Mạng lưới quan hệ'},
+  4:{name:'NĂM CÁ NHÂN 4 — XÂY NỀN TẢNG',
+    desc:'Năm của sự làm việc chăm chỉ, xây dựng nền tảng vững chắc và đặt kế hoạch dài hạn. Không nên trông đợi may mắn — thành công đến từ nỗ lực kiên trì mỗi ngày. Tập trung vào sức khỏe, tài chính và sắp xếp lại trật tự trong cuộc sống.',
+    focus:'Sức khỏe, Tài chính, Kỷ luật'},
+  5:{name:'NĂM CÁ NHÂN 5 — THAY ĐỔI TỰ DO',
+    desc:'Năm của sự thay đổi lớn, bất ngờ và những cơ hội kỳ lạ đến từ nhiều hướng không ngờ. Hãy linh hoạt, thích nghi nhanh và đón nhận sự thay đổi như một người bạn. Đây là năm mở rộng trải nghiệm — du lịch, học hỏi điều mới và gặp gỡ người thú vị.',
+    focus:'Tự do, Thay đổi, Trải nghiệm mới'},
+  6:{name:'NĂM CÁ NHÂN 6 — TRÁCH NHIỆM TÌNH YÊU',
+    desc:'Năm của gia đình, tình yêu và trách nhiệm với những người thân yêu xung quanh. Nhà cửa, hôn nhân và sức khỏe gia đình là ưu tiên hàng đầu trong năm này. Hãy cho đi vô điều kiện — những gì bạn gieo trồng bằng tình thương sẽ cho quả ngọt bội thu.',
+    focus:'Gia đình, Tình yêu, Sức khỏe'},
+  7:{name:'NĂM CÁ NHÂN 7 — TÂM LINH NGHIÊN CỨU',
+    desc:'Năm của sự tĩnh lặng, chiêm nghiệm sâu sắc và phát triển nội tâm đáng kể. Không phải năm thích hợp cho những quyết định kinh doanh lớn — hãy dành thời gian học hỏi và suy nghĩ. Trực giác và tâm linh của bạn rất nhạy bén trong năm này — hãy lắng nghe tiếng nói bên trong.',
+    focus:'Nghiên cứu, Tâm linh, Phát triển nội tâm'},
+  8:{name:'NĂM CÁ NHÂN 8 — VẬT CHẤT THÀNH CÔNG',
+    desc:'Năm thu hoạch mạnh mẽ sau những năm gieo trồng vất vả — tài chính và sự nghiệp bứt phá. Đây là năm tốt nhất để đầu tư, mở rộng kinh doanh và thăng tiến trong công việc. Hãy dũng cảm, quyết đoán và không bỏ lỡ cơ hội vàng chỉ xuất hiện một lần trong chu kỳ 9 năm.',
+    focus:'Tài chính, Sự nghiệp, Đầu tư'},
+  9:{name:'NĂM CÁ NHÂN 9 — HOÀN THÀNH BUÔNG BỎ',
+    desc:'Năm kết thúc chu kỳ 9 năm — thời điểm để hoàn thành những việc còn dang dở và buông bỏ những gì lỗi thời. Đây không phải lúc bắt đầu dự án lớn mới — hãy dọn dẹp, hoàn tất và chuẩn bị tinh thần cho chu kỳ mới. Cho đi nhiều hơn nhận — sự hào phóng và tấm lòng rộng mở sẽ mang lại phước lành đặc biệt.',
+    focus:'Hoàn thành, Buông bỏ, Phụng sự'}
+};
+
+var PM_TAGS={1:'great',2:'good',3:'great',4:'ok',5:'good',6:'care',7:'ok',8:'great',9:'good',11:'great',22:'great',33:'great'};
+var PM_LABELS={1:'Xuất sắc',2:'Thuận lợi',3:'Xuất sắc',4:'Bình thường',5:'Tốt',6:'Cẩn thận',7:'Tĩnh lặng',8:'Vượt trội',9:'Hoàn thành',11:'Đặc biệt',22:'Vĩ đại',33:'Tâm linh'};
+
+function getPersonalMonthPrediction(pm,py,m){
+  var preds={
+    1:['Tháng khởi đầu mạnh mẽ — hãy hành động ngay với những ý tưởng đang nung nấu. Năng lượng dồi dào, sự tự tin ở mức cao nhất — đây là thời điểm hoàn hảo để ra quyết định. Mọi bước đi đầu tiên trong tháng này đều mang lại kết quả đáng khích lệ và tạo đà cho tháng tiếp theo.'],
+    2:['Tháng của sự nhẫn nại và xây dựng mối quan hệ chân thành với những người quan trọng. Hãy lắng nghe nhiều hơn nói — sự đồng cảm của bạn sẽ mở ra những cánh cửa bất ngờ. Hợp tác tốt hơn làm một mình trong tháng này, hãy tìm đúng người đồng hành phù hợp.',
+     'Tháng cần sự cẩn thận trong giao tiếp — đôi khi im lặng là vàng trong những tình huống nhạy cảm. Tình cảm được củng cố, nhưng tài chính cần quản lý chặt chẽ hơn bình thường.'],
+    3:['Tháng bùng nổ sáng tạo và giao tiếp rộng rãi — hãy chia sẻ ý tưởng và tỏa sáng trước đám đông. Mạng lưới quan hệ mở rộng tự nhiên, những cuộc gặp gỡ thú vị có thể thay đổi hướng đi. Đây là tháng tốt để học kỹ năng mới, tham gia cộng đồng và tận hưởng cuộc sống trọn vẹn.',
+     'Tháng vui vẻ và năng động — hãy tận hưởng nhưng đừng quên những trách nhiệm quan trọng. Cơ hội đến qua các cuộc trò chuyện và sự kiện kết nối xã hội bất ngờ.'],
+    4:['Tháng làm việc chăm chỉ và xây dựng nền tảng — không có đường tắt, chỉ có nỗ lực kiên trì. Hãy tập trung vào các chi tiết nhỏ và hoàn thiện những gì còn chưa xong từ trước. Sức khỏe cần được chú ý đặc biệt — đừng để cơ thể kiệt sức vì áp lực công việc.',
+     'Tháng của kỷ luật và tổ chức — hãy lên kế hoạch rõ ràng và tuân theo từng bước. Tài chính cần quản lý thận trọng, tránh chi tiêu không cần thiết và theo cảm hứng.'],
+    5:['Tháng của sự thay đổi bất ngờ và cơ hội mới — hãy linh hoạt và đón nhận sự khác biệt. Có thể có chuyến đi, sự kiện thú vị hoặc thông tin mới quan trọng đến từ xa. Tháng động, đừng lên kế hoạch quá cứng nhắc — hãy sẵn sàng điều chỉnh theo tình hình.',
+     'Năng lượng cao, sự nhiệt tình tràn đầy — hãy dùng nó cho những mục tiêu xứng đáng. Cẩn thận với những quyết định bốc đồng và những lời hứa khó thực hiện.'],
+    6:['Tháng của gia đình, tình yêu và trách nhiệm — hãy dành thời gian cho những người thân yêu. Giải quyết các vấn đề gia đình chưa được xử lý sẽ mang lại sự nhẹ nhõm và bình yên lớn. Cho đi và chăm sóc người khác sẽ mang lại niềm hạnh phúc thực sự cho bạn trong tháng này.',
+     'Tháng cần cân bằng giữa trách nhiệm và nhu cầu bản thân. Đừng hy sinh bản thân hoàn toàn — tự chăm sóc bản thân mới có thể chăm sóc người khác tốt.'],
+    7:['Tháng của sự tĩnh lặng, học hỏi sâu và phát triển nội tâm đặc biệt có giá trị. Hãy dành thời gian một mình để suy nghĩ, đọc sách và kết nối với trực giác của mình. Không phải tháng thích hợp cho các quyết định kinh doanh lớn — hãy nghiên cứu và chuẩn bị.',
+     'Trực giác rất nhạy bén tháng này — hãy lắng nghe những cảm nhận bên trong thay vì phân tích thuần túy. Những bí ẩn hoặc hiểu lầm trong quá khứ có thể được làm sáng tỏ.'],
+    8:['Tháng của sức mạnh, thành công tài chính và những kết quả rõ rệt sau thời gian chuẩn bị. Hãy mạnh dạn trong kinh doanh, đàm phán và các quyết định tài chính quan trọng. Đây là tháng để thu hoạch — hãy quyết đoán và không để cơ hội vàng trôi qua.',
+     'Quyền lực và ảnh hưởng của bạn ở mức cao nhất trong tháng này — hãy sử dụng khôn ngoan. Thành công vật chất gần tầm tay — kiên trì thêm một bước nữa sẽ đến đích.'],
+    9:['Tháng hoàn thành và buông bỏ — hãy đóng lại những chương cũ không còn phục vụ bạn. Giải quyết dứt điểm những vấn đề tồn đọng để bước sang chu kỳ mới trong sáng hơn. Hào phóng và từ bi trong tháng này sẽ mang lại phước lành đặc biệt khó diễn tả bằng lời.',
+     'Tháng của sự tha thứ — cả với người khác và với chính bản thân mình. Buông bỏ oán giận sẽ giải phóng năng lượng to lớn cho chu kỳ mới sắp đến.'],
+    11:['Tháng của trực giác siêu việt và cảm hứng phi thường hiếm có. Những ý tưởng đột phá và tầm nhìn xa có thể xuất hiện bất ngờ bất cứ lúc nào — hãy ghi chú ngay. Tháng đặc biệt về mặt tinh thần — hãy chú ý đến giấc mơ và những dấu hiệu từ vũ trụ.',
+     'Tháng số chủ 11 — năng lượng đặc biệt và nhạy cảm cao. Có thể cảm thấy quá tải — hãy bảo vệ năng lượng và chọn lọc môi trường xung quanh.'],
+    22:['Tháng của những thành tựu to lớn và hiện thực hóa những giấc mơ tưởng chừng không thể. Năng lượng để xây dựng những điều vĩ đại đang ở đỉnh cao — hãy hành động với tầm nhìn lớn. Đây là tháng hiếm có để biến kế hoạch lớn lao thành hiện thực và tạo di sản.',
+     'Tháng số chủ 22 — khả năng biến giấc mơ thành thực tế rất cao. Hãy hành động can đảm với tầm nhìn dài hạn cho cộng đồng và xã hội.'],
+    33:['Tháng của tình yêu thương vô điều kiện và sự cống hiến tâm linh đặc biệt sâu sắc. Hãy phụng sự với trái tim rộng mở và đừng mong đợi sự đền đáp ngay lập tức. Những hành động xuất phát từ tình yêu trong tháng này sẽ tạo ra sóng lan tỏa diệu kỳ.',
+     'Tháng số chủ 33 — năng lượng chữa lành và dạy dỗ đang ở đỉnh cao. Hãy chia sẻ trí tuệ và tình thương với thế giới xung quanh một cách hết lòng.']
+  };
+  var arr=preds[pm]||preds[9];
+  return arr[m%arr.length];
+}
+
+window.analyzeBirth=function(){
+  var dd=parseInt(document.getElementById('bDay').value)||0;
+  var mm=parseInt(document.getElementById('bMonth').value)||0;
+  var yy=parseInt(document.getElementById('bYear').value)||0;
+  if(!dd||!mm||!yy||dd<1||dd>31||mm<1||mm>12||yy<1900||yy>2015){
+    document.getElementById('birthResults').innerHTML='<p style="color:#c0180c;font-size:14px;padding:10px;text-align:center;">⚠ Vui lòng nhập ngày tháng năm sinh hợp lệ.</p>';
+    document.getElementById('birthResults').style.display='flex';
+    return;
+  }
+  // Life path
+  var allDigits=String(dd)+String(mm)+String(yy);
+  var lpSum=0;
+  for(var i=0;i<allDigits.length;i++) lpSum+=parseInt(allDigits[i])||0;
+  var lp=reduceNum(lpSum);
+  // Personal year (current year 2025)
+  var curYear=new Date().getFullYear();
+  var cyStr=String(curYear);
+  var pySum=dd+mm;
+  for(var j=0;j<cyStr.length;j++) pySum+=parseInt(cyStr[j])||0;
+  var py=reduceNum(pySum);
+  var lpInfo=LP_DATA[lp]||LP_DATA[9];
+  var pyInfo=PY_DATA[py]||PY_DATA[9];
+  // Build 12 months starting from current month
+  var curMon=new Date().getMonth();
+  var monthsHTML='';
+  for(var m=0;m<12;m++){
+    var mIdx=(m+curMon)%12;
+    var pmSum=py+(mIdx+1);
+    var pm=reduceNum(pmSum);
+    var tag=PM_TAGS[pm]||'ok';
+    var lbl=PM_LABELS[pm]||'Ổn định';
+    var txt=getPersonalMonthPrediction(pm,py,m);
+    monthsHTML+='<div class="bmc">'
+      +'<div class="bmc-month">'+MONTHS[mIdx]+'<span class="bmc-num">'+pm+'</span></div>'
+      +'<div class="bmc-text">'+txt+'</div>'
+      +'<span class="bmc-tag '+tag+'">'+lbl+'</span>'
+      +'</div>';
+  }
+  var html='<div class="life-path-card">'
+    +'<div class="lp-number">'+lp+'</div>'
+    +'<div class="lp-name">'+lpInfo.name+'</div>'
+    +'<div class="lp-desc">'+lpInfo.desc+'</div>'
+    +'<div style="margin-top:10px;font-size:12px;color:rgba(255,220,100,.7);font-family:Cinzel,serif;letter-spacing:1px;">'+lpInfo.lucky+'</div>'
+    +'</div>'
+    +'<div class="py-card">'
+    +'<div class="py-row"><div class="py-num">'+py+'</div><div class="py-info"><div class="py-title">NĂM CÁ NHÂN '+curYear+'</div><div style="font-family:Cinzel,serif;font-size:11px;color:rgba(200,170,255,.9);letter-spacing:2px;margin-top:2px;">'+pyInfo.name+'</div></div></div>'
+    +'<div style="font-size:13px;color:rgba(220,200,255,.85);line-height:1.85;font-family:Be Vietnam Pro,sans-serif;">'+pyInfo.desc+'</div>'
+    +'<div style="margin-top:8px;font-size:11px;color:rgba(160,130,220,.8);font-family:Cinzel,serif;letter-spacing:2px;">⭐ Trọng tâm năm: '+pyInfo.focus+'</div>'
+    +'</div>'
+    +'<div class="birth-month-block">'
+    +'<div class="bm-title">📅 Dự Đoán 12 Tháng Theo Thần Số Học</div>'
+    +'<div class="birth-month-grid">'+monthsHTML+'</div>'
+    +'</div>';
+  var res=document.getElementById('birthResults');
+  res.innerHTML=html;
+  res.style.display='flex';
+  res.style.flexDirection='column';
+  res.style.gap='12px';
+  // Speak summary
+  speak('Phân tích xong. Số chủ đạo của bạn là số '+lp+'. '+lpInfo.name+'. Năm cá nhân '+curYear+' là số '+py+'. '+pyInfo.name+'. '+pyInfo.desc.substring(0,120));
+  setTimeout(function(){res.scrollIntoView({behavior:'smooth',block:'start'});},300);
+};
+
+/* ══ SCORING ══ */
 function dist(a,b){return Math.sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y));}
 function scoreR(actual,ideal,tol){
   if(!isFinite(actual))return 50;
@@ -575,7 +871,7 @@ function calcScore(lm,gender){
   return{total:total,faceShape:Math.round(s1),eyes:Math.round(s2),nose:Math.round(s3),mouth:Math.round(s4),symmetry:Math.round(s5),forehead:Math.round(s6),phi:Math.round(scoreR(faceH/faceW,PHI,0.13))};
 }
 
-/* ── COLORS ── */
+/* ══ COLORS ══ */
 function clr(s){
   if(s>=88)return'#c8960a';if(s>=74)return'#0a8020';
   if(s>=60)return'#d06000';if(s>=45)return'#a05010';return'#c0180c';
@@ -594,7 +890,7 @@ function grade(s){
   return{l:'D',t:'CẦN TU DƯỠNG ĐỨC HẠNH',c:'#c0180c'};
 }
 
-/* ── CANVAS ── */
+/* ══ CANVAS ══ */
 function drawFace(dets,vw,vh){
   var canvas=document.getElementById('faceCanvas');
   var ctx=canvas.getContext('2d');
@@ -627,34 +923,50 @@ function drawFace(dets,vw,vh){
   });
 }
 
-/* ── VOICE SPEECH ── */
+/* ══ VOICE — ENHANCED ══ */
 var synth=window.speechSynthesis;
 var currentUtterance=null;
+var isSpeaking=false;
+
+function setVoiceStatus(msg,speaking){
+  var el=document.getElementById('voiceStatus');
+  if(!el)return;
+  el.textContent=msg;
+  if(speaking){el.classList.add('speaking');}else{el.classList.remove('speaking');}
+  var btn=document.getElementById('btnRead');
+  if(btn){
+    if(speaking){btn.classList.add('playing');}else{btn.classList.remove('playing');}
+  }
+}
 
 function speak(txt,onEnd){
-  if(!synth)return;
+  if(!synth){setVoiceStatus('⚠ Trình duyệt không hỗ trợ giọng nói',false);return;}
   stopReading();
-  currentUtterance=new SpeechSynthesisUtterance(txt);
-  currentUtterance.lang='vi-VN';
-  currentUtterance.rate=0.9;
-  currentUtterance.pitch=1.05;
-  // Try to find Vietnamese female voice
+  var u=new SpeechSynthesisUtterance(txt);
+  u.lang='vi-VN';
+  u.rate=0.88;
+  u.pitch=1.05;
+  u.volume=1.0;
   var voices=synth.getVoices();
-  var viVoice=voices.find(function(v){return v.lang==='vi-VN'&&v.name.toLowerCase().indexOf('female')>-1;});
-  if(!viVoice)viVoice=voices.find(function(v){return v.lang==='vi-VN';});
-  if(!viVoice)viVoice=voices.find(function(v){return v.lang.indexOf('vi')>-1;});
-  if(viVoice)currentUtterance.voice=viVoice;
-  if(onEnd)currentUtterance.onend=onEnd;
-  synth.speak(currentUtterance);
+  var v=voices.find(function(x){return x.lang==='vi-VN'&&x.name.toLowerCase().indexOf('female')>-1;});
+  if(!v) v=voices.find(function(x){return x.lang==='vi-VN';});
+  if(!v) v=voices.find(function(x){return x.lang.indexOf('vi')>-1;});
+  if(v) u.voice=v;
+  currentUtterance=u;
+  u.onstart=function(){isSpeaking=true;setVoiceStatus('🔊 Đang đọc...', true);};
+  u.onend=function(){isSpeaking=false;setVoiceStatus('✅ Đã đọc xong',false);currentUtterance=null;if(onEnd)onEnd();};
+  u.onerror=function(){isSpeaking=false;setVoiceStatus('⚠ Lỗi giọng đọc — thử lại hoặc đổi trình duyệt',false);currentUtterance=null;};
+  synth.speak(u);
 }
 
 window.stopReading=function(){
-  if(synth)synth.cancel();
-  currentUtterance=null;
+  if(synth){synth.cancel();}
+  isSpeaking=false;currentUtterance=null;
+  setVoiceStatus('⏹ Đã dừng',false);
 };
 
 window.readFullReport=function(){
-  if(!window._lastScores)return;
+  if(!window._lastScores){setVoiceStatus('⚠ Chưa có kết quả phân tích',false);return;}
   var s=window._lastScores;
   var g=grade(s.total);
   var overall=document.getElementById('overallReading').textContent||'';
@@ -662,20 +974,20 @@ window.readFullReport=function(){
   var early=document.getElementById('rdEarly').textContent||'';
   var current=document.getElementById('rdCurrent').textContent||'';
   var late=document.getElementById('rdLate').textContent||'';
-  var text='Hệ thống đã phân tích xong. '+
+  var text='Thầy Khởi đã phân tích xong khuôn mặt của bạn. '+
     'Điểm tướng số tổng là '+s.total+' trên một trăm điểm. '+
     'Xếp loại: '+g.t+'. '+
     'Tỷ lệ vàng Phi đạt '+s.phi+' phần trăm. '+
-    'Lời phán của Thầy Khởi: '+overall.replace(/<[^>]*>/g,'')+'. '+
+    'Lời phán của Thầy: '+overall.replace(/<[^>]*>/g,'')+'. '+
     'Về tính cách: '+personality+'. '+
     'Tiền vận: '+early+'. '+
     'Vận hạn hiện tại: '+current+'. '+
     'Hậu vận: '+late+'. '+
-    'Điểm ngũ quan: Khuôn mặt '+s.faceShape+' điểm. Đôi mắt '+s.eyes+' điểm. Mũi '+s.nose+' điểm. Miệng '+s.mouth+' điểm. Đối xứng '+s.symmetry+' điểm. Trán ngũ quan '+s.forehead+' điểm.';
+    'Chi tiết ngũ quan: Khuôn mặt '+s.faceShape+' điểm. Đôi mắt '+s.eyes+' điểm. Mũi '+s.nose+' điểm. Miệng '+s.mouth+' điểm. Đối xứng '+s.symmetry+' điểm. Trán ngũ quan '+s.forehead+' điểm.';
   speak(text);
 };
 
-/* ── UI UPDATE ── */
+/* ══ UI UPDATE ══ */
 var lastTotal=-99,readingDone=false,scanDone=false;
 var scanTimer=null,scanCounter=0;
 
@@ -726,6 +1038,7 @@ function updateUI(scores,gender,age){
     renderMonths(scores.total);
     document.getElementById('audioBar').classList.add('show');
     document.getElementById('btnReset').style.display='block';
+    setVoiceStatus('Nhấn ▶ ĐỌC TOÀN BỘ để nghe Thầy phán',false);
   }
   document.getElementById('scanLine').classList.add('on');
   document.getElementById('idle-msg').classList.add('off');
@@ -738,27 +1051,21 @@ function resetUI(){
   document.getElementById('genderPill').classList.remove('on');
 }
 
-/* ── RESET SESSION ── */
 window.resetSession=function(){
   stopReading();
-  // Reset scan state
   scanDone=false;readingDone=false;lastTotal=-99;
   if(scanTimer){clearInterval(scanTimer);scanTimer=null;}
   document.getElementById('scan-overlay').classList.remove('on');
   document.getElementById('done-overlay').classList.remove('on');
-  // Reset UI
   resetUI();
   document.getElementById('results').classList.remove('show');
   document.getElementById('panel-idle').style.display='';
   document.getElementById('audioBar').classList.remove('show');
   document.getElementById('btnReset').style.display='none';
-  // Show announcement
   speak('Đã xóa kết quả. Mời người tiếp theo vào khung hình.');
-  // Resume detection
   isRunning=true;
 };
 
-/* ── 5s SCAN ── */
 function startScanCountdown(){
   if(scanTimer)return;
   var overlay=document.getElementById('scan-overlay');
@@ -784,8 +1091,7 @@ function cancelScanCountdown(){
 }
 
 function showDone(){
-  scanDone=true;
-  isRunning=false;
+  scanDone=true;isRunning=false;
   document.getElementById('scanLine').classList.remove('on');
   document.getElementById('done-overlay').classList.add('on');
   speak('Đã phân tích xong. Mời quý khách xem chỉ số bên dưới.');
@@ -797,7 +1103,7 @@ window.hideDone=function(){
   if(res)res.scrollIntoView({behavior:'smooth',block:'start'});
 };
 
-/* ── MODEL LOAD ── */
+/* ══ MODEL LOAD ══ */
 async function loadModels(){
   var status=document.getElementById('ld-status');
   var labels=['jsDelivr CDN','GitHub Raw'];
@@ -835,7 +1141,7 @@ async function loadModels(){
   document.getElementById('btn-retry').style.display='block';
 }
 
-/* ── WEBCAM ── */
+/* ══ WEBCAM ══ */
 var videoEl=null,isRunning=false,frame=0,lastUpdate=0;
 
 async function startCamera(){
@@ -843,8 +1149,7 @@ async function startCamera(){
   btn.disabled=true;btn.textContent='Đang kết nối...';
   try{
     var stream=await navigator.mediaDevices.getUserMedia({
-      video:{width:{ideal:480},height:{ideal:640},facingMode:'user'},
-      audio:false
+      video:{width:{ideal:480},height:{ideal:640},facingMode:'user'},audio:false
     });
     videoEl=document.getElementById('video');
     videoEl.srcObject=stream;
@@ -891,9 +1196,8 @@ async function detectionLoop(){
   requestAnimationFrame(detectionLoop);
 }
 
-/* ── BOOT ── */
+/* ══ BOOT ══ */
 function bootApp(){
-  // Load voices early
   if(window.speechSynthesis){
     speechSynthesis.getVoices();
     speechSynthesis.onvoiceschanged=function(){speechSynthesis.getVoices();};
