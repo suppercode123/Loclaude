@@ -1,2326 +1,1405 @@
-
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<script>
-  // Kiểm tra xem máy này đã nhập đúng mật khẩu trước đó chưa
-  var isAuthenticated = localStorage.getItem("my_web_auth");
-
-  if (isAuthenticated !== "true") {
-    var password = prompt("Vui lòng nhập mật khẩu để truy cập:");
-    
-    if (password === "anhem123") {
-      // Nếu đúng, lưu trạng thái "đã xác thực" vào máy (vĩnh viễn cho đến khi xóa cache)
-      localStorage.setItem("my_web_auth", "true");
-      alert("Đăng nhập thành công! Máy này đã được ghi nhớ.");
-    } else {
-      alert("Sai mật khẩu!");
-      window.location.href = "about:blank";
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚜ Tướng Số AI — Phân Tích Khuôn Mặt Tỷ Lệ Vàng</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+  <!-- face-api.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <style>
+    /* ══════════════════════════════════════════
+       ROOT VARIABLES
+    ══════════════════════════════════════════ */
+    :root {
+      --bg-void:    #03030a;
+      --bg-deep:    #06060f;
+      --bg-card:    #0b0b18;
+      --bg-panel:   #07070e;
+      --gold:       #d4af37;
+      --gold-lt:    #f2d060;
+      --gold-dim:   #7a5f18;
+      --gold-glow:  rgba(212,175,55,0.18);
+      --amber:      #e89030;
+      --rose:       #f0a0b0;
+      --white:      #f0eade;
+      --muted:      #7a6a4a;
+      --border:     rgba(212,175,55,0.22);
+      --border-dim: rgba(212,175,55,0.10);
+      --shadow-gold:0 0 40px rgba(212,175,55,0.12);
     }
-  }
-</script>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#020c1b">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>AI RADAR V42 — QUAD CORE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --neon: #00d4ff;
-            --cyan: #40c4ff;
-            --gold: #80d8ff;
-            --red: #ff5252;
-            --green: #00e5ff;
-            --orange: #29b6f6;
-            --pink: #0091ea;
-            --blue: #1565c0;
-            --bg-dark: #020c1b;
-            --box-bg: #0a1929;
-            --glass: rgba(0,150,255,0.04);
-            --safe-top: env(safe-area-inset-top, 0px);
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-        }
-
-        html {
-            -webkit-text-size-adjust: 100%;
-            text-size-adjust: 100%;
-        }
-
-        ::-webkit-scrollbar { width: 3px; height: 3px; }
-        ::-webkit-scrollbar-track { background: #0a1929; }
-        ::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 5px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--neon); }
-
-        body {
-            background: var(--bg-dark);
-            color: #fff;
-            font-family: -apple-system, 'Segoe UI', Roboto, 'Noto Sans', Helvetica, Arial, sans-serif;
-            padding: 6px;
-            padding-top: calc(6px + var(--safe-top));
-            padding-bottom: calc(16px + var(--safe-bottom));
-            line-height: 1.35;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 430px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        .workspace {
-            background: var(--box-bg);
-            border: 1px solid #132f4c;
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 15px rgba(0,20,60,0.6);
-        }
-
-        .system-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            color: #4a6b8a;
-            margin-bottom: 8px;
-            border-bottom: 1px solid #173a5e;
-            padding-bottom: 6px;
-            font-weight: bold;
-        }
-
-        .system-bar .del-btn {
-            color: var(--red);
-            cursor: pointer;
-            padding: 4px 6px;
-            border-radius: 4px;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        .system-bar .del-btn:active {
-            background: rgba(255,82,82,0.12);
-        }
-
-        #data-audit {
-            background: #0c1c30;
-            border: 1px solid #1e4d7a;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            overflow: hidden;
-            font-size: 12px;
-        }
-
-        #audit-list {
-            max-height: 300px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 4px;
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: smooth;
-        }
-
-        #audit-list::-webkit-scrollbar { width: 3px; }
-        #audit-list::-webkit-scrollbar-track { background: #0a1929; }
-        #audit-list::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 5px; }
-
-        .audit-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 8px;
-            border-bottom: 1px solid #132f4c;
-        }
-
-        .audit-row:last-child { border-bottom: none; }
-
-        .status-ok { color: var(--green); font-weight: bold; }
-
-        textarea {
-            width: 100%;
-            height: 62px;
-            background: #071525;
-            color: var(--cyan);
-            border: 1px solid #1e4d7a;
-            border-radius: 6px;
-            padding: 8px;
-            font-size: 13px;
-            margin-bottom: 8px;
-            outline: none;
-            resize: none;
-            font-family: 'Courier New', monospace;
-            -webkit-appearance: none;
-        }
-
-        textarea:focus {
-            border-color: var(--cyan);
-            box-shadow: 0 0 6px rgba(0,150,255,0.3);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-main {
-            flex: 2.5;
-            min-height: 46px;
-            padding: 10px 6px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 900;
-            cursor: pointer;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, #0052d4, #00d4ff);
-            color: #000;
-            font-size: 14px;
-            letter-spacing: 1px;
-            -webkit-appearance: none;
-        }
-
-        .btn-main:active {
-            filter: brightness(0.85);
-            transform: scale(0.97);
-        }
-
-        .btn-confirm {
-            flex: 1;
-            min-height: 46px;
-            background: #132f4c;
-            color: #80d8ff;
-            border: 1px solid var(--gold);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-            -webkit-appearance: none;
-        }
-
-        .btn-confirm:active {
-            background: rgba(128,216,255,0.1);
-        }
-
-        .btn-test {
-            flex: 1;
-            min-height: 46px;
-            background: rgba(0,150,255,0.08);
-            color: #40c4ff;
-            border: 1px solid rgba(64,196,255,0.35);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-            -webkit-appearance: none;
-        }
-
-        .btn-test:active {
-            background: rgba(64,196,255,0.2);
-        }
-
-        .engine-panel {
-            display: none;
-            background: #061220;
-            border: 1px solid #132f4c;
-            border-radius: 8px;
-            padding: 8px 10px;
-            margin-bottom: 10px;
-            font-size: 12px;
-        }
-
-        .engine-title {
-            color: #3d6080;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-            font-size: 11px;
-            border-bottom: 1px solid #132f4c;
-            padding-bottom: 4px;
-        }
-
-        .weight-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
-            margin-bottom: 4px;
-        }
-
-        .weight-block {
-            background: #0c1c30;
-            border-radius: 5px;
-            padding: 4px 0;
-            border: 1px solid #15344f;
-            text-align: center;
-        }
-
-        .weight-label {
-            display: block;
-            font-size: 9px;
-            color: #4a6b8a;
-            margin-bottom: 1px;
-            letter-spacing: 1px;
-        }
-
-        .weight-val { font-size: 13px; font-weight: 900; }
-
-        .w-geo { color: #00d4ff; text-shadow: 0 0 4px rgba(0,212,255,0.4); }
-        .w-mac { color: #40c4ff; text-shadow: 0 0 4px rgba(64,196,255,0.4); }
-        .w-mom { color: #29b6f6; text-shadow: 0 0 4px rgba(41,182,246,0.4); }
-        .w-ent { color: #0288d1; text-shadow: 0 0 4px rgba(2,136,209,0.4); }
-        .w-clu { color: #80d8ff; text-shadow: 0 0 4px rgba(128,216,255,0.4); }
-        .w-tail { color: #b3e5fc; text-shadow: 0 0 4px rgba(179,229,252,0.4); }
-        .w-hurst { color: #4fc3f7; text-shadow: 0 0 5px rgba(79,195,247,0.4); }
-        .w-sand { color: #0277bd; text-shadow: 0 0 5px rgba(2,119,189,0.4); }
-
-        .verify-box {
-            display: none;
-            background: #061220;
-            border: 1px solid #132f4c;
-            border-radius: 8px;
-            padding: 7px 10px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            font-family: 'Exo 2', sans-serif;
-        }
-
-        .verify-title {
-            color: #fff;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: 13px;
-            font-family: 'Exo 2', sans-serif;
-            border-bottom: 1px solid #132f4c;
-            padding-bottom: 3px;
-            margin-bottom: 4px;
-        }
-
-        .verify-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2px 0;
-            border-bottom: 1px solid #0c1c30;
-            font-size: 13px;
-            font-family: 'Exo 2', sans-serif;
-        }
-
-        .verify-row:last-child { border-bottom: none; }
-        .vr-label { color: #fff; }
-        .vr-val { font-weight: 900; }
-        .vr-hit { color: var(--green); text-shadow: 0 0 4px rgba(0,229,255,0.4); }
-        .vr-miss { color: var(--red); }
-
-        .poster-card {
-            background: #051225;
-            border: 1px solid #1e4d7a;
-            border-radius: 16px;
-            padding: 12px 10px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 30px rgba(0,15,40,0.9);
-        }
-
-        .poster-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 3px;
-            background: linear-gradient(90deg, #0052d4, #00d4ff, #40c4ff, #80d8ff);
-        }
-
-        .poster-card.active {
-            border-color: rgba(0,212,255,0.4);
-            box-shadow: 0 0 25px rgba(0,212,255,0.15);
-        }
-
-        .big-date {
-            font-size: 30px;
-            font-weight: 900;
-            color: #fff;
-            line-height: 1;
-            letter-spacing: 1px;
-            text-shadow: 0 0 12px rgba(0,180,255,0.5);
-            margin-bottom: 4px;
-        }
-
-        .main-title {
-            font-size: 20px;
-            font-weight: 900;
-            color: #fff;
-            text-transform: uppercase;
-            margin: 6px 0 8px 0;
-            letter-spacing: 2px;
-            padding: 6px 0;
-            border-top: 1px dashed #173a5e;
-            border-bottom: 1px dashed #132f4c;
-            line-height: 1.3;
-        }
-
-        .sub-title-mb {
-            display: block;
-            font-size: 16px;
-            color: #80d8ff;
-            letter-spacing: 4px;
-            margin-top: 2px;
-            text-shadow: 0 0 8px rgba(128,216,255,0.3);
-        }
-
-        .loto-row { margin-bottom: 8px; }
-
-        .loto-box {
-            background: var(--glass);
-            border: 1px solid #132f4c;
-            border-radius: 12px;
-            padding: 10px 6px;
-            box-shadow: inset 0 0 15px rgba(0,100,200,0.06);
-        }
-
-        .label-sm {
-            font-size: 13px;
-            font-weight: 900;
-            color: var(--cyan);
-            display: block;
-            margin-bottom: 3px;
-            letter-spacing: 2px;
-            text-shadow: 0 0 6px rgba(0,150,255,0.35);
-        }
-
-        .num-stl {
-            font-size: 48px;
-            font-weight: 900;
-            color: #fff;
-            line-height: 1;
-            text-shadow: 0 0 20px rgba(0,150,255,0.8), 0 0 40px rgba(0,100,220,0.4);
-            letter-spacing: 4px;
-        }
-
-        .st-conf {
-            display: block;
-            font-size: 10px;
-            color: rgba(0,180,255,0.65);
-            font-weight: 700;
-            margin-top: 4px;
-            letter-spacing: 0.5px;
-        }
-
-        .xien-box {
-            background: rgba(5,18,37,0.97);
-            border: 1px solid #132f4c;
-            border-radius: 12px;
-            padding: 8px 10px;
-            text-align: left;
-            margin-bottom: 8px;
-        }
-
-        .x-row {
-            margin-bottom: 6px;
-            padding-bottom: 6px;
-            border-bottom: 1px dashed #0e2035;
-        }
-
-        .x-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-
-        .x-head {
-            font-size: 13px;
-            font-weight: 900;
-            color: #8ab4d0;
-            margin-bottom: 4px;
-            display: block;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .x-head-apriori {
-            font-size: 9px;
-            color: #80d8ff;
-            font-weight: bold;
-            letter-spacing: 1px;
-            margin-left: 6px;
-            background: rgba(128,216,255,0.1);
-            border: 1px solid rgba(128,216,255,0.3);
-            border-radius: 3px;
-            padding: 1px 5px;
-            vertical-align: middle;
-        }
-
-        .x-vals {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .x-item {
-            background: #0c1c30;
-            border-radius: 8px;
-            border: 1px solid #173a5e;
-            flex: 1;
-            text-align: center;
-            padding: 5px 2px 4px;
-        }
-
-        .x-nums {
-            display: block;
-            font-size: 18px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: #fff;
-        }
-
-        .x-conf {
-            display: block;
-            font-size: 9px;
-            font-weight: 700;
-            margin-top: 2px;
-            letter-spacing: 0.5px;
-        }
-
-        .x-divider { color: #1e4d7a; font-weight: normal; font-size: 14px; flex-shrink: 0; }
-
-        .x-row:nth-child(1) .x-nums { color: #00d4ff; text-shadow: 0 0 8px rgba(0,212,255,0.6); }
-        .x-row:nth-child(1) .x-item { border-color: rgba(0,212,255,0.2); }
-        .x-row:nth-child(1) .x-conf { color: rgba(0,212,255,0.6); }
-        .x-row:nth-child(2) .x-nums { color: #40c4ff; text-shadow: 0 0 8px rgba(64,196,255,0.5); }
-        .x-row:nth-child(2) .x-item { border-color: rgba(64,196,255,0.15); }
-        .x-row:nth-child(2) .x-conf { color: rgba(64,196,255,0.55); }
-        .x-row:nth-child(3) .x-nums { color: #29b6f6; text-shadow: 0 0 8px rgba(41,182,246,0.5); }
-        .x-row:nth-child(3) .x-item { border-color: rgba(41,182,246,0.15); }
-        .x-row:nth-child(3) .x-conf { color: rgba(41,182,246,0.55); }
-
-        .x-item.apriori-hot {
-            background: rgba(0,212,255,0.08);
-            border-color: rgba(0,212,255,0.5) !important;
-        }
-        .x-item.apriori-hot .x-nums { color: #80d8ff !important; text-shadow: 0 0 10px rgba(128,216,255,0.6) !important; }
-        .x-item.apriori-hot .x-conf { color: #80d8ff !important; }
-
-        .dan8-box {
-            background: rgba(5,18,37,0.97);
-            border: 1px solid #132f4c;
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 8px;
-        }
-
-        .dan8-title {
-            font-size: 14px;
-            font-weight: 900;
-            color: var(--cyan);
-            margin-bottom: 8px;
-            display: block;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            text-align: center;
-            text-shadow: 0 0 6px rgba(0,150,255,0.35);
-        }
-
-        .dan8-conf {
-            font-size: 9px;
-            color: var(--green);
-            font-weight: bold;
-            letter-spacing: 1px;
-            margin-left: 6px;
-            background: rgba(0,150,255,0.1);
-            border: 1px solid rgba(0,150,255,0.3);
-            border-radius: 3px;
-            padding: 1px 5px;
-            vertical-align: middle;
-        }
-
-        .dan8-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-        }
-
-        .dan8-cell {
-            background: #071525;
-            border: 1px solid #173a5e;
-            border-radius: 10px;
-            padding: 7px 2px 6px;
-            text-align: center;
-            position: relative;
-            display: block;
-            visibility: visible;
-        }
-
-        .d8-number {
-            font-size: 26px;
-            font-weight: 900;
-            line-height: 1;
-            display: block;
-        }
-
-        .d8-conf {
-            display: block;
-            font-size: 10px;
-            font-weight: 700;
-            margin-top: 3px;
-        }
-
-        .d8-rank {
-            position: absolute;
-            top: 2px; right: 4px;
-            font-size: 8px;
-            color: #2e5070;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .heat-hot { color: #00d4ff; text-shadow: 0 0 12px rgba(0,212,255,0.7); border-color: rgba(0,212,255,0.4); box-shadow: 0 0 8px rgba(0,212,255,0.15); }
-        .heat-hot .d8-conf { color: rgba(0,212,255,0.8); }
-        .heat-warm { color: #40c4ff; text-shadow: 0 0 12px rgba(64,196,255,0.6); border-color: rgba(64,196,255,0.3); box-shadow: 0 0 8px rgba(64,196,255,0.1); }
-        .heat-warm .d8-conf { color: rgba(64,196,255,0.75); }
-        .heat-mid { color: #29b6f6; text-shadow: 0 0 10px rgba(41,182,246,0.5); border-color: rgba(41,182,246,0.25); box-shadow: 0 0 6px rgba(41,182,246,0.1); }
-        .heat-mid .d8-conf { color: rgba(41,182,246,0.7); }
-        .heat-cool { color: #0288d1; text-shadow: 0 0 8px rgba(2,136,209,0.4); border-color: rgba(2,136,209,0.25); }
-        .heat-cool .d8-conf { color: rgba(2,136,209,0.65); }
-
-        .trend-box {
-            display: none;
-            background: rgba(5,18,37,0.97);
-            border: 1px solid #132f4c;
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 8px;
-        }
-
-        .trend-title {
-            font-size: 12px;
-            font-weight: 900;
-            color: #3d6080;
-            margin-bottom: 6px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-align: center;
-        }
-
-        .trend-canvas-wrap {
-            width: 100%;
-            height: 85px;
-            position: relative;
-        }
-
-        .trend-canvas-wrap canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .trend-legend {
-            display: flex;
-            justify-content: center;
-            gap: 14px;
-            margin-top: 5px;
-            font-size: 10px;
-            color: #4a6b8a;
-        }
-
-        .tl-dot {
-            display: inline-block;
-            width: 7px; height: 7px;
-            border-radius: 50%;
-            margin-right: 4px;
-            vertical-align: middle;
-        }
-
-        .tl-dot-st { background: #00d4ff; }
-        .tl-dot-d8 { background: #40c4ff; }
-
-        .footer-tag {
-            font-size: 10px;
-            color: #2e5070;
-            margin-top: 8px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* === EDITABLE NUMBER SYSTEM === */
-        .editable-num {
-            cursor: pointer;
-            position: relative;
-            display: inline-block;
-            transition: text-shadow 0.15s;
-            -webkit-user-select: none;
-            user-select: none;
-            border-bottom: 1px dashed rgba(0,180,255,0.25);
-            padding-bottom: 1px;
-        }
-        .editable-num:active {
-            opacity: 0.7;
-        }
-        .dan8-cell.editable-cell {
-            cursor: pointer;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        .dan8-cell.editable-cell:active {
-            opacity: 0.7;
-            transform: scale(0.95);
-            transition: transform 0.1s;
-        }
-        .edit-hint {
-            display: block;
-            font-size: 8px;
-            color: rgba(255,255,255,0.2);
-            letter-spacing: 1px;
-            margin-top: 2px;
-            text-align: center;
-        }
-
-        /* Numpad Modal */
-        .numpad-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(2,12,27,0.92);
-            z-index: 9999;
-            justify-content: center;
-            align-items: flex-end;
-            padding-bottom: calc(16px + var(--safe-bottom));
-        }
-        .numpad-overlay.show {
-            display: flex;
-        }
-        .numpad-box {
-            width: 100%;
-            max-width: 430px;
-            background: #0c1c30;
-            border-top: 2px solid #00d4ff;
-            border-radius: 16px 16px 0 0;
-            padding: 12px 10px 8px;
-            box-shadow: 0 -8px 30px rgba(0,100,200,0.2);
-        }
-        .numpad-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 0 4px;
-        }
-        .numpad-title {
-            font-size: 13px;
-            color: var(--cyan);
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-        .numpad-close {
-            color: var(--red);
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-        .numpad-close:active { background: rgba(255,82,82,0.12); }
-        .numpad-display {
-            background: #061220;
-            border: 1px solid #1e4d7a;
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-            margin-bottom: 10px;
-            min-height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .numpad-digit-slot {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
-            font-size: 28px;
-            font-weight: 900;
-            font-family: 'Share Tech Mono', monospace;
-            border: 2px solid #1e4d7a;
-            color: #3d6080;
-            background: #071525;
-            transition: all 0.15s;
-        }
-        .numpad-digit-slot.filled {
-            color: #fff;
-            border-color: var(--cyan);
-            text-shadow: 0 0 10px rgba(0,150,255,0.5);
-        }
-        .numpad-digit-slot.active-slot {
-            border-color: #00d4ff;
-            box-shadow: 0 0 8px rgba(0,212,255,0.35);
-        }
-        .numpad-sep {
-            font-size: 20px;
-            color: #1e4d7a;
-            font-weight: bold;
-        }
-        .numpad-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-            margin-bottom: 6px;
-        }
-        .numpad-key {
-            min-height: 50px;
-            background: #132f4c;
-            border: 1px solid #1a4570;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 22px;
-            font-weight: 900;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            -webkit-appearance: none;
-            -webkit-user-select: none;
-            user-select: none;
-            transition: background 0.1s;
-        }
-        .numpad-key:active {
-            background: #1a4570;
-            transform: scale(0.96);
-        }
-        .numpad-key.key-del {
-            background: rgba(255,82,82,0.08);
-            color: var(--red);
-            border-color: rgba(255,82,82,0.25);
-            font-size: 16px;
-        }
-        .numpad-key.key-ok {
-            background: rgba(0,150,255,0.1);
-            color: var(--cyan);
-            border-color: rgba(0,150,255,0.35);
-            font-size: 15px;
-            font-weight: 900;
-            letter-spacing: 2px;
-        }
-        .numpad-key.key-ok:active { background: rgba(0,150,255,0.2); }
-
-        /* === MINH NGỌC EMBED OVERRIDE === */
-        #mn-body { max-height: 420px; overflow-y: auto; }
-        #mn-body table { width: 100% !important; max-width: 100% !important; border-collapse: collapse !important; }
-        #mn-body td, #mn-body th { padding: 3px 4px !important; font-size: 12px !important; border-color: #132f4c !important; }
-        #mn-embed-inner { min-height: 60px; }
-        #mn-section.collapsed #mn-body { display: none; }
-        #mn-section.collapsed #mn-status-bar { display: none; }
-        #mn-section.collapsed div[style*="margin-top:8px"] { display: none; }
-
-        @keyframes livePulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        .mn-live-active { animation: livePulse 1.2s ease-in-out infinite; color: #00d4ff !important; }
-        .mn-crawling { color: #40c4ff !important; }
-
-        .debug-panel {
-            display: none;
-            background: #061220;
-            border: 1px solid #132f4c;
-            border-radius: 8px;
-            padding: 10px;
-            margin-top: 8px;
-            font-size: 13px;
-            color: #fff;
-            font-family: 'Share Tech Mono', monospace;
-            max-height: 400px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            text-align: left;
-            line-height: 1.4;
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: smooth;
-        }
-
-        .debug-panel.show { display: block; }
-
-        .debug-panel::-webkit-scrollbar { width: 3px; }
-        .debug-panel::-webkit-scrollbar-track { background: #061220; }
-        .debug-panel::-webkit-scrollbar-thumb { background: #0091ea; border-radius: 5px; }
-
-        .btn-debug {
-            display: none;
-            width: 100%;
-            min-height: 36px;
-            margin-top: 6px;
-            background: transparent;
-            border: 1px solid #132f4c;
-            color: #3d6080;
-            border-radius: 6px;
-            padding: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            letter-spacing: 1px;
-            font-family: 'Share Tech Mono', monospace;
-            -webkit-appearance: none;
-        }
-
-        .btn-debug:active { border-color: #1e4d7a; color: #888; }
-
-        .pnl-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 2px 0;
-            border-bottom: 1px solid #0e2035;
-            font-size: 14px;
-            font-family: 'Exo 2', sans-serif;
-        }
-        .pnl-row:last-child { border-bottom: none; }
-
-        .log-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2px 0;
-            border-bottom: 1px solid #0c1c30;
-            font-size: 13px;
-            font-family: 'Share Tech Mono', monospace;
-            line-height: 1.4;
-            width: 100%;
-        }
-        .log-row:last-child { border-bottom: none; }
-
-        .loading-bar {
-            display: none;
-            text-align: center;
-            padding: 10px;
-            color: #00d4ff;
-            font-size: 13px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        .loading-bar.show { display: block; }
-
-        .loading-dots::after {
-            content: '';
-            animation: dotPulse 1.2s steps(4) infinite;
-        }
-
-        @keyframes dotPulse {
-            0% { content: ''; }
-            25% { content: '.'; }
-            50% { content: '..'; }
-            75% { content: '...'; }
-        }
-
-        .v-badge {
-            display: inline-block;
-            font-size: 9px;
-            color: #80d8ff;
-            border: 1px solid rgba(0,212,255,0.4);
-            border-radius: 3px;
-            padding: 1px 5px;
-            letter-spacing: 1px;
-            margin-left: 6px;
-            vertical-align: middle;
-            font-weight: 900;
-        }
-    </style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    html, body {
+      min-height: 100vh;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════════════════
+       STARFIELD CANVAS
+    ══════════════════════════════════════════ */
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ══════════════════════════════════════════
+       LOADING SCREEN
+    ══════════════════════════════════════════ */
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--bg-void);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      transition: opacity 1s ease;
+    }
+    #loader.fade-out { opacity: 0; pointer-events: none; }
+
+    .loader-sigil {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 72px;
+      color: var(--gold);
+      text-shadow: 0 0 40px rgba(212,175,55,0.7), 0 0 80px rgba(212,175,55,0.3);
+      animation: sigilPulse 2.5s ease-in-out infinite;
+      user-select: none;
+    }
+    .loader-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(18px, 3vw, 28px);
+      color: var(--gold);
+      letter-spacing: 6px;
+      text-shadow: 0 0 20px rgba(212,175,55,0.4);
+    }
+    .loader-sub {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 5px;
+      text-transform: uppercase;
+    }
+    #loader-status {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      min-height: 20px;
+      text-align: center;
+    }
+    .loader-track {
+      width: 300px;
+      height: 1px;
+      background: rgba(212,175,55,0.15);
+      position: relative;
+      overflow: visible;
+    }
+    #loader-bar {
+      position: absolute;
+      left: 0; top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold-dim), var(--gold-lt));
+      box-shadow: 0 0 12px var(--gold);
+      width: 0%;
+      transition: width 0.6s ease;
+    }
+    .loader-track::before, .loader-track::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      width: 7px; height: 7px;
+      border: 1px solid var(--gold-dim);
+      transform: rotate(45deg);
+    }
+    .loader-track::before { left: -4px; }
+    .loader-track::after  { right: -4px; }
+
+    /* ══════════════════════════════════════════
+       HEADER
+    ══════════════════════════════════════════ */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 22px 24px 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(3,3,10,0.98) 0%, transparent 100%);
+    }
+    .hdr-ornament {
+      font-size: 11px;
+      color: var(--gold-dim);
+      letter-spacing: 10px;
+      margin-bottom: 6px;
+    }
+    .hdr-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(20px, 3.5vw, 34px);
+      font-weight: 900;
+      color: var(--gold);
+      text-shadow: 0 0 25px rgba(212,175,55,0.45);
+      letter-spacing: 5px;
+      line-height: 1.15;
+    }
+    .hdr-sub {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+
+    /* ══════════════════════════════════════════
+       MAIN LAYOUT
+    ══════════════════════════════════════════ */
+    main {
+      position: relative;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px;
+      gap: 0;
+      min-height: calc(100vh - 95px);
+    }
+
+    /* ══════════════════════════════════════════
+       LEFT: CAMERA PANEL
+    ══════════════════════════════════════════ */
+    .camera-side {
+      padding: 16px 20px 16px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* Video frame */
+    .cam-frame {
+      position: relative;
+      width: 100%;
+      max-width: 640px;
+      aspect-ratio: 4/3;
+      background: #020208;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-gold), 0 0 0 1px rgba(0,0,0,0.8);
+    }
+
+    /* Corner ornaments */
+    .crnr {
+      position: absolute;
+      width: 26px; height: 26px;
+      border-color: var(--gold);
+      border-style: solid;
+      z-index: 20;
+      pointer-events: none;
+    }
+    .crnr-tl { top:8px; left:8px;  border-width:2px 0 0 2px; border-radius:3px 0 0 0; }
+    .crnr-tr { top:8px; right:8px; border-width:2px 2px 0 0; border-radius:0 3px 0 0; }
+    .crnr-bl { bottom:8px; left:8px;  border-width:0 0 2px 2px; border-radius:0 0 0 3px; }
+    .crnr-br { bottom:8px; right:8px; border-width:0 2px 2px 0; border-radius:0 0 3px 0; }
+
+    /* Scan line */
+    .scan {
+      position: absolute;
+      left:0; right:0; height:2px;
+      background: linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.6) 50%, transparent 100%);
+      z-index: 15;
+      top: 0;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .scan.on { opacity: 1; animation: scanMove 2.5s linear infinite; }
+
+    #video {
+      width:100%; height:100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+      display: block;
+    }
+    #faceCanvas {
+      position: absolute;
+      top:0; left:0;
+      width:100%; height:100%;
+      transform: scaleX(-1);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Idle message */
+    #idle-msg {
+      position: absolute;
+      inset:0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      z-index: 12;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+    #idle-msg.off { opacity: 0; }
+    .idle-icon { font-size:44px; color:var(--gold-dim); animation:sigilPulse 3s ease-in-out infinite; }
+    .idle-text {
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 3px;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    /* Score overlay on video */
+    #score-overlay {
+      position: absolute;
+      bottom: 14px; left:50%;
+      transform: translateX(-50%);
+      z-index: 18;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+    #score-overlay.on { opacity: 1; }
+    .score-num {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: clamp(42px,7vw,58px);
+      line-height: 1;
+      transition: color 0.6s, text-shadow 0.6s;
+    }
+    .score-unit {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 5px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* Cam controls row */
+    .cam-controls {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-cam {
+      background: linear-gradient(135deg, #5a3e0a, var(--gold));
+      color: #000;
+      border: none;
+      padding: 11px 32px;
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(212,175,55,0.25);
+    }
+    .btn-cam:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+      box-shadow: 0 6px 30px rgba(212,175,55,0.5);
+      transform: translateY(-1px);
+    }
+    .btn-cam:disabled { opacity:0.45; cursor:not-allowed; }
+    .btn-cam.active {
+      background: linear-gradient(135deg, #0a2a0a, #1a5a1a);
+      color: #50e040;
+      box-shadow: 0 0 20px rgba(50,200,50,0.2);
+    }
+
+    .gender-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      background: rgba(212,175,55,0.05);
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .gender-pill.on { opacity:1; }
+
+    /* ══════════════════════════════════════════
+       RIGHT: ANALYSIS PANEL
+    ══════════════════════════════════════════ */
+    .analysis-side {
+      border-left: 1px solid var(--border);
+      padding: 16px 0 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+    }
+    .analysis-side::-webkit-scrollbar { width:3px; }
+    .analysis-side::-webkit-scrollbar-track { background:transparent; }
+    .analysis-side::-webkit-scrollbar-thumb { background:var(--gold-dim); border-radius:2px; }
+
+    /* Section title */
+    .sect-title {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sect-title::before, .sect-title::after {
+      content:'';
+      flex:1;
+      height:1px;
+      background:var(--border-dim);
+    }
+
+    /* Grade badge */
+    .grade-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 16px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .grade-card::before {
+      content:'';
+      position:absolute;
+      inset:0;
+      background: radial-gradient(circle at 50% 100%, rgba(212,175,55,0.07) 0%, transparent 60%);
+      pointer-events:none;
+    }
+    .grade-letter {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 64px;
+      font-weight: 900;
+      line-height: 1;
+      transition: color 0.6s, text-shadow 0.6s;
+    }
+    .grade-title {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      margin-top: 6px;
+      text-transform: uppercase;
+      transition: color 0.5s;
+    }
+    .golden-score-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .golden-score-label {
+      font-family:'Cinzel', serif;
+      font-size:9px;
+      color:var(--muted);
+      letter-spacing:3px;
+    }
+    .golden-pct {
+      font-family:'Cinzel', serif;
+      font-size:14px;
+      font-weight:700;
+      color:var(--gold-lt);
+      transition: color 0.5s;
+    }
+
+    /* Reference faces */
+    .ref-row {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .ref-card {
+      background:var(--bg-card);
+      border:1px solid var(--border-dim);
+      border-radius:8px;
+      padding:10px 8px;
+      text-align:center;
+    }
+    .ref-svg {
+      width:56px; height:66px;
+      margin:0 auto 6px;
+      display:block;
+    }
+    .ref-lbl {
+      font-family:'Cinzel', serif;
+      font-size:9px;
+      letter-spacing:3px;
+      color:var(--muted);
+    }
+
+    /* Metric card */
+    .metric-card {
+      background:var(--bg-card);
+      border:1px solid var(--border-dim);
+      border-radius:7px;
+      padding:12px 14px;
+      position:relative;
+      overflow:hidden;
+    }
+    .metric-card::before {
+      content:'';
+      position:absolute;
+      top:0; left:0;
+      width:3px; height:100%;
+      border-radius:3px 0 0 3px;
+    }
+    .mc-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:7px;
+    }
+    .mc-name {
+      font-family:'Cinzel', serif;
+      font-size:9px;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      color:var(--gold);
+    }
+    .mc-score {
+      font-family:'Cinzel', serif;
+      font-size:16px;
+      font-weight:700;
+      transition:color 0.5s;
+    }
+    .bar-bg {
+      height:3px;
+      background:rgba(255,255,255,0.06);
+      border-radius:2px;
+      overflow:hidden;
+      margin-bottom:7px;
+    }
+    .bar-fill {
+      height:100%;
+      border-radius:2px;
+      width:0%;
+      transition:width 1.1s cubic-bezier(0.4,0,0.2,1);
+      box-shadow:0 0 6px currentColor;
+    }
+    .mc-desc {
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.7;
+      font-style:italic;
+    }
+
+    /* Reading cards */
+    .reading-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .rd-card {
+      background:var(--bg-card);
+      border:1px solid var(--border-dim);
+      border-radius:7px;
+      padding:11px 11px;
+    }
+    .rd-icon { font-size:18px; display:block; margin-bottom:5px; }
+    .rd-title {
+      font-family:'Cinzel', serif;
+      font-size:9px;
+      color:var(--gold);
+      letter-spacing:2px;
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
+    .rd-text {
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.75;
+      min-height:46px;
+    }
+
+    /* Idle/waiting state for panel */
+    #panel-idle {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:40px 16px;
+      gap:14px;
+      text-align:center;
+    }
+    .panel-idle-sym {
+      font-size:36px;
+      color:var(--gold-dim);
+      animation:sigilPulse 3.5s ease-in-out infinite;
+    }
+    .panel-idle-txt {
+      font-family:'Cinzel', serif;
+      font-size:11px;
+      color:var(--muted);
+      letter-spacing:3px;
+      line-height:1.9;
+    }
+
+    #results { display:none; flex-direction:column; gap:14px; }
+    #results.show { display:flex; }
+
+    /* ══════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════ */
+    footer {
+      position: relative;
+      z-index:5;
+      text-align:center;
+      padding:12px;
+      border-top:1px solid var(--border-dim);
+      font-family:'Cinzel', serif;
+      font-size:9px;
+      color:var(--gold-dim);
+      letter-spacing:4px;
+    }
+
+    /* ══════════════════════════════════════════
+       KEYFRAMES
+    ══════════════════════════════════════════ */
+    @keyframes sigilPulse {
+      0%,100% { opacity:.6; transform:scale(1); }
+      50%      { opacity:1; transform:scale(1.06); }
+    }
+    @keyframes scanMove {
+      0%   { top:0%; }
+      100% { top:100%; }
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(8px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes shimmer {
+      0%   { background-position:-300% center; }
+      100% { background-position:300% center; }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media (max-width:900px) {
+      main { grid-template-columns:1fr; padding:12px; gap:0; }
+      .camera-side { padding:10px 0; }
+      .analysis-side {
+        border-left:none;
+        border-top:1px solid var(--border);
+        padding:16px 0 0;
+        max-height:none;
+        position:static;
+      }
+    }
+    @media (max-width:500px) {
+      .reading-grid { grid-template-columns:1fr; }
+      .ref-row { grid-template-columns:1fr 1fr; }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
 
-    <!-- LIVE KQXS MINH NGỌC SECTION -->
-    <div class="workspace" id="mn-section">
-        <div class="system-bar" style="cursor:pointer" onclick="toggleMNBox()">
-            <span>BẢNG KQXS MINH NGỌC <span id="mn-live-dot" style="color:#3d6080">⏸</span></span>
-            <span id="mn-toggle-btn" style="color:var(--cyan);font-size:11px">[THU GỌN]</span>
-        </div>
-        <div id="mn-status-bar" style="font-size:11px;color:#4a6b8a;padding:3px 0 6px;border-bottom:1px solid #132f4c;margin-bottom:6px">
-            Trạng thái: <span id="mn-status">Chờ khởi động...</span>
-        </div>
-        <div id="mn-body" style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-            <div id="mn-embed-inner">
-                <script language="javascript" src="https://www.minhngoc.net.vn/jquery/jquery-1.7.2.js"></script>
-                <link rel="stylesheet" type="text/css" href="https://www.minhngoc.net.vn/style/bangketqua_mini.css"/>
-                <div id="box_kqxs_minhngoc">
-                    <script language="javascript"> bgcolor="#0a1929";titlecolor="#00d4ff";dbcolor="#40c4ff";fsize="13px"; kqwidth="100%"; </script>
-                    <script language="javascript" src="https://www.minhngoc.net.vn/getkqxs/mien-bac.js"></script>
-                </div>
-            </div>
-        </div>
-        <div style="margin-top:8px;display:flex;gap:6px">
-            <button class="btn-main" onclick="manualCrawlNow()" id="btn-crawl-now" style="background:linear-gradient(135deg,#0052d4,#00d4ff);flex:1;font-size:12px;min-height:38px">NẠP TỪ BẢNG NÀY</button>
-            <button class="btn-confirm" onclick="toggleAutoLive()" id="btn-auto-live" style="flex:1;font-size:11px;min-height:38px">BẬT LIVE</button>
-        </div>
-    </div>
+<!-- Stars BG -->
+<canvas id="stars"></canvas>
 
-    <div class="loading-bar" id="loading-bar">
-        <span>ĐANG PHÂN TÍCH</span><span class="loading-dots"></span>
-    </div>
-
-    <div class="workspace">
-        <div class="system-bar">
-            <span>DATA: <span id="db-count" style="color:var(--cyan)">0</span> DAYS <span class="v-badge">V42</span></span>
-            <span class="del-btn" onclick="clearDB()">[XÓA TRẮNG]</span>
-        </div>
-        <div id="data-audit">
-            <div id="audit-list"></div>
-        </div>
-        <textarea id="rawInput" placeholder="Dán dữ liệu KQXS vào đây..."></textarea>
-        <div class="button-group">
-            <button class="btn-main" onclick="runEngine()">TẠO BÀI CHỐT</button>
-            <button class="btn-confirm" onclick="confirmBulk()">NẠP DATA</button>
-            <button class="btn-test" onclick="runBlindTestUI()">TEST MÙ</button>
-        </div>
-    </div>
-
-    <div class="verify-box" id="verify-box">
-        <div class="verify-title">XÁC MINH KẾT QUẢ HÔM QUA</div>
-        <div id="verify-content"></div>
-    </div>
-
-    <div class="engine-panel" id="engine-panel">
-        <div class="engine-title">⬡ V42 — QUAD CORE ENGINE</div>
-        <div class="weight-row">
-            <div class="weight-block"><span class="weight-label">MAC</span><span class="weight-val w-mac">w1.0</span></div>
-            <div class="weight-block"><span class="weight-label">MOM</span><span class="weight-val w-mom">w1.0</span></div>
-            <div class="weight-block"><span class="weight-label">ENT</span><span class="weight-val w-ent">w1.0</span></div>
-            <div class="weight-block"><span class="weight-label">CLU</span><span class="weight-val w-clu">w1.0</span></div>
-        </div>
-    </div>
-
-    <div class="poster-card" id="poster-area">
-        <div class="big-date" id="post-date">--/--/----</div>
-        <div class="main-title">
-            <span class="sub-title-mb">M.I.Ề.N B.Ắ.C</span>
-        </div>
-
-        <div class="loto-row">
-            <div class="loto-box">
-                <span class="label-sm">L •O •T •O 🔥S O N G T H Ủ</span>
-                <div class="num-stl" id="stl-main">??—??</div>
-                <span class="st-conf" id="st-conf"></span>
-            </div>
-        </div>
-
-        <div class="xien-box">
-            <div class="x-row">
-                <span class="x-head">L •O •T •O XIÊN 2: <span class="x-head-apriori" id="x2-badge" style="display:none">LIFT</span></span>
-                <div class="x-vals">
-                    <span class="x-item" id="x2-1"><span class="x-nums">??—??</span><span class="x-conf"></span></span>
-                    <span class="x-divider">|</span>
-                    <span class="x-item" id="x2-2"><span class="x-nums">??—??</span><span class="x-conf"></span></span>
-                </div>
-            </div>
-            <div class="x-row">
-                <span class="x-head">L •O •T •O XIÊN 3: <span class="x-head-apriori" id="x3-badge" style="display:none">LIFT</span></span>
-                <div class="x-vals">
-                    <span class="x-item" id="x3-1"><span class="x-nums">??—??—??</span><span class="x-conf"></span></span>
-                    <span class="x-divider">|</span>
-                    <span class="x-item" id="x3-2"><span class="x-nums">??—??—??</span><span class="x-conf"></span></span>
-                </div>
-            </div>
-            <div class="x-row">
-                <span class="x-head">L •O •T •O XIÊN 4:</span>
-                <div class="x-vals">
-                    <span class="x-item" id="x4-1"><span class="x-nums">??—??—??—??</span><span class="x-conf"></span></span>
-                    <span class="x-divider">|</span>
-                    <span class="x-item" id="x4-2"><span class="x-nums">??—??—??—??</span><span class="x-conf"></span></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="dan8-box" id="dan8-box">
-            <span class="dan8-title">D•À•N 8 S•Ố T•O•P <span class="dan8-conf">QUAD CORE AI</span></span>
-            <div class="dan8-grid" id="dan8-grid"></div>
-        </div>
-
-        <div class="trend-box" id="trend-box">
-            <div class="trend-title">HIỆU SUẤT 10 NGÀY GẦN NHẤT</div>
-            <div class="trend-canvas-wrap">
-                <canvas id="trend-canvas"></canvas>
-            </div>
-            <div class="trend-legend">
-                <span><span class="tl-dot tl-dot-st"></span>Song Thủ</span>
-                <span><span class="tl-dot tl-dot-d8"></span>Dàn 8</span>
-            </div>
-        </div>
-
-        <div class="footer-tag" id="footer-tag">AI RADAR V42 — QUAD CORE</div>
-        <div class="edit-hint" id="edit-hint" style="display:none">TAP VÀO SỐ ĐỂ CHỈNH SỬA THỦ CÔNG</div>
-        <button class="btn-debug" onclick="toggleDebug()" id="debug-btn">[ SCORE REPORT ]</button>
-        <div class="debug-panel" id="debug-panel"></div>
-    </div>
-
-    <div class="numpad-overlay" id="numpad-overlay" onclick="if(event.target===this)closeNumpad()">
-        <div class="numpad-box">
-            <div class="numpad-header">
-                <span class="numpad-title" id="numpad-title">CHỈNH SỐ</span>
-                <span class="numpad-close" onclick="closeNumpad()">✕ HỦY</span>
-            </div>
-            <div class="numpad-display" id="numpad-display"></div>
-            <div class="numpad-grid">
-                <div class="numpad-key" onclick="numpadInput('1')">1</div>
-                <div class="numpad-key" onclick="numpadInput('2')">2</div>
-                <div class="numpad-key" onclick="numpadInput('3')">3</div>
-                <div class="numpad-key" onclick="numpadInput('4')">4</div>
-                <div class="numpad-key" onclick="numpadInput('5')">5</div>
-                <div class="numpad-key" onclick="numpadInput('6')">6</div>
-                <div class="numpad-key" onclick="numpadInput('7')">7</div>
-                <div class="numpad-key" onclick="numpadInput('8')">8</div>
-                <div class="numpad-key" onclick="numpadInput('9')">9</div>
-                <div class="numpad-key key-del" onclick="numpadDelete()">⌫ XÓA</div>
-                <div class="numpad-key" onclick="numpadInput('0')">0</div>
-                <div class="numpad-key key-ok" onclick="numpadConfirm()">OK</div>
-            </div>
-        </div>
-    </div>
+<!-- ── LOADING ── -->
+<div id="loader">
+  <div class="loader-sigil">☯</div>
+  <div class="loader-title">Tướng Số AI</div>
+  <div class="loader-sub">Phân Tích Khuôn Mặt · Tỷ Lệ Vàng Phi</div>
+  <div id="loader-status">Đang khởi tạo...</div>
+  <div class="loader-track"><div id="loader-bar"></div></div>
 </div>
 
+<!-- ── HEADER ── -->
+<header>
+  <div class="hdr-ornament">✦ ◈ ✦ ◈ ✦</div>
+  <div class="hdr-title">Tướng Số AI</div>
+  <div class="hdr-sub">Nhận diện khuôn mặt · Tỷ lệ vàng Phi · Luận giải số phận</div>
+</header>
+
+<!-- ── MAIN ── -->
+<main>
+
+  <!-- LEFT: Camera -->
+  <div class="camera-side">
+    <div class="cam-frame" id="camFrame">
+      <div class="crnr crnr-tl"></div>
+      <div class="crnr crnr-tr"></div>
+      <div class="crnr crnr-bl"></div>
+      <div class="crnr crnr-br"></div>
+      <div class="scan" id="scanLine"></div>
+
+      <video id="video" autoplay muted playsinline></video>
+      <canvas id="faceCanvas"></canvas>
+
+      <div id="idle-msg">
+        <div class="idle-icon">◉</div>
+        <div class="idle-text">Hướng khuôn mặt vào camera<br>để bắt đầu phân tích tướng số</div>
+      </div>
+
+      <div id="score-overlay">
+        <div class="score-num" id="scoreNum">—</div>
+        <div class="score-unit">TƯỚNG SỐ TỔNG / 100</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="cam-controls">
+      <button class="btn-cam" id="btnCam" onclick="startCamera()">▶ KÍCH HOẠT CAMERA</button>
+      <div class="gender-pill" id="genderPill">
+        <span id="gIcon">⚥</span>
+        <span id="gText">—</span>
+        <span id="gAge"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Analysis -->
+  <div class="analysis-side">
+
+    <!-- Idle -->
+    <div id="panel-idle">
+      <div class="panel-idle-sym">☽ ✦ ☾</div>
+      <div class="panel-idle-txt">Chưa phát hiện khuôn mặt<br>Nhấn nút kích hoạt camera<br>để bắt đầu phân tích</div>
+    </div>
+
+    <!-- Results (hidden until face found) -->
+    <div id="results">
+
+      <!-- Grade -->
+      <div class="grade-card">
+        <div class="grade-letter" id="gradeLetter" style="color:var(--gold)">—</div>
+        <div class="grade-title" id="gradeTitle">Đang phân tích...</div>
+        <div class="golden-score-row">
+          <span class="golden-score-label">TỶ LỆ VÀNG PHI</span>
+          <span class="golden-pct" id="goldenPct">—%</span>
+        </div>
+      </div>
+
+      <!-- Reference faces -->
+      <div class="sect-title">Chuẩn tham chiếu</div>
+      <div class="ref-row">
+        <div class="ref-card">
+          <svg class="ref-svg" viewBox="0 0 56 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="28" cy="30" rx="20" ry="24" stroke="#d4af37" stroke-width="1.3" fill="none"/>
+            <line x1="28" y1="6" x2="28" y2="54" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2,3" opacity="0.5"/>
+            <line x1="8" y1="26" x2="48" y2="26" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2,3" opacity="0.5"/>
+            <line x1="8" y1="36" x2="48" y2="36" stroke="#d4af37" stroke-width="0.5" stroke-dasharray="2,3" opacity="0.5"/>
+            <ellipse cx="21" cy="26" rx="4.5" ry="2.5" stroke="#d4af37" stroke-width="1" fill="none"/>
+            <ellipse cx="35" cy="26" rx="4.5" ry="2.5" stroke="#d4af37" stroke-width="1" fill="none"/>
+            <path d="M28 20 L26.5 36 L28 37.5 L29.5 36 Z" stroke="#d4af37" stroke-width="0.8" fill="none"/>
+            <path d="M22 44 Q28 48 34 44" stroke="#d4af37" stroke-width="1.2" fill="none"/>
+            <path d="M16 21 Q21 19 26 21" stroke="#d4af37" stroke-width="1" fill="none"/>
+            <path d="M30 21 Q35 19 40 21" stroke="#d4af37" stroke-width="1" fill="none"/>
+            <text x="28" y="63" text-anchor="middle" font-family="Cinzel,serif" font-size="5" fill="#7a5f18" letter-spacing="2">1.618</text>
+          </svg>
+          <div class="ref-lbl">NAM CHUẨN</div>
+        </div>
+        <div class="ref-card">
+          <svg class="ref-svg" viewBox="0 0 56 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="28" cy="29" rx="18" ry="25" stroke="#f0a0b0" stroke-width="1.3" fill="none"/>
+            <line x1="28" y1="4" x2="28" y2="54" stroke="#f0a0b0" stroke-width="0.5" stroke-dasharray="2,3" opacity="0.5"/>
+            <line x1="10" y1="25" x2="46" y2="25" stroke="#f0a0b0" stroke-width="0.5" stroke-dasharray="2,3" opacity="0.5"/>
+            <line x1="10" y1="35" x2="46" y2="35" stroke="#f0a0b0" stroke-width="0.5" stroke-dasharray="2,3" opacity="0.5"/>
+            <ellipse cx="21" cy="25" rx="5" ry="3.2" stroke="#f0a0b0" stroke-width="1" fill="none"/>
+            <ellipse cx="35" cy="25" rx="5" ry="3.2" stroke="#f0a0b0" stroke-width="1" fill="none"/>
+            <path d="M28 20 L27 33 L28 35 L29 33 Z" stroke="#f0a0b0" stroke-width="0.7" fill="none"/>
+            <path d="M21 42 Q25 46 28 45 Q31 46 35 42" stroke="#f0a0b0" stroke-width="1.2" fill="none"/>
+            <path d="M16 20 Q21 17 26 20" stroke="#f0a0b0" stroke-width="1" fill="none"/>
+            <path d="M30 20 Q35 17 40 20" stroke="#f0a0b0" stroke-width="1" fill="none"/>
+            <text x="28" y="63" text-anchor="middle" font-family="Cinzel,serif" font-size="5" fill="#a06070" letter-spacing="2">1.618</text>
+          </svg>
+          <div class="ref-lbl" style="color:#f0a0b0">NỮ CHUẨN</div>
+        </div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="sect-title">Phân tích các vùng</div>
+
+      <div class="metric-card" style="--left-clr:var(--gold)">
+        <div class="mc-header">
+          <span class="mc-name">Hình Dáng Khuôn Mặt</span>
+          <span class="mc-score" id="mFace">—</span>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" id="bFace"></div></div>
+        <div class="mc-desc" id="dFace">Đang chờ dữ liệu...</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="mc-header">
+          <span class="mc-name">Đôi Mắt · Thần Quang</span>
+          <span class="mc-score" id="mEyes">—</span>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" id="bEyes"></div></div>
+        <div class="mc-desc" id="dEyes">Đang chờ dữ liệu...</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="mc-header">
+          <span class="mc-name">Mũi · Tài Lộc</span>
+          <span class="mc-score" id="mNose">—</span>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" id="bNose"></div></div>
+        <div class="mc-desc" id="dNose">Đang chờ dữ liệu...</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="mc-header">
+          <span class="mc-name">Miệng & Môi · Khẩu Phúc</span>
+          <span class="mc-score" id="mMouth">—</span>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" id="bMouth"></div></div>
+        <div class="mc-desc" id="dMouth">Đang chờ dữ liệu...</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="mc-header">
+          <span class="mc-name">Tính Đối Xứng</span>
+          <span class="mc-score" id="mSym">—</span>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" id="bSym"></div></div>
+        <div class="mc-desc" id="dSym">Đang chờ dữ liệu...</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="mc-header">
+          <span class="mc-name">Trán & Ngũ Quan</span>
+          <span class="mc-score" id="mForehead">—</span>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" id="bForehead"></div></div>
+        <div class="mc-desc" id="dForehead">Đang chờ dữ liệu...</div>
+      </div>
+
+      <!-- Readings -->
+      <div class="sect-title">Luận giải tướng số</div>
+      <div class="reading-grid">
+        <div class="rd-card">
+          <span class="rd-icon">🔮</span>
+          <div class="rd-title">Tính Cách</div>
+          <div class="rd-text" id="rdPersonality">—</div>
+        </div>
+        <div class="rd-card">
+          <span class="rd-icon">🌱</span>
+          <div class="rd-title">Tiền Vận</div>
+          <div class="rd-text" id="rdEarly">—</div>
+        </div>
+        <div class="rd-card">
+          <span class="rd-icon">⚡</span>
+          <div class="rd-title">Vận Hạn</div>
+          <div class="rd-text" id="rdCurrent">—</div>
+        </div>
+        <div class="rd-card">
+          <span class="rd-icon">🌙</span>
+          <div class="rd-title">Hậu Vận</div>
+          <div class="rd-text" id="rdLate">—</div>
+        </div>
+      </div>
+
+    </div><!-- /results -->
+  </div><!-- /analysis-side -->
+</main>
+
+<footer>⬡ TỶ LỆ VÀNG PHI = 1.618 · TƯỚNG SỐ AI ⬡</footer>
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
 <script>
-var DB_KEY = 'ai_radar_v40_octa';
-var db = [];
-var _cache = { allScores: null, maxScore: 0, top8nums: [] };
+/* ───────────────────────────────────────────────
+   STARFIELD
+─────────────────────────────────────────────── */
+(function() {
+  const c = document.getElementById('stars');
+  const ctx = c.getContext('2d');
+  let stars = [];
+  function resize() {
+    c.width  = window.innerWidth;
+    c.height = window.innerHeight;
+    stars = Array.from({length:200}, () => ({
+      x: Math.random()*c.width, y: Math.random()*c.height,
+      r: Math.random()*1.3+0.2,
+      a: Math.random()*0.5+0.05,
+      spd: Math.random()*0.4+0.05,
+      t: Math.random()*Math.PI*2
+    }));
+  }
+  function draw() {
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s => {
+      s.t += s.spd * 0.018;
+      const a = s.a * (0.4 + 0.6*Math.sin(s.t));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(212,175,55,${a})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', resize);
+  resize(); draw();
+})();
 
-function initDB() {
-    try {
-        var saved = localStorage.getItem(DB_KEY);
-        if (!saved) saved = localStorage.getItem('ai_radar_v39_octa');
-        if (saved) db = JSON.parse(saved);
-    } catch(e) {}
-    updateCounter();
-    renderQueue();
-}
+/* ───────────────────────────────────────────────
+   CONSTANTS
+─────────────────────────────────────────────── */
+// PRIMARY: jsDelivr CDN (GitHub mirror — fast, cached)
+const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights';
+// FALLBACK (uncomment if above fails):
+// const MODEL_URL = 'https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights';
 
-function formatDate(date) {
-    return ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth()+1)).slice(-2) + "/" + date.getFullYear();
-}
+const PHI = 1.618033988;
 
-function updateCounter() {
-    document.getElementById('db-count').innerText = db.length;
-}
-
-function clearDB() {
-    if (confirm("Xóa toàn bộ lịch sử dữ liệu?")) {
-        db = [];
-        try { localStorage.removeItem(DB_KEY); } catch(e) {}
-        updateCounter();
-        renderQueue();
-        document.getElementById('verify-box').style.display = 'none';
+/* ───────────────────────────────────────────────
+   TEXT DATABASE
+─────────────────────────────────────────────── */
+const DB = {
+  personality: {
+    hi: [
+      "Khí chất cao quý, nhân hậu đức độ — mệnh có quý nhân phù trợ suốt đời.",
+      "Thông tuệ xuất chúng, lãnh đạo thiên bẩm, sự nghiệp hiển hách vinh danh.",
+      "Tướng phú quý vẹn toàn, tâm địa thiện lương, được mọi người kính mến."
+    ],
+    md: [
+      "Cần cù, kiên nhẫn — vận may đến muộn nhưng bền vững và chắc chắn.",
+      "Tính tình thẳng thắn, trọng nghĩa tình, nhiều bạn bè tốt bên cạnh.",
+      "Tư chất thông minh, nếu nỗ lực phấn đấu ắt đạt thành tựu xứng đáng."
+    ],
+    lo: [
+      "Lao khổ rèn ý chí — tích đức hành thiện cải được số phận tốt đẹp hơn.",
+      "Có chí hướng mạnh mẽ, cần vượt qua thử thách để gặt hái thành công.",
+      "Tướng số chỉ là khởi điểm — nội tâm tu dưỡng mới quyết định vận mệnh."
+    ]
+  },
+  early: {
+    hi: [
+      "Tiền vận hanh thông, gia đình hòa thuận, học hành xuất sắc thuận lợi.",
+      "Thuở nhỏ được thương yêu, nền tảng vững chắc, con đường rộng mở tươi sáng.",
+      "Thời trẻ gặp thầy giỏi bạn tốt, học vấn rộng mở, tiền đồ rực rỡ."
+    ],
+    md: [
+      "Tiền vận tuy vất vả nhưng tích lũy được nhiều kinh nghiệm quý giá.",
+      "Tuổi trẻ cần nỗ lực, những thử thách tôi luyện ý chí bản lĩnh vững vàng.",
+      "Tiền vận trung bình, kiên trì và quyết tâm sẽ xây dựng nền tảng bền vững."
+    ],
+    lo: [
+      "Tiền vận gian nan rèn ý chí kiên cường — hậu vận bù đắp xứng đáng.",
+      "Thuở nhỏ trải qua khó khăn, nhưng chính thử thách tạo nên tính cách mạnh.",
+      "Tiền vận có phần vất vả, cần học cân bằng và tìm sự hỗ trợ từ người thân."
+    ]
+  },
+  current: {
+    hi: [
+      "Vận khí đỉnh cao, tài lộc dồi dào, quý nhân hỗ trợ, cơ hội xuất hiện liên tiếp.",
+      "Thuận buồm xuôi gió, sự nghiệp thăng tiến rực rỡ — đây là giai đoạn vàng son.",
+      "Giai đoạn vàng son, mạnh dạn nắm bắt cơ hội, thành công trong tầm tay."
+    ],
+    md: [
+      "Vận hạn trung bình, cần kiên nhẫn và sáng suốt nắm bắt thời cơ đúng lúc.",
+      "Thời điểm tích lũy, chuẩn bị cho bước ngoặt lớn và cơ hội sắp tới.",
+      "Vận đang chuyển tích cực, giữ vững tinh thần và kiên trì cố gắng từng ngày."
+    ],
+    lo: [
+      "Vận hạn cần chú ý, thận trọng trong quyết định quan trọng, tránh mạo hiểm.",
+      "Giai đoạn thử lửa — giữ bình tĩnh, tìm lời khuyên sáng suốt từ người kinh nghiệm.",
+      "Tạm thời có trở ngại, nhẫn nại và tích đức hành thiện để vượt qua giai đoạn này."
+    ]
+  },
+  late: {
+    hi: [
+      "Hậu vận cực tốt — an nhàn hưởng phúc, con cháu hiếu thảo, tuổi già sung túc.",
+      "Về già được kính trọng, sức khỏe tốt, tài lộc dồi dào, thọ lâu phúc hậu.",
+      "Hậu vận rực rỡ, sự nghiệp tiếng thơm, con cháu thành tài, gia đạo hưng thịnh."
+    ],
+    md: [
+      "Hậu vận ổn định, cuộc sống bình yên hạnh phúc, con cháu thành đạt.",
+      "Về già có người chăm sóc, tâm hồn thanh thản, hưởng cuộc sống an lành.",
+      "Hậu vận ấm áp, gia đình hòa thuận, cuộc sống giản dị mà hạnh phúc bền vững."
+    ],
+    lo: [
+      "Hậu vận cần tích đức hành thiện để cải thiện, chú trọng sức khỏe và gia đình.",
+      "Tuổi già cần giữ gìn sức khỏe, củng cố các mối quan hệ tốt đẹp bền vững.",
+      "Hậu vận chưa sáng rõ — kiên trì tu dưỡng đức hạnh, cơ hội cải mệnh vẫn còn."
+    ]
+  },
+  metrics: {
+    faceShape: {
+      hi: "Khuôn mặt tỷ lệ vàng hoàn hảo, hình oval chuẩn Phi — tướng phú quý, danh vọng hiển hách.",
+      md: "Khuôn mặt cân đối, tỷ lệ hài hòa — số phận trung bình khá, cuộc sống ổn định sung túc.",
+      lo: "Khuôn mặt chưa đạt tỷ lệ lý tưởng — cần rèn luyện thêm để phát huy đúng tiềm năng."
+    },
+    eyes: {
+      hi: "Đôi mắt sáng, khoảng cách lý tưởng — tướng thông minh, nhìn xa trông rộng, quý nhân phù trợ.",
+      md: "Đôi mắt bình thường — nội tâm phong phú, cần phát huy trực giác và sự nhạy bén thiên bẩm.",
+      lo: "Đôi mắt cần chú ý — hãy rèn luyện sự tập trung và nhìn nhận vấn đề đa chiều hơn."
+    },
+    nose: {
+      hi: "Mũi thẳng đứng đắn, đầu mũi tròn — tướng tài lộc, tiền tài dồi dào, kinh doanh phát đạt.",
+      md: "Mũi cân đối — tài lộc ổn định, biết tính toán, vật chất không thiếu hụt suốt cuộc đời.",
+      lo: "Mũi chưa đạt chuẩn tỷ lệ — cần cẩn thận trong tài chính, tránh đầu cơ mạo hiểm."
+    },
+    mouth: {
+      hi: "Miệng chuẩn, môi đầy đặn — tướng khẩu phúc, khéo léo giao tiếp, thành công nhờ tài ăn nói.",
+      md: "Miệng cân đối — giao tiếp tốt, khéo léo trong quan hệ xã hội, được nhiều người tin yêu.",
+      lo: "Miệng chưa đạt tỷ lệ vàng — cần chú ý lời ăn tiếng nói, tránh gây hiểu lầm không đáng."
+    },
+    symmetry: {
+      hi: "Khuôn mặt đối xứng tuyệt vời — nội tâm cân bằng, cuộc sống hài hòa, sức khỏe tốt bền vững.",
+      md: "Đối xứng khá tốt — tính cách ổn định, cuộc sống tương đối bình ổn và hạnh phúc.",
+      lo: "Khuôn mặt còn bất đối xứng — cần chú ý cân bằng nội tâm và các mối quan hệ xung quanh."
+    },
+    forehead: {
+      hi: "Trán rộng phẳng, tỷ lệ ngũ quan chuẩn — tướng thông tuệ, sáng tạo, quan lộc hanh thông.",
+      md: "Trán và ngũ quan cân đối — trí tuệ tốt, tư duy logic mạnh, sự nghiệp từng bước phát triển.",
+      lo: "Tỷ lệ ngũ quan chưa hoàn hảo — hãy phát huy thế mạnh bẩm sinh và không ngừng học hỏi."
     }
-}
-
-function renderQueue() {
-    var auditList = document.getElementById('audit-list');
-    auditList.innerHTML = "";
-    var now = new Date();
-    var targetDate = new Date();
-    if (now.getHours() > 18 || (now.getHours() === 18 && now.getMinutes() >= 30)) {
-        targetDate.setDate(now.getDate() + 1);
-    }
-    document.getElementById('post-date').innerText = formatDate(targetDate);
-    var todayStr = formatDate(targetDate);
-    var rowToday = document.createElement('div');
-    rowToday.className = 'audit-row';
-    rowToday.innerHTML = '<span style="color:#4a6b8a">' + todayStr + '</span><span style="color:#3d6080;font-size:11px">CHỜ NẠP</span>';
-    auditList.appendChild(rowToday);
-    for (var di = 0; di < db.length; di++) {
-        var d = db[di];
-        var row = document.createElement('div');
-        row.className = 'audit-row';
-        row.innerHTML = '<span style="color:#b0d0e8">' + d.d + '</span><span class="status-ok">● ĐÃ NẠP (' + d.raw.length + ')</span>';
-        auditList.appendChild(row);
-    }
-}
-
-function confirmBulk() {
-    var input = document.getElementById('rawInput').value.trim();
-    if (!input) return alert("Vui lòng dán dữ liệu vào ô trống!");
-    try {
-        var chunks = input.split(/Ngày\s+/);
-        var count = 0;
-        for (var ci = 0; ci < chunks.length; ci++) {
-            var chunk = chunks[ci];
-            var dateMatch = chunk.match(/^(\d{1,2}\/\d{1,2}\/\d{4})/);
-            var loMatch = chunk.match(/Lô:\s*([\d,\s]+)/);
-            if (dateMatch && loMatch) {
-                var dArr = dateMatch[1].split('/');
-                var date = ("0"+dArr[0]).slice(-2) + "/" + ("0"+dArr[1]).slice(-2) + "/" + dArr[2];
-                var loNumbers = loMatch[1].match(/\d{2}/g) || [];
-                var unique = [];
-                for (var li = 0; li < loNumbers.length; li++) {
-                    if (unique.indexOf(loNumbers[li]) === -1) unique.push(loNumbers[li]);
-                }
-                var dataObj = { d: date, s: unique, raw: loNumbers };
-                var existingIndex = -1;
-                for (var di = 0; di < db.length; di++) {
-                    if (db[di].d === date) { existingIndex = di; break; }
-                }
-                if (existingIndex !== -1) db[existingIndex] = dataObj;
-                else db.unshift(dataObj);
-                count++;
-            }
-        }
-        db.sort(function(a,b) {
-            var pA = a.d.split('/'), pB = b.d.split('/');
-            return new Date(pB[2],pB[1]-1,pB[0]) - new Date(pA[2],pA[1]-1,pA[0]);
-        });
-        if (db.length > 2000) db = db.slice(0, 2000);
-        try { localStorage.setItem(DB_KEY, JSON.stringify(db)); } catch(e) {}
-        updateCounter();
-        renderQueue();
-        document.getElementById('rawInput').value = "";
-        if (count === 0) alert("Không tìm thấy dữ liệu hợp lệ!");
-        else alert("Đã nạp " + count + " ngày. Tổng: " + db.length + " ngày.");
-    } catch(err) {
-        alert("Lỗi: " + err.message);
-    }
-}
-
-/* ==========================================
-   V42 QUAD CORE ENGINE — ALL ES5
-   4 lõi: MAC, Momentum, Entropy, Cluster
-   Equal weight w=1 | s1+s2 | gap>=1
-   Backtest 165d: 52.7% WR (vs V40 47.9%)
-   ========================================== */
-var ALL_NUMS = [];
-for (var _i = 0; _i < 100; _i++) ALL_NUMS.push(("0"+_i).slice(-2));
-
-function currentGap(n, data) {
-    for (var i = 0; i < data.length; i++) {
-        if (data[i].s.indexOf(n) !== -1) return i;
-    }
-    return data.length;
-}
-
-function calcGaps(n, data) {
-    var gaps = [], cur = 0;
-    for (var i = 0; i < data.length; i++) {
-        if (data[i].s.indexOf(n) !== -1) { gaps.push(cur); cur = 0; }
-        else cur++;
-    }
-    return gaps;
-}
-
-/* V42: scoreGeo, scoreTail, scoreHurst, scoreSandpile REMOVED
-   Backtest 165d proved: Geo CDF miscalibrated (predicts 90% actual 24%),
-   Tail/Hurst/Sand add noise when combined with MAC+Mom+Ent+Clu */
-
-function scoreMAC(data) {
-    var sc = {};
-    var l5 = Math.min(5, data.length), l15 = Math.min(15, data.length);
-    var threshold = Math.max(0.08, 0.15 * Math.min(1, data.length / 30));
-    for (var ni = 0; ni < ALL_NUMS.length; ni++) {
-        var n = ALL_NUMS[ni];
-        var c5 = 0, c15 = 0;
-        for (var i = 0; i < l5; i++) { if (data[i].s.indexOf(n) !== -1) c5++; }
-        for (var i = 0; i < l15; i++) { if (data[i].s.indexOf(n) !== -1) c15++; }
-        var ma5 = c5 / l5, ma15 = c15 / l15;
-        sc[n] = (ma5 < ma15 && ma15 > threshold) ? (ma15 - ma5) * 100 : 0;
-    }
-    return sc;
-}
-
-function scoreMomentum(data) {
-    var sc = {};
-    var l3 = Math.min(3, data.length), l7 = Math.min(7, data.length), l15 = Math.min(15, data.length);
-    for (var ni = 0; ni < ALL_NUMS.length; ni++) {
-        var n = ALL_NUMS[ni];
-        var c3 = 0, c7 = 0, c15 = 0;
-        for (var i = 0; i < l3; i++) { if (data[i].s.indexOf(n) !== -1) c3++; }
-        for (var i = 0; i < l7; i++) { if (data[i].s.indexOf(n) !== -1) c7++; }
-        for (var i = 0; i < l15; i++) { if (data[i].s.indexOf(n) !== -1) c15++; }
-        var accel = ((c3/l3) - (c7/l7)) * 50;
-        var velocity = ((c7/l7) - (c15/l15)) * 30;
-        var cg = currentGap(n, data);
-        if (accel > 0 && cg >= 1 && cg <= 8) {
-            sc[n] = (accel + Math.max(0, velocity)) * (1 + 0.1*cg);
-        } else if (velocity > 0 && cg >= 2 && cg <= 10) {
-            sc[n] = velocity * 0.5 * cg;
-        } else {
-            sc[n] = 0;
-        }
-    }
-    return sc;
-}
-
-function scoreEnt(data) {
-    var sc = {};
-    for (var ni = 0; ni < ALL_NUMS.length; ni++) {
-        var n = ALL_NUMS[ni];
-        var windows = [];
-        var maxW = Math.min(data.length, 30);
-        for (var s = 0; s < maxW; s += 5) {
-            var end = Math.min(s+5, data.length);
-            var hit = 0;
-            for (var wi = s; wi < end; wi++) { if (data[wi].s.indexOf(n) !== -1) hit++; }
-            windows.push(hit);
-        }
-        if (!windows.length) { sc[n] = 0; continue; }
-        var tot = 0;
-        for (var w = 0; w < windows.length; w++) tot += windows[w];
-        tot += windows.length;
-        var ent = 0;
-        for (var w = 0; w < windows.length; w++) {
-            var p = (windows[w]+1) / tot;
-            if (p > 0) ent -= p * (Math.log(p) / Math.log(2));
-        }
-        var cg = currentGap(n, data);
-        sc[n] = (cg >= 2 && ent < 2.5) ? (3-ent) * cg * 10 : 0;
-    }
-    return sc;
-}
-
-function scoreCluster(data) {
-    var sc = {};
-    var recentDays = Math.min(10, data.length);
-    var freq = {};
-    for (var di = 0; di < recentDays; di++) {
-        var weight = 1 - di*0.08;
-        for (var si = 0; si < data[di].s.length; si++) {
-            var num = data[di].s[si];
-            freq[num] = (freq[num]||0) + weight;
-        }
-    }
-    var freqArr = [];
-    for (var k in freq) freqArr.push([k, freq[k]]);
-    freqArr.sort(function(a,b){ return b[1]-a[1]; });
-    var hotNums = [];
-    for (var hi = 0; hi < Math.min(15, freqArr.length); hi++) hotNums.push(freqArr[hi][0]);
-    for (var ni = 0; ni < ALL_NUMS.length; ni++) {
-        var n = ALL_NUMS[ni];
-        var clusterScore = 0;
-        var scanDays = Math.min(20, data.length);
-        for (var hi = 0; hi < hotNums.length; hi++) {
-            var partner = hotNums[hi];
-            if (partner === n) continue;
-            var coCount = 0;
-            for (var di = 0; di < scanDays; di++) {
-                if (data[di].s.indexOf(n) !== -1 && data[di].s.indexOf(partner) !== -1) {
-                    coCount += (1 - di*0.04);
-                }
-            }
-            if (coCount > 0) clusterScore += coCount;
-        }
-        var cg = currentGap(n, data);
-        sc[n] = (cg >= 1) ? clusterScore * (1 + cg*0.05) : clusterScore * 0.3;
-    }
-    return sc;
-}
-
-
-
-
-function normScores(sc) {
-    var vals = [];
-    for (var k in sc) vals.push(sc[k]);
-    var mn = vals[0], mx = vals[0];
-    for (var i = 1; i < vals.length; i++) {
-        if (vals[i] < mn) mn = vals[i];
-        if (vals[i] > mx) mx = vals[i];
-    }
-    var r = {};
-    if (mx === mn) { for (var k in sc) r[k] = 0; }
-    else { for (var k in sc) r[k] = (sc[k]-mn)/(mx-mn); }
-    return r;
-}
-
-/* V42 QUAD CORE — Backtest 165 ngày: 50.9% → 52.7%
-   Bỏ 4 lõi nhiễu: Geo(CDF sai), Tail, Hurst, Sandpile
-   Giữ 4 lõi hiệu quả: MAC, Momentum, Entropy, Cluster
-   Equal weight w=1 — tối ưu tuyệt đối theo grid search */
-function getCombinedScores(data) {
-    var rm = normScores(scoreMAC(data));
-    var rmo = normScores(scoreMomentum(data));
-    var re = normScores(scoreEnt(data));
-    var rc = normScores(scoreCluster(data));
-    var combined = {};
-    for (var ni = 0; ni < ALL_NUMS.length; ni++) {
-        var n = ALL_NUMS[ni];
-        combined[n] = (rm[n]||0) + (rmo[n]||0) + (re[n]||0) + (rc[n]||0);
-    }
-    return combined;
-}
-
-function getTopNWithScores(data, topN) {
-    var sc = getCombinedScores(data);
-    var arr = [];
-    for (var k in sc) arr.push([k, sc[k]]);
-    arr.sort(function(a,b){ return b[1]-a[1]; });
-    var result = [];
-    for (var i = 0; i < Math.min(topN, arr.length); i++) {
-        result.push({ num: arr[i][0], score: arr[i][1] });
-    }
-    return result;
-}
-
-function getTopN(data, topN) {
-    var items = getTopNWithScores(data, topN);
-    var r = [];
-    for (var i = 0; i < items.length; i++) r.push(items[i].num);
-    return r;
-}
-
-function calcConf(numScore, maxScore) {
-    if (maxScore <= 0) return '0.0';
-    return (numScore/maxScore*99).toFixed(1);
-}
-
-function calcSupport(nums, data) {
-    var co = 0;
-    for (var di = 0; di < data.length; di++) {
-        var allIn = true;
-        for (var ni = 0; ni < nums.length; ni++) {
-            if (data[di].s.indexOf(nums[ni]) === -1) { allIn = false; break; }
-        }
-        if (allIn) co++;
-    }
-    return data.length > 0 ? (co/data.length*100).toFixed(1) : '0.0';
-}
-
-function buildPairData(data) {
-    var N = data.length;
-    var ind = {}, pair = {};
-    for (var ni = 0; ni < ALL_NUMS.length; ni++) ind[ALL_NUMS[ni]] = 0;
-    for (var di = 0; di < data.length; di++) {
-        var nums = data[di].s;
-        for (var i = 0; i < nums.length; i++) {
-            ind[nums[i]]++;
-            for (var j = i+1; j < nums.length; j++) {
-                var k = (nums[i]<nums[j]) ? nums[i]+'-'+nums[j] : nums[j]+'-'+nums[i];
-                pair[k] = (pair[k]||0) + 1;
-            }
-        }
-    }
-    return { ind:ind, pair:pair, N:N };
-}
-
-/* V42 QUAD CORE — getSongThu
-   s1 + s2 | gap >= 1 | no GAN GUARD */
-function getSongThu(data) {
-    var scores = getCombinedScores(data);
-    var checked = {}, best = null;
-    for (var i = 0; i < 100; i++) {
-        var n1 = ("0" + i).slice(-2);
-        var n2 = n1.split('').reverse().join('');
-        if (n1 === n2) continue;
-        var key = (n1 < n2) ? n1 + '-' + n2 : n2 + '-' + n1;
-        if (checked[key]) continue;
-        checked[key] = 1;
-        var g1 = currentGap(n1, data);
-        var g2 = currentGap(n2, data);
-        if (g1 < 1 || g2 < 1) continue;
-        var s1 = scores[n1] || 0;
-        var s2 = scores[n2] || 0;
-        var combo = s1 + s2;
-        if (!best || combo > best.score) {
-            best = { n1: n1, n2: n2, score: combo, lift: 0, co: 0, gan: 0 };
-        }
-    }
-    return best || { n1: '--', n2: '--', score: 0, lift: 0, co: 0, gan: 0 };
-}
-
-function getXien2(data, pool) {
-    var pd = buildPairData(data);
-    var scores = getCombinedScores(data);
-    var cands = [];
-    for (var i = 0; i < pool.length; i++) {
-        for (var j = i+1; j < pool.length; j++) {
-            var a = pool[i], b = pool[j];
-            var pk = (a<b)?a+'-'+b:b+'-'+a;
-            var co = pd.pair[pk]||0;
-            var pa = pd.ind[a]/pd.N, pb2 = pd.ind[b]/pd.N;
-            var lift = (pa*pb2 > 0 && co > 0) ? ((co/pd.N)/(pa*pb2)) : 0;
-            var ms = Math.min(scores[a]||0, scores[b]||0);
-            cands.push({ a:a, b:b, sc:co*lift*ms, co:co, lift:lift });
-        }
-    }
-    cands.sort(function(x,y){ return y.sc-x.sc; });
-    var res = [], used = {};
-    for (var ci = 0; ci < cands.length && res.length < 2; ci++) {
-        var pk = (cands[ci].a<cands[ci].b)?cands[ci].a+'-'+cands[ci].b:cands[ci].b+'-'+cands[ci].a;
-        if (!used[pk]) { res.push(cands[ci]); used[pk] = 1; }
-    }
-    while (res.length < 2) res.push({ a:pool[res.length*2]||'??', b:pool[res.length*2+1]||'??', co:0, lift:0 });
-    return res;
-}
-
-function getXien3(data, pool) {
-    var pd = buildPairData(data);
-    var scores = getCombinedScores(data);
-    var cands = [];
-    for (var i = 0; i < pool.length; i++) {
-        for (var j = i+1; j < pool.length; j++) {
-            for (var k = j+1; k < pool.length; k++) {
-                var a = pool[i], b = pool[j], c = pool[k];
-                var co3 = 0;
-                for (var di = 0; di < data.length; di++) {
-                    if (data[di].s.indexOf(a)!==-1 && data[di].s.indexOf(b)!==-1 && data[di].s.indexOf(c)!==-1) co3++;
-                }
-                var pairs = [[a,b],[a,c],[b,c]];
-                var minP = 999;
-                for (var pi = 0; pi < pairs.length; pi++) {
-                    var pk2 = (pairs[pi][0]<pairs[pi][1])?pairs[pi][0]+'-'+pairs[pi][1]:pairs[pi][1]+'-'+pairs[pi][0];
-                    var pco = pd.pair[pk2]||0;
-                    if (pco < minP) minP = pco;
-                }
-                var ms = Math.min(scores[a]||0, scores[b]||0, scores[c]||0);
-                cands.push({ nums:[a,b,c], sc:(co3+1)*(minP+1)*ms, co3:co3, minP:minP });
-            }
-        }
-    }
-    cands.sort(function(x,y){ return y.sc-x.sc; });
-    var res = [], usedS = [];
-    for (var ci = 0; ci < cands.length && res.length < 2; ci++) {
-        var s = cands[ci].nums.slice().sort().join('-');
-        if (usedS.indexOf(s)===-1) { res.push(cands[ci]); usedS.push(s); }
-    }
-    while (res.length < 2) {
-        var idx = res.length*3;
-        res.push({ nums:[pool[idx]||'??',pool[idx+1]||'??',pool[idx+2]||'??'], co3:0, minP:0 });
-    }
-    return res;
-}
-
-function getXien4(data, pool) {
-    var pd = buildPairData(data);
-    var scores = getCombinedScores(data);
-    var cands = [];
-    var len = Math.min(pool.length, 8);
-    for (var i = 0; i < len; i++) {
-        for (var j = i+1; j < len; j++) {
-            for (var k = j+1; k < len; k++) {
-                for (var l = k+1; l < len; l++) {
-                    var a = pool[i], b = pool[j], c = pool[k], dd = pool[l];
-                    var co4 = 0;
-                    for (var di = 0; di < data.length; di++) {
-                        if (data[di].s.indexOf(a)!==-1 && data[di].s.indexOf(b)!==-1 && data[di].s.indexOf(c)!==-1 && data[di].s.indexOf(dd)!==-1) co4++;
-                    }
-                    var pairs = [[a,b],[a,c],[a,dd],[b,c],[b,dd],[c,dd]];
-                    var minP = 999;
-                    for (var pi = 0; pi < pairs.length; pi++) {
-                        var pk3 = (pairs[pi][0]<pairs[pi][1])?pairs[pi][0]+'-'+pairs[pi][1]:pairs[pi][1]+'-'+pairs[pi][0];
-                        var pco = pd.pair[pk3]||0;
-                        if (pco < minP) minP = pco;
-                    }
-                    var ms = Math.min(scores[a]||0, scores[b]||0, scores[c]||0, scores[dd]||0);
-                    cands.push({ nums:[a,b,c,dd], sc:(co4+1)*(minP+1)*ms, co4:co4, minP:minP });
-                }
-            }
-        }
-    }
-    cands.sort(function(x,y){ return y.sc-x.sc; });
-    var res = [], usedS = [];
-    for (var ci = 0; ci < cands.length && res.length < 2; ci++) {
-        var s = cands[ci].nums.slice().sort().join('-');
-        if (usedS.indexOf(s)===-1) { res.push(cands[ci]); usedS.push(s); }
-    }
-    while (res.length < 2) {
-        var idx = res.length*4;
-        res.push({ nums:[pool[idx]||'??',pool[idx+1]||'??',pool[idx+2]||'??',pool[idx+3]||'??'], co4:0, minP:0 });
-    }
-    return res;
-}
-
-function runYesterdayVerify() {
-    if (db.length < 6) return;
-    var actualData = db[0];
-    var predData = db.slice(1);
-    if (predData.length < 5) return;
-    var top8 = getTopN(predData, 8);
-    var st = getSongThu(predData);
-    var actualRaw = actualData.raw;
-    var stHits = 0;
-    for (var ri = 0; ri < actualRaw.length; ri++) {
-        if (actualRaw[ri] === st.n1) stHits++;
-        if (actualRaw[ri] === st.n2) stHits++;
-    }
-    var d8Hits = 0, d8Detail = [];
-    for (var ti = 0; ti < top8.length; ti++) {
-        var cnt = 0;
-        for (var ri = 0; ri < actualRaw.length; ri++) {
-            if (actualRaw[ri] === top8[ti]) cnt++;
-        }
-        if (cnt > 0) { d8Hits += cnt; d8Detail.push(top8[ti]+'('+cnt+')'); }
-    }
-    var x2 = getXien2(predData, top8);
-    var html = '';
-    html += '<div class="verify-row"><span class="vr-label">Ngày</span><span class="vr-val" style="color:var(--cyan)">'+actualData.d+'</span></div>';
-    html += '<div class="verify-row"><span class="vr-label">Song Thủ ['+st.n1+'-'+st.n2+']</span>';
-    html += stHits > 0 ? '<span class="vr-val vr-hit">NỔ '+stHits+' NHÁY ✓</span>' : '<span class="vr-val vr-miss">TRƯỢT</span>';
-    html += '</div>';
-    html += '<div class="verify-row"><span class="vr-label">Dàn 8</span>';
-    html += d8Hits > 0 ? '<span class="vr-val vr-hit">'+d8Hits+' nháy: '+d8Detail.join(', ')+'</span>' : '<span class="vr-val vr-miss">0 nháy</span>';
-    html += '</div>';
-    for (var xi = 0; xi < 2; xi++) {
-        var aH = false, bH = false;
-        for (var ri = 0; ri < actualRaw.length; ri++) {
-            if (actualRaw[ri] === x2[xi].a) aH = true;
-            if (actualRaw[ri] === x2[xi].b) bH = true;
-        }
-        var ok = aH && bH;
-        html += '<div class="verify-row"><span class="vr-label">X2#'+(xi+1)+' ['+x2[xi].a+'-'+x2[xi].b+']</span>';
-        html += '<span class="vr-val '+(ok?'vr-hit':'vr-miss')+'">'+(ok?'TRÚNG ✓':'TRƯỢT')+'</span></div>';
-    }
-    document.getElementById('verify-content').innerHTML = html;
-    document.getElementById('verify-box').style.display = 'block';
-}
-
-function drawTrendChart() {
-    if (db.length < 16) return;
-    var canvas = document.getElementById('trend-canvas');
-    var wrap = canvas.parentElement;
-    var dpr = window.devicePixelRatio || 1;
-    var W = wrap.offsetWidth;
-    var H = 85;
-    canvas.width = W * dpr;
-    canvas.height = H * dpr;
-    canvas.style.width = W + 'px';
-    canvas.style.height = H + 'px';
-    var ctx = canvas.getContext('2d');
-    ctx.scale(dpr, dpr);
-    var PAD_L = 22, PAD_R = 8, PAD_T = 8, PAD_B = 14;
-    var plotW = W - PAD_L - PAD_R;
-    var plotH = H - PAD_T - PAD_B;
-    var DAYS = Math.min(10, db.length - 5);
-    if (DAYS < 3) return;
-    var stData = [], d8Data = [];
-    for (var i = DAYS; i >= 1; i--) {
-        var testData = db.slice(i);
-        var actual = db[i-1].raw;
-        var top8 = getTopN(testData, 8);
-        var st = getSongThu(testData);
-        var stH = 0, d8H = 0;
-        for (var ri = 0; ri < actual.length; ri++) {
-            if (actual[ri] === st.n1 || actual[ri] === st.n2) stH++;
-            if (top8.indexOf(actual[ri]) !== -1) d8H++;
-        }
-        stData.push(stH);
-        d8Data.push(d8H);
-    }
-    var maxVal = 1;
-    for (var i = 0; i < stData.length; i++) {
-        if (stData[i] > maxVal) maxVal = stData[i];
-        if (d8Data[i] > maxVal) maxVal = d8Data[i];
-    }
-    maxVal = Math.max(maxVal, 4);
-    ctx.strokeStyle = '#0e2035';
-    ctx.lineWidth = 0.5;
-    for (var y = 0; y <= maxVal; y++) {
-        var yy = PAD_T + plotH - (y/maxVal)*plotH;
-        ctx.beginPath(); ctx.moveTo(PAD_L, yy); ctx.lineTo(W-PAD_R, yy); ctx.stroke();
-        if (y <= 6) { ctx.fillStyle = '#444'; ctx.font = '9px monospace'; ctx.textAlign = 'right'; ctx.fillText(y, PAD_L-3, yy+3); }
-    }
-    function drawLine(data, color) {
-        if (data.length < 2) return;
-        ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.beginPath();
-        for (var i = 0; i < data.length; i++) {
-            var x = PAD_L + (i/(data.length-1))*plotW;
-            var y = PAD_T + plotH - (data[i]/maxVal)*plotH;
-            if (i === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-        }
-        ctx.stroke();
-        for (var i = 0; i < data.length; i++) {
-            var x = PAD_L + (i/(data.length-1))*plotW;
-            var y = PAD_T + plotH - (data[i]/maxVal)*plotH;
-            ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI*2); ctx.fill();
-        }
-    }
-    drawLine(d8Data, '#40c4ff');
-    drawLine(stData, '#00d4ff');
-    document.getElementById('trend-box').style.display = 'block';
-}
-
-function runEngine() {
-    if (db.length < 5) return alert("Cần ít nhất 5 ngày dữ liệu!");
-    document.getElementById('loading-bar').classList.add('show');
-    setTimeout(function() {
-        try {
-            var top8data = getTopNWithScores(db, 8);
-            var top8 = [];
-            for (var ti = 0; ti < top8data.length; ti++) top8.push(top8data[ti].num);
-            var maxScore = top8data[0].score;
-            var allScores = getCombinedScores(db);
-            _cache.allScores = allScores;
-            _cache.maxScore = maxScore;
-            _cache.top8nums = top8.slice();
-            var st = getSongThu(db);
-            var x2 = getXien2(db, top8);
-            var x3 = getXien3(db, top8);
-            var x4 = getXien4(db, top8);
-            document.getElementById('x2-badge').style.display = 'none';
-            document.getElementById('x3-badge').style.display = 'none';
-            document.getElementById('stl-main').innerHTML = buildEditableSTL(st.n1, st.n2);
-            var stConf1 = calcConf(allScores[st.n1]||0, maxScore);
-            var stConf2 = calcConf(allScores[st.n2]||0, maxScore);
-            var stSupport = calcSupport([st.n1, st.n2], db);
-            document.getElementById('st-conf').innerText = st.n1+': '+stConf1+'% | '+st.n2+': '+stConf2+'% | Cặp: '+stSupport+'%';
-            var x2el1 = document.getElementById('x2-1');
-            var x2el2 = document.getElementById('x2-2');
-            x2el1.className = 'x-item'; x2el2.className = 'x-item';
-            var x2sup1 = calcSupport([x2[0].a, x2[0].b], db);
-            var x2sup2 = calcSupport([x2[1].a, x2[1].b], db);
-            x2el1.setAttribute('data-xnums', x2[0].a+'-'+x2[0].b);
-            x2el1.setAttribute('data-xtype', 'x2');
-            x2el2.setAttribute('data-xnums', x2[1].a+'-'+x2[1].b);
-            x2el2.setAttribute('data-xtype', 'x2');
-            x2el1.innerHTML = '<span class="x-nums"><span class="editable-num" onclick="openXienEdit(this)">'+x2[0].a+'-'+x2[0].b+'</span></span><span class="x-conf">SUP '+x2sup1+'%</span>';
-            x2el2.innerHTML = '<span class="x-nums"><span class="editable-num" onclick="openXienEdit(this)">'+x2[1].a+'-'+x2[1].b+'</span></span><span class="x-conf">SUP '+x2sup2+'%</span>';
-            if (x2[0].lift > 1.2) { document.getElementById('x2-badge').style.display = 'inline'; x2el1.className = 'x-item apriori-hot'; }
-            if (x2[1].lift > 1.2) { x2el2.className = 'x-item apriori-hot'; }
-            var x3sup1 = calcSupport(x3[0].nums, db);
-            var x3sup2 = calcSupport(x3[1].nums, db);
-            var x3el1 = document.getElementById('x3-1');
-            var x3el2 = document.getElementById('x3-2');
-            x3el1.setAttribute('data-xnums', x3[0].nums.join('-'));
-            x3el1.setAttribute('data-xtype', 'x3');
-            x3el2.setAttribute('data-xnums', x3[1].nums.join('-'));
-            x3el2.setAttribute('data-xtype', 'x3');
-            x3el1.innerHTML = '<span class="x-nums"><span class="editable-num" onclick="openXienEdit(this)">'+x3[0].nums.join('-')+'</span></span><span class="x-conf">SUP '+x3sup1+'%</span>';
-            x3el2.innerHTML = '<span class="x-nums"><span class="editable-num" onclick="openXienEdit(this)">'+x3[1].nums.join('-')+'</span></span><span class="x-conf">SUP '+x3sup2+'%</span>';
-            if (x3[0].co3 >= 2) document.getElementById('x3-badge').style.display = 'inline';
-            var x4sup1 = calcSupport(x4[0].nums, db);
-            var x4sup2 = calcSupport(x4[1].nums, db);
-            var x4el1 = document.getElementById('x4-1');
-            var x4el2 = document.getElementById('x4-2');
-            x4el1.setAttribute('data-xnums', x4[0].nums.join('-'));
-            x4el1.setAttribute('data-xtype', 'x4');
-            x4el2.setAttribute('data-xnums', x4[1].nums.join('-'));
-            x4el2.setAttribute('data-xtype', 'x4');
-            x4el1.innerHTML = '<span class="x-nums"><span class="editable-num" onclick="openXienEdit(this)">'+x4[0].nums.join('-')+'</span></span><span class="x-conf">SUP '+x4sup1+'%</span>';
-            x4el2.innerHTML = '<span class="x-nums"><span class="editable-num" onclick="openXienEdit(this)">'+x4[1].nums.join('-')+'</span></span><span class="x-conf">SUP '+x4sup2+'%</span>';
-            var grid = document.getElementById('dan8-grid');
-            var heatClasses = ['heat-hot','heat-hot','heat-warm','heat-warm','heat-mid','heat-mid','heat-cool','heat-cool'];
-            var gridHTML = '';
-            for (var di = 0; di < top8data.length; di++) {
-                var item = top8data[di];
-                var conf = calcConf(item.score, maxScore);
-                gridHTML += buildEditableD8Cell(item.num, di+1, heatClasses[di], conf);
-            }
-            grid.innerHTML = gridHTML;
-            document.getElementById('engine-panel').style.display = 'block';
-            runYesterdayVerify();
-            drawTrendChart();
-            var debugLines = [];
-            var sorted = [];
-            for (var k in allScores) sorted.push([k, allScores[k]]);
-            sorted.sort(function(a,b){ return b[1]-a[1]; });
-            var rawMAC = scoreMAC(db), rawMom = scoreMomentum(db);
-            var rawEnt = scoreEnt(db), rawClu = scoreCluster(db);
-            debugLines.push('=== TOP 12 SCORE (QUAD CORE V42) ===');
-            for (var si = 0; si < Math.min(12, sorted.length); si++) {
-                var sn = sorted[si][0];
-                debugLines.push('#'+(si+1)+' ['+sn+'] sc='+sorted[si][1].toFixed(2)+' cf='+calcConf(sorted[si][1],maxScore)+'% gap='+currentGap(sn,db));
-                debugLines.push(' └MAC:'+(rawMAC[sn]||0).toFixed(2)+' Mom:'+(rawMom[sn]||0).toFixed(2)+' Ent:'+(rawEnt[sn]||0).toFixed(2)+' Clu:'+(rawClu[sn]||0).toFixed(2));
-            }
-            document.getElementById('debug-panel').innerHTML = debugLines.join('<br>');
-            document.getElementById('debug-btn').style.display = 'block';
-            document.getElementById('poster-area').classList.add('active');
-            document.getElementById('edit-hint').style.display = 'block';
-            document.getElementById('footer-tag').innerText = 'V42 QUAD CORE | DATA: '+db.length+' NGÀY';
-        } catch(e) {
-            alert("Lỗi engine: " + e.message);
-        }
-        document.getElementById('loading-bar').classList.remove('show');
-    }, 30);
-}
-
-function toggleDebug() {
-    var dp = document.getElementById('debug-panel');
-    var btn = document.getElementById('debug-btn');
-    if (dp.className.indexOf('show') !== -1) {
-        dp.className = 'debug-panel';
-        btn.innerText = '[ SCORE REPORT ]';
-    } else {
-        dp.className = 'debug-panel show';
-        btn.innerText = '[ ẨN SCORE REPORT ]';
-    }
-}
-
-function runBlindTestUI() {
-    if (db.length < 20) return alert("Cần tối thiểu 20 ngày dữ liệu để test mù!");
-    var dp = document.getElementById('debug-panel');
-    var btn = document.getElementById('debug-btn');
-    dp.className = 'debug-panel show';
-    btn.innerText = '[ ẨN SCORE REPORT ]';
-    btn.style.display = 'block';
-    dp.innerHTML = "<span style='color:var(--cyan);font-weight:bold;font-size:13px;'>Đang chạy Walk-forward + P&L...<br>Vui lòng đợi...</span>";
-    document.getElementById('loading-bar').classList.add('show');
-    setTimeout(function() {
-        try {
-            var stWin = 0, stTotalHits = 0, d8Hits = 0;
-            var x2Win = 0, x3Win = 0, x4Win = 0;
-            var pnlST = 0, pnlD8 = 0, pnlX2 = 0, pnlX3 = 0, pnlX4 = 0;
-            var TEST_DAYS = db.length - 15;
-            if (TEST_DAYS < 1) TEST_DAYS = 1;
-            var logLines = [];
-            var maxStreak = 0, curStreak = 0;
-            for (var i = TEST_DAYS; i >= 1; i--) {
-                var testData = db.slice(i);
-                var actualResult = db[i-1].raw;
-                var dateLabel = db[i-1].d;
-                var top8 = getTopN(testData, 8);
-                var st = getSongThu(testData);
-                var x2 = getXien2(testData, top8);
-                var x3 = getXien3(testData, top8);
-                var x4 = getXien4(testData, top8);
-                var stHitDay = 0;
-                for (var ri = 0; ri < actualResult.length; ri++) {
-                    if (actualResult[ri] === st.n1) stHitDay++;
-                    if (actualResult[ri] === st.n2) stHitDay++;
-                }
-                if (stHitDay > 0) { stWin++; curStreak++; if (curStreak > maxStreak) maxStreak = curStreak; }
-                else curStreak = 0;
-                stTotalHits += stHitDay;
-                pnlST += stHitDay * 99.5 - 54;
-                var d8HitDay = 0;
-                for (var ri = 0; ri < actualResult.length; ri++) {
-                    if (top8.indexOf(actualResult[ri]) !== -1) d8HitDay++;
-                }
-                d8Hits += d8HitDay;
-                pnlD8 += d8HitDay * 99.5 - 216;
-                var x2HitDay = 0;
-                var x2a1=false, x2b1=false, x2a2=false, x2b2=false;
-                for (var ri = 0; ri < actualResult.length; ri++) {
-                    if (actualResult[ri] === x2[0].a) x2a1=true;
-                    if (actualResult[ri] === x2[0].b) x2b1=true;
-                    if (actualResult[ri] === x2[1].a) x2a2=true;
-                    if (actualResult[ri] === x2[1].b) x2b2=true;
-                }
-                if (x2a1 && x2b1) { x2Win++; x2HitDay++; }
-                if (x2a2 && x2b2) { x2Win++; x2HitDay++; }
-                pnlX2 += x2HitDay * 17 - 2;
-                var x3HitDay = 0;
-                for (var xi = 0; xi < 2; xi++) {
-                    var allIn = true;
-                    for (var ni = 0; ni < x3[xi].nums.length; ni++) {
-                        var fnd = false;
-                        for (var ri = 0; ri < actualResult.length; ri++) {
-                            if (actualResult[ri] === x3[xi].nums[ni]) { fnd=true; break; }
-                        }
-                        if (!fnd) { allIn=false; break; }
-                    }
-                    if (allIn) { x3Win++; x3HitDay++; }
-                }
-                pnlX3 += x3HitDay * 65 - 2;
-                var x4HitDay = 0;
-                for (var xi = 0; xi < 2; xi++) {
-                    var allIn = true;
-                    for (var ni = 0; ni < x4[xi].nums.length; ni++) {
-                        var fnd = false;
-                        for (var ri = 0; ri < actualResult.length; ri++) {
-                            if (actualResult[ri] === x4[xi].nums[ni]) { fnd=true; break; }
-                        }
-                        if (!fnd) { allIn=false; break; }
-                    }
-                    if (allIn) { x4Win++; x4HitDay++; }
-                }
-                pnlX4 += x4HitDay * 188 - 2;
-                var stColor = stHitDay > 0 ? '#00d4ff' : '#ff5252';
-                var d8Color = d8HitDay >= 3 ? '#40c4ff' : (d8HitDay > 0 ? '#8ab4d0' : '#ff5252');
-                var x2Color = x2HitDay > 0 ? '#80d8ff' : '#ff5252';
-                logLines.push(
-                    '<div class="log-row">'
-                    + '<span style="color:#fff;flex:0 0 auto">' + dateLabel + '</span>'
-                    + '<span style="flex:0 0 auto">STL[<span style="color:var(--cyan)">' + st.n1 + '-' + st.n2 + '</span>]</span>'
-                    + '<span style="flex:0 0 auto"><b style="color:' + stColor + '">' + stHitDay + ' nháy</b></span>'
-                    + '<span style="flex:0 0 auto">D8:<span style="color:' + d8Color + '">' + d8HitDay + '</span></span>'
-                    + '<span style="flex:0 0 auto">X2:<span style="color:' + x2Color + '">' + x2HitDay + '</span></span>'
-                    + '</div>'
-                );
-            }
-            var totalPnL = pnlST + pnlD8 + pnlX2 + pnlX3 + pnlX4;
-            function pc(v) { return v >= 0 ? 'color:#00d4ff;font-weight:900' : 'color:#ff5252;font-weight:900'; }
-            function ps(v) { return v >= 0 ? '+'+v.toFixed(0)+'k' : v.toFixed(0)+'k'; }
-            var h = '<div style="font-size:14px;line-height:1.55;font-family:\'Exo 2\',sans-serif">';
-            h += '<span style="color:var(--cyan);font-weight:900;font-size:17px;font-family:\'Share Tech Mono\',monospace">=== TEST MÙ V42 QUAD CORE (' + TEST_DAYS + ' NGÀY) ===</span><br>';
-            h += '<span style="color:#fff">WR Song Thủ: </span><span style="color:var(--green);font-weight:900">' + ((stWin/TEST_DAYS)*100).toFixed(1) + '%</span> <span style="color:#fff">MaxStreak: ' + maxStreak + '</span><br>';
-            h += '<span style="color:#fff">Song Thủ: </span><span style="color:var(--green);font-weight:900">' + (stTotalHits/TEST_DAYS).toFixed(2) + ' nháy/ngày</span> <span style="color:#fff">(' + stTotalHits + ')</span><br>';
-            h += '<span style="color:#fff">Dàn 8: </span><span style="color:var(--green);font-weight:900">' + (d8Hits/TEST_DAYS).toFixed(2) + ' nháy/ngày</span> <span style="color:#fff">(' + d8Hits + ')</span><br><br>';
-            h += '<span style="color:var(--gold);font-weight:bold">Xiên 2: ' + x2Win + ' trúng / ' + (TEST_DAYS*2) + ' cặp</span><br>';
-            h += '<span style="color:var(--neon);font-weight:bold">Xiên 3: ' + x3Win + ' trúng / ' + (TEST_DAYS*2) + ' bộ</span><br>';
-            h += '<span style="color:var(--green);font-weight:bold">Xiên 4: ' + x4Win + ' trúng / ' + (TEST_DAYS*2) + ' bộ</span><br><br>';
-            h += '<span style="color:var(--cyan);font-weight:900;font-size:17px;font-family:\'Share Tech Mono\',monospace">=== P&L (đơn vị: 1k) ===</span><br>';
-            h += '<span style="color:#fff;font-size:12px">Lô:27k/số | X2:1k/cặp | X3:1k/bộ | X4:1k/bộ</span><br><br>';
-            h += '<div class="pnl-row"><span style="color:#fff">Song Thủ (2 số)</span><span style="' + pc(pnlST) + '">' + ps(pnlST) + '</span></div>';
-            h += '<div class="pnl-row"><span style="color:#fff">Dàn 8 số</span><span style="' + pc(pnlD8) + '">' + ps(pnlD8) + '</span></div>';
-            h += '<div class="pnl-row"><span style="color:#fff">Xiên 2 (2 cặp)</span><span style="' + pc(pnlX2) + '">' + ps(pnlX2) + '</span></div>';
-            h += '<div class="pnl-row"><span style="color:#fff">Xiên 3 (2 bộ)</span><span style="' + pc(pnlX3) + '">' + ps(pnlX3) + '</span></div>';
-            h += '<div class="pnl-row"><span style="color:#fff">Xiên 4 (2 bộ)</span><span style="' + pc(pnlX4) + '">' + ps(pnlX4) + '</span></div>';
-            h += '<div class="pnl-row" style="border-top:1px solid #1e4d7a;margin-top:4px;padding-top:4px"><span style="color:#fff;font-weight:900">TỔNG P&L</span><span style="' + pc(totalPnL) + ';font-size:17px">' + ps(totalPnL) + '</span></div>';
-            h += '<div style="color:#fff;font-size:12px;margin-top:3px">P&L/ngày: ' + (totalPnL/TEST_DAYS).toFixed(1) + 'k | Vốn/ngày: 276k | ROI: ' + ((totalPnL/(TEST_DAYS*276))*100).toFixed(1) + '%</div>';
-            h += '<br><span style="color:var(--cyan);font-weight:900;font-family:\'Share Tech Mono\',monospace">=== TOÀN BỘ LOG (' + TEST_DAYS + ' NGÀY) ===</span><br>';
-            h += '<span style="color:#fff;font-size:12px">STL=SongThủ nh=nháy D8=Dàn8 X2=Xiên2</span><br>';
-            h += logLines.join('');
-            h += '</div>';
-            dp.innerHTML = h;
-            dp.scrollTop = 0;
-        } catch(e) {
-            dp.innerHTML = "<span style='color:red'>Lỗi: " + e.message + "</span>";
-        }
-        document.getElementById('loading-bar').classList.remove('show');
-    }, 50);
-}
-
-/* === EDITABLE NUMBER PAD SYSTEM === */
-var _np = {
-    el: null, // target element to update
-    type: '', // 'st', 'x2', 'x3', 'x4', 'd8'
-    count: 0, // how many numbers to edit (1 for d8, 2 for st/x2, 3 for x3, 4 for x4)
-    digits: [], // array of 2-char strings being built
-    curIdx: 0, // which number slot we're editing (0-based)
-    curBuf: '', // current digit buffer for active slot
-    origNums: [] // original numbers for display
+  }
 };
 
-function openNumpad(el, type, nums) {
-    _np.el = el;
-    _np.type = type;
-    _np.count = nums.length;
-    _np.digits = [];
-    for (var i = 0; i < nums.length; i++) _np.digits.push(nums[i]);
-    _np.origNums = nums.slice();
-    _np.curIdx = 0;
-    _np.curBuf = '';
-    var titles = { 'st':'SONG THỦ', 'x2':'XIÊN 2', 'x3':'XIÊN 3', 'x4':'XIÊN 4', 'd8':'DÀN 8' };
-    document.getElementById('numpad-title').innerText = 'CHỈNH ' + (titles[type]||'SỐ');
-    renderNumpadDisplay();
-    document.getElementById('numpad-overlay').classList.add('show');
-    document.body.style.overflow = 'hidden';
+function pick(cat, score) {
+  const tier = score >= 75 ? 'hi' : score >= 50 ? 'md' : 'lo';
+  const arr = DB[cat][tier];
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+function metricDesc(key, score) {
+  const tier = score >= 75 ? 'hi' : score >= 50 ? 'md' : 'lo';
+  return DB.metrics[key][tier];
 }
 
-function closeNumpad() {
-    document.getElementById('numpad-overlay').classList.remove('show');
-    document.body.style.overflow = '';
-    _np.el = null;
+/* ───────────────────────────────────────────────
+   SCORING ALGORITHM (Golden Ratio / Phi)
+─────────────────────────────────────────────── */
+function dist(a, b) {
+  return Math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2);
+}
+function mid(a, b) {
+  return { x:(a.x+b.x)/2, y:(a.y+b.y)/2 };
+}
+function scoreR(actual, ideal, tol) {
+  if (!isFinite(actual)) return 50;
+  const dev = Math.abs(actual - ideal) / Math.abs(ideal);
+  return Math.max(0, Math.min(100, 100 - (dev / tol) * 36));
 }
 
-function renderNumpadDisplay() {
-    var html = '';
-    for (var i = 0; i < _np.count; i++) {
-        if (i > 0) html += '<span class="numpad-sep">—</span>';
-        var val = (i === _np.curIdx) ? _np.curBuf : _np.digits[i];
-        var isActive = (i === _np.curIdx);
-        var d1 = val.length > 0 ? val.charAt(0) : '_';
-        var d2 = val.length > 1 ? val.charAt(1) : '_';
-        var filled1 = val.length > 0 ? ' filled' : '';
-        var filled2 = val.length > 1 ? ' filled' : '';
-        var active = isActive ? ' active-slot' : '';
-        html += '<span class="numpad-digit-slot' + filled1 + active + '" style="width:36px;height:42px;font-size:22px">' + d1 + '</span>';
-        html += '<span class="numpad-digit-slot' + filled2 + active + '" style="width:36px;height:42px;font-size:22px">' + d2 + '</span>';
-    }
-    document.getElementById('numpad-display').innerHTML = html;
+function calcScore(lm, gender) {
+  const p = lm.positions;
+  if (!p || p.length < 68) return null;
+
+  /* KEY MEASUREMENTS */
+  // Face width at jaw: 0–16
+  const faceW = dist(p[0], p[16]);
+  // Left eye corners: 36(outer) 39(inner)
+  const leW = dist(p[36], p[39]);
+  // Right eye corners: 42(inner) 45(outer)
+  const reW = dist(p[42], p[45]);
+  const avgEyeW = (leW + reW) / 2;
+  // Inter-eye spacing (inner corners)
+  const eyeGap = dist(p[39], p[42]);
+  // Nose: 27(bridge top) 33(tip) 31(L ala) 35(R ala)
+  const noseW = dist(p[31], p[35]);
+  const noseH = dist(p[27], p[33]);
+  // Mouth: 48(L) 54(R) 51(top) 57(bottom)
+  const mouthW = dist(p[48], p[54]);
+  const upperLipH = dist(p[51], p[62]);
+  const lowerLipH = dist(p[57], p[62]);
+  // Brow midpoints: 19 (L) 24 (R)
+  const browY = (p[19].y + p[24].y) / 2;
+  const noseTipY = p[33].y;
+  const chinY = p[8].y;
+  // Face height (brow line to chin)
+  const faceH = Math.abs(chinY - browY);
+
+  /* COMPONENT SCORES */
+  const isMale = gender === 'male';
+
+  // 1. Face oval ratio — ideal: height/width ≈ Phi (1.618)
+  const faceR = faceH / faceW;
+  const s1 = scoreR(faceR, isMale ? 1.5 : 1.58, 0.16);
+
+  // 2. Eye spacing — each eye = 1/5 face width, gap = 1 eye width
+  const eyeGapRatio = eyeGap / avgEyeW;
+  const s2 = scoreR(eyeGapRatio, 1.0, 0.18);
+
+  // 3. Nose width — ideal 1/5 of face width
+  const noseRatio = noseW / faceW;
+  const s3 = scoreR(noseRatio, 0.200, 0.07);
+
+  // 4. Mouth/nose golden ratio — mouth = Phi × nose
+  const mnRatio = mouthW / noseW;
+  const s4 = scoreR(mnRatio, PHI, 0.13);
+
+  // 5. Symmetry — compare L/R eye widths + L/R brow heights
+  const eyeSymm = 1 - Math.min(1, Math.abs(leW - reW) / avgEyeW);
+  const browSymm = 1 - Math.min(1, Math.abs(p[19].y - p[24].y) / (faceH * 0.1 + 1));
+  const s5 = Math.min(100, (eyeSymm * 0.55 + Math.min(1, browSymm) * 0.45) * 100);
+
+  // 6. Vertical thirds (nose-to-chin / brow-to-nose)
+  const upper  = Math.abs(noseTipY - browY);
+  const lower  = Math.abs(chinY - noseTipY);
+  const thirdR = upper / (lower || 1);
+  const s6 = scoreR(thirdR, 1.0, 0.17);
+
+  // 7. Lip ratio (lower:upper ≈ Phi)
+  const lipR = lowerLipH / (upperLipH || 1);
+  const s7 = scoreR(lipR, PHI, 0.22);
+
+  // WEIGHTED TOTAL
+  const W = { s1:0.16, s2:0.20, s3:0.15, s4:0.14, s5:0.20, s6:0.10, s7:0.05 };
+  const raw = s1*W.s1 + s2*W.s2 + s3*W.s3 + s4*W.s4 + s5*W.s5 + s6*W.s6 + s7*W.s7;
+  const total = Math.round(Math.min(97, Math.max(38, raw)));
+
+  // Phi score (face H/W vs 1.618)
+  const phiScore = scoreR(faceH / faceW, PHI, 0.13);
+
+  return {
+    total,
+    faceShape: Math.round(s1),
+    eyes:      Math.round(s2),
+    nose:      Math.round(s3),
+    mouth:     Math.round(s4),
+    symmetry:  Math.round(s5),
+    forehead:  Math.round(s6),
+    phi:       Math.round(phiScore)
+  };
 }
 
-function numpadInput(d) {
-    if (_np.curBuf.length >= 2) return;
-    _np.curBuf += d;
-    if (_np.curBuf.length === 2) {
-        _np.digits[_np.curIdx] = _np.curBuf;
-        if (_np.curIdx < _np.count - 1) {
-            _np.curIdx++;
-            _np.curBuf = '';
-        }
-    }
-    renderNumpadDisplay();
+/* ───────────────────────────────────────────────
+   COLOR HELPERS
+─────────────────────────────────────────────── */
+function clr(s) {
+  if (s >= 88) return '#ffd700';
+  if (s >= 74) return '#d4af37';
+  if (s >= 60) return '#e89030';
+  if (s >= 45) return '#c08030';
+  return '#906040';
+}
+function barGrad(s) {
+  if (s >= 88) return 'linear-gradient(90deg,#9a6f00,#ffd700)';
+  if (s >= 74) return 'linear-gradient(90deg,#6a4f10,#d4af37)';
+  if (s >= 60) return 'linear-gradient(90deg,#a05010,#e89030)';
+  return 'linear-gradient(90deg,#6a3010,#c07030)';
 }
 
-function numpadDelete() {
-    if (_np.curBuf.length > 0) {
-        _np.curBuf = _np.curBuf.slice(0, -1);
-    } else if (_np.curIdx > 0) {
-        _np.curIdx--;
-        _np.curBuf = _np.digits[_np.curIdx].slice(0, 1);
-        _np.digits[_np.curIdx] = _np.curBuf;
-    }
-    renderNumpadDisplay();
+function grade(s) {
+  if (s >= 93) return { l:'S', t:'PHÚ QUÝ SONG TOÀN',    c:'#ffd700' };
+  if (s >= 83) return { l:'A', t:'QUÝ TƯỚNG THƯỢNG PHẨM',c:'#d4af37' };
+  if (s >= 71) return { l:'B', t:'HẢO TƯỚNG TRUNG CẤP',  c:'#e89030' };
+  if (s >= 56) return { l:'C', t:'TƯỚNG BÌNH THƯỜNG',     c:'#b08030' };
+  return              { l:'D', t:'CẦN TU DƯỠNG ĐỨC HẠNH',c:'#907050' };
 }
 
-function numpadConfirm() {
-    if (_np.curBuf.length === 1) _np.curBuf = '0' + _np.curBuf;
-    if (_np.curBuf.length === 2) _np.digits[_np.curIdx] = _np.curBuf;
-    for (var i = 0; i < _np.count; i++) {
-        if (!_np.digits[i] || _np.digits[i].length !== 2) {
-            _np.curIdx = i;
-            _np.curBuf = _np.digits[i] || '';
-            renderNumpadDisplay();
-            return;
-        }
-    }
-    applyNumpadResult();
-    closeNumpad();
-}
+/* ───────────────────────────────────────────────
+   CANVAS DRAWING
+─────────────────────────────────────────────── */
+function drawFace(dets, vw, vh) {
+  const canvas = document.getElementById('faceCanvas');
+  const ctx    = canvas.getContext('2d');
+  canvas.width  = vw;
+  canvas.height = vh;
+  ctx.clearRect(0, 0, vw, vh);
 
-function applyNumpadResult() {
-    var el = _np.el;
-    var nums = _np.digits;
-    if (!el) return;
-    if (_np.type === 'st') {
-        rebuildFromSongThu(nums[0], nums[1]);
-    } else if (_np.type === 'd8') {
-        var cell = el;
-        var numSpan = cell.querySelector('.d8-number');
-        if (numSpan) {
-            numSpan.innerHTML = nums[0];
-            cell.setAttribute('data-num', nums[0]);
-            cell.onclick = function() { openNumpad(cell, 'd8', [cell.getAttribute('data-num')]); };
-        }
-    } else if (_np.type === 'x2' || _np.type === 'x3' || _np.type === 'x4') {
-        var xItem = el;
-        var sep = _np.type === 'x2' ? '-' : '-';
-        xItem.querySelector('.x-nums').innerHTML = buildEditableXien(nums, _np.type, xItem);
-    }
-}
+  dets.forEach(det => {
+    const box = det.detection.box;
+    const pts = det.landmarks.positions;
+    if (!pts || pts.length < 68) return;
 
-/* === SONG THỦ CASCADE: rebuild Dàn 8 + Xiên 2/3/4 === */
-function rebuildFromSongThu(n1, n2) {
-    if (!_cache.allScores || db.length < 5) return;
-    /* Update Song Thủ display */
-    document.getElementById('stl-main').innerHTML = buildEditableSTL(n1, n2);
-    var stConf1 = calcConf(_cache.allScores[n1]||0, _cache.maxScore);
-    var stConf2 = calcConf(_cache.allScores[n2]||0, _cache.maxScore);
-    var stSupport = calcSupport([n1, n2], db);
-    document.getElementById('st-conf').innerText = n1+': '+stConf1+'% | '+n2+': '+stConf2+'% | Cặp: '+stSupport+'%';
+    // Bounding box glow
+    ctx.save();
+    ctx.strokeStyle = 'rgba(212,175,55,0.85)';
+    ctx.lineWidth   = 1.8;
+    ctx.shadowColor = '#d4af37';
+    ctx.shadowBlur  = 14;
+    ctx.strokeRect(box.x, box.y, box.width, box.height);
+    ctx.restore();
 
-    /* Build new pool: force n1, n2 at top, fill remaining 6 from engine scores */
-    var sorted = [];
-    for (var k in _cache.allScores) sorted.push([k, _cache.allScores[k]]);
-    sorted.sort(function(a,b){ return b[1]-a[1]; });
-    var newPool = [n1, n2];
-    for (var i = 0; i < sorted.length && newPool.length < 8; i++) {
-        var sn = sorted[i][0];
-        if (sn !== n1 && sn !== n2) newPool.push(sn);
-    }
+    // Corner marks
+    const cs = 14;
+    ctx.strokeStyle = '#ffd700';
+    ctx.lineWidth   = 2.5;
+    ctx.shadowColor = '#ffd700';
+    ctx.shadowBlur  = 8;
+    const corners = [
+      [box.x, box.y, 1, 1],
+      [box.x + box.width, box.y, -1, 1],
+      [box.x, box.y + box.height, 1, -1],
+      [box.x + box.width, box.y + box.height, -1, -1]
+    ];
+    corners.forEach(([x, y, dx, dy]) => {
+      ctx.beginPath();
+      ctx.moveTo(x + dx * cs, y);
+      ctx.lineTo(x, y);
+      ctx.lineTo(x, y + dy * cs);
+      ctx.stroke();
+    });
+    ctx.shadowBlur = 0;
 
-    /* Rebuild Dàn 8 grid */
-    var heatClasses = ['heat-hot','heat-hot','heat-warm','heat-warm','heat-mid','heat-mid','heat-cool','heat-cool'];
-    var gridHTML = '';
-    for (var di = 0; di < newPool.length; di++) {
-        var num = newPool[di];
-        var sc = _cache.allScores[num] || 0;
-        var conf = calcConf(sc, _cache.maxScore);
-        gridHTML += buildEditableD8Cell(num, di+1, heatClasses[di], conf);
-    }
-    document.getElementById('dan8-grid').innerHTML = gridHTML;
-
-    /* Recalculate Xiên 2/3/4 from new pool */
-    var x2 = getXien2(db, newPool);
-    var x3 = getXien3(db, newPool);
-    var x4 = getXien4(db, newPool);
-
-    /* Render Xiên 2 */
-    var x2el1 = document.getElementById('x2-1');
-    var x2el2 = document.getElementById('x2-2');
-    x2el1.className = 'x-item'; x2el2.className = 'x-item';
-    var x2sup1 = calcSupport([x2[0].a, x2[0].b], db);
-    var x2sup2 = calcSupport([x2[1].a, x2[1].b], db);
-    x2el1.setAttribute('data-xnums', x2[0].a+'-'+x2[0].b);
-    x2el1.setAttribute('data-xtype', 'x2');
-    x2el2.setAttribute('data-xnums', x2[1].a+'-'+x2[1].b);
-    x2el2.setAttribute('data-xtype', 'x2');
-    x2el1.innerHTML = '<span class="x-nums"><span class="editable-num" onclick="openXienEdit(this)">'+x2[0].a+'-'+x2[0].b+'</span></span><span class="x-conf">SUP '+x2sup1+'%</span>';
-    x2el2.innerHTML = '<span class="x-nums"><span class="editable-num" onclick="openXienEdit(this)">'+x2[1].a+'-'+x2[1].b+'</span></span><span class="x-conf">SUP '+x2sup2+'%</span>';
-    document.getElementById('x2-badge').style.display = 'none';
-    if (x2[0].lift > 1.2) { document.getElementById('x2-badge').style.display = 'inline'; x2el1.className = 'x-item apriori-hot'; }
-    if (x2[1].lift > 1.2) { x2el2.className = 'x-item apriori-hot'; }
-
-    /* Render Xiên 3 */
-    var x3el1 = document.getElementById('x3-1');
-    var x3el2 = document.getElementById('x3-2');
-    var x3sup1 = calcSupport(x3[0].nums, db);
-    var x3sup2 = calcSupport(x3[1].nums, db);
-    x3el1.setAttribute('data-xnums', x3[0].nums.join('-'));
-    x3el1.setAttribute('data-xtype', 'x3');
-    x3el2.setAttribute('data-xnums', x3[1].nums.join('-'));
-    x3el2.setAttribute('data-xtype', 'x3');
-    x3el1.innerHTML = '<span class="x-nums"><span class="editable-num" onclick="openXienEdit(this)">'+x3[0].nums.join('-')+'</span></span><span class="x-conf">SUP '+x3sup1+'%</span>';
-    x3el2.innerHTML = '<span class="x-nums"><span class="editable-num" onclick="openXienEdit(this)">'+x3[1].nums.join('-')+'</span></span><span class="x-conf">SUP '+x3sup2+'%</span>';
-    document.getElementById('x3-badge').style.display = 'none';
-    if (x3[0].co3 >= 2) document.getElementById('x3-badge').style.display = 'inline';
-
-    /* Render Xiên 4 */
-    var x4el1 = document.getElementById('x4-1');
-    var x4el2 = document.getElementById('x4-2');
-    var x4sup1 = calcSupport(x4[0].nums, db);
-    var x4sup2 = calcSupport(x4[1].nums, db);
-    x4el1.setAttribute('data-xnums', x4[0].nums.join('-'));
-    x4el1.setAttribute('data-xtype', 'x4');
-    x4el2.setAttribute('data-xnums', x4[1].nums.join('-'));
-    x4el2.setAttribute('data-xtype', 'x4');
-    x4el1.innerHTML = '<span class="x-nums"><span class="editable-num" onclick="openXienEdit(this)">'+x4[0].nums.join('-')+'</span></span><span class="x-conf">SUP '+x4sup1+'%</span>';
-    x4el2.innerHTML = '<span class="x-nums"><span class="editable-num" onclick="openXienEdit(this)">'+x4[1].nums.join('-')+'</span></span><span class="x-conf">SUP '+x4sup2+'%</span>';
-}
-
-function buildEditableSTL(n1, n2) {
-    return '<span class="editable-num" onclick="openNumpad(document.getElementById(\'stl-main\'),\'st\',getSTLNums())">' + n1 + '—' + n2 + '</span>';
-}
-
-function getSTLNums() {
-    var text = document.getElementById('stl-main').innerText.replace(/\s/g,'');
-    var parts = text.split('—');
-    if (parts.length === 2 && parts[0].length === 2 && parts[1].length === 2) return [parts[0], parts[1]];
-    return ['??','??'];
-}
-
-function buildEditableXien(nums, type, parentEl) {
-    var id = 'xe_' + Math.random().toString(36).substr(2,6);
-    parentEl.setAttribute('data-xnums', nums.join('-'));
-    parentEl.setAttribute('data-xtype', type);
-    return '<span class="editable-num" onclick="openXienEdit(this)">' + nums.join('-') + '</span>';
-}
-
-function openXienEdit(span) {
-    var item = span.closest('.x-item');
-    if (!item) return;
-    var numsStr = item.getAttribute('data-xnums') || '';
-    var type = item.getAttribute('data-xtype') || 'x2';
-    var nums = numsStr.split('-');
-    openNumpad(item, type, nums);
-}
-
-function buildEditableD8Cell(num, rank, heatClass, conf) {
-    return '<div class="dan8-cell editable-cell ' + heatClass + '" data-num="' + num + '" onclick="openNumpad(this,\'d8\',[this.getAttribute(\'data-num\')])">'
-        + '<span class="d8-rank">#' + rank + '</span>'
-        + '<span class="d8-number">' + num + '</span>'
-        + '<span class="d8-conf">' + conf + '%</span>'
-        + '</div>';
-}
-
-/* === MINH NGỌC LIVE CRAWL SYSTEM === */
-var _mnLive = {
-    timer: null,      // setInterval ID cho auto-poll
-    active: false,    // live mode on/off
-    lastCrawled: '',  // ngày cuối đã crawl thành công (DD/MM/YYYY)
-    pollInterval: 30  // giây giữa mỗi lần poll
-};
-
-function setMNStatus(text, cssClass) {
-    var el = document.getElementById('mn-status');
-    if (el) {
-        el.innerText = text;
-        el.className = cssClass || '';
-    }
-}
-
-function setMNDot(state) {
-    var dot = document.getElementById('mn-live-dot');
-    if (!dot) return;
-    dot.className = '';
-    if (state === 'live') { dot.innerText = '● LIVE'; dot.className = 'mn-live-active'; }
-    else if (state === 'crawling') { dot.innerText = '⟳'; dot.className = 'mn-crawling'; }
-    else { dot.innerText = '⏸'; dot.style.color = '#555'; }
-}
-
-function toggleMNBox() {
-    var sec = document.getElementById('mn-section');
-    var btn = document.getElementById('mn-toggle-btn');
-    if (sec.className.indexOf('collapsed') !== -1) {
-        sec.className = sec.className.replace(' collapsed', '');
-        btn.innerText = '[THU GỌN]';
-    } else {
-        sec.className += ' collapsed';
-        btn.innerText = '[MỞ RỘNG]';
-    }
-}
-
-/* Parse ngày từ DOM bảng Minh Ngọc — KHÔNG dùng new Date() */
-function parseMNDate() {
-    var box = document.getElementById('box_kqxs_minhngoc');
-    if (!box) return null;
-
-    /* Cách 1: Tìm text chứa pattern DD/MM/YYYY trong toàn bộ box */
-    var allText = box.innerText || '';
-    var dateMatch = allText.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
-    if (dateMatch) {
-        var dd = ("0" + parseInt(dateMatch[1], 10)).slice(-2);
-        var mm = ("0" + parseInt(dateMatch[2], 10)).slice(-2);
-        var yyyy = dateMatch[3];
-        return dd + '/' + mm + '/' + yyyy;
-    }
-
-    /* Cách 2: Tìm trong các thẻ có class chứa "ngay" hoặc "title" */
-    var titleCells = box.querySelectorAll('td, th, div, span');
-    for (var i = 0; i < titleCells.length; i++) {
-        var txt = titleCells[i].innerText || '';
-        var m2 = txt.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
-        if (m2) {
-            var dd2 = ("0" + parseInt(m2[1], 10)).slice(-2);
-            var mm2 = ("0" + parseInt(m2[2], 10)).slice(-2);
-            return dd2 + '/' + mm2 + '/' + m2[3];
-        }
-    }
-
-    return null; // Không tìm được → KHÔNG nạp
-}
-
-/* Crawl lô 2 số cuối từ bảng MN */
-function crawlLoFromMN() {
-    var box = document.getElementById('box_kqxs_minhngoc');
-    if (!box) return null;
-
-    var cacGiai = box.querySelectorAll('[class^="giai"]');
-    if (!cacGiai.length) {
-        /* Fallback: quét tất cả td có số dài >= 2 chữ số */
-        cacGiai = box.querySelectorAll('td');
-    }
-
-    var loNumbers = [];
-    for (var i = 0; i < cacGiai.length; i++) {
-        var daySo = cacGiai[i].innerText.match(/\d{2,}/g);
-        if (daySo) {
-            for (var j = 0; j < daySo.length; j++) {
-                if (daySo[j].length >= 2) {
-                    loNumbers.push(daySo[j].slice(-2));
-                }
-            }
-        }
-    }
-
-    return loNumbers.length >= 27 ? loNumbers : null;
-}
-
-/* Core: thực hiện 1 lần crawl, trả về true nếu nạp thành công data MỚI */
-function doOneCrawl(silent) {
-    var dateStr = parseMNDate();
-    if (!dateStr) {
-        if (!silent) setMNStatus('Bảng MN chưa load hoặc không có ngày', '');
-        return false;
-    }
-
-    var loNumbers = crawlLoFromMN();
-    if (!loNumbers) {
-        if (!silent) setMNStatus('Bảng MN ngày ' + dateStr + ' — chưa đủ 27 giải', '');
-        return false;
-    }
-
-    /* Kiểm tra đã có trong db chưa */
-    var existingIndex = -1;
-    for (var di = 0; di < db.length; di++) {
-        if (db[di].d === dateStr) { existingIndex = di; break; }
-    }
-
-    /* Nếu đã có và raw.length giống → không cần nạp lại */
-    if (existingIndex !== -1 && db[existingIndex].raw.length === loNumbers.length) {
-        if (!silent) setMNStatus('Ngày ' + dateStr + ' đã có trong DB (' + loNumbers.length + ' lô)', '');
-        _mnLive.lastCrawled = dateStr;
-        return false;
-    }
-
-    /* Nạp data mới */
-    var unique = [];
-    for (var k = 0; k < loNumbers.length; k++) {
-        if (unique.indexOf(loNumbers[k]) === -1) unique.push(loNumbers[k]);
-    }
-
-    var dataObj = { d: dateStr, s: unique, raw: loNumbers };
-
-    if (existingIndex !== -1) {
-        db[existingIndex] = dataObj;
-    } else {
-        db.unshift(dataObj);
-    }
-
-    db.sort(function(a, b) {
-        var pA = a.d.split('/'), pB = b.d.split('/');
-        return new Date(pB[2], pB[1] - 1, pB[0]) - new Date(pA[2], pA[1] - 1, pA[0]);
+    // Landmark points grouped by region
+    const regions = [
+      { rng:[0,16],  col:'rgba(212,175,55,0.35)', r:1.4 },  // jaw
+      { rng:[17,26], col:'rgba(200,155,50,0.65)', r:1.5 },  // brows
+      { rng:[27,35], col:'rgba(255,180,60,0.65)', r:1.5 },  // nose
+      { rng:[36,41], col:'rgba(80,180,255,0.60)', r:1.6 },  // L eye
+      { rng:[42,47], col:'rgba(80,180,255,0.60)', r:1.6 },  // R eye
+      { rng:[48,67], col:'rgba(255,100,120,0.65)', r:1.5 }, // mouth
+    ];
+    regions.forEach(rg => {
+      ctx.fillStyle = rg.col;
+      for (let i = rg.rng[0]; i <= rg.rng[1] && i < pts.length; i++) {
+        ctx.beginPath();
+        ctx.arc(pts[i].x, pts[i].y, rg.r, 0, Math.PI*2);
+        ctx.fill();
+      }
     });
 
-    try { localStorage.setItem(DB_KEY, JSON.stringify(db)); } catch(e) {}
-    updateCounter();
-    renderQueue();
-
-    _mnLive.lastCrawled = dateStr;
-    setMNStatus('NẠP THÀNH CÔNG ngày ' + dateStr + ' (' + loNumbers.length + ' lô, ' + unique.length + ' unique)', 'mn-crawling');
-
-    return true; // data MỚI đã nạp
+    // Phi guideline: vertical center + eye horizontal
+    ctx.setLineDash([3, 4]);
+    ctx.lineWidth   = 0.8;
+    ctx.strokeStyle = 'rgba(212,175,55,0.22)';
+    // Eye line
+    const eyeY = (pts[39].y + pts[42].y) / 2;
+    ctx.beginPath(); ctx.moveTo(box.x, eyeY); ctx.lineTo(box.x + box.width, eyeY); ctx.stroke();
+    // Center line
+    const cx = (pts[27].x + pts[33].x) / 2;
+    ctx.beginPath(); ctx.moveTo(cx, box.y); ctx.lineTo(cx, box.y + box.height); ctx.stroke();
+    // Nose-tip line
+    const noseY = pts[33].y;
+    ctx.beginPath(); ctx.moveTo(box.x, noseY); ctx.lineTo(box.x + box.width, noseY); ctx.stroke();
+    ctx.setLineDash([]);
+  });
 }
 
-/* Nút bấm thủ công: NẠP TỪ BẢNG NÀY */
-function manualCrawlNow() {
-    setMNDot('crawling');
-    setMNStatus('Đang quét bảng...', 'mn-crawling');
+/* ───────────────────────────────────────────────
+   UI UPDATE
+─────────────────────────────────────────────── */
+let lastReadingTotal = -99;
+let readingsDone = false;
 
-    var ok = doOneCrawl(false);
-    if (ok) {
-        setMNDot('live');
-        /* Tự chạy engine sau 500ms */
-        setTimeout(function() { runEngine(); }, 500);
-    } else {
-        setMNDot('idle');
+function setBar(id, val, dur = 1100) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.background  = barGrad(val);
+  el.style.transition  = `width ${dur}ms cubic-bezier(0.4,0,0.2,1)`;
+  // small timeout so transition fires
+  setTimeout(() => el.style.width = val + '%', 60);
+}
+
+function updateUI(scores, gender, age) {
+  // Show results panel
+  document.getElementById('panel-idle').style.display = 'none';
+  const res = document.getElementById('results');
+  res.classList.add('show');
+
+  // Video overlay score
+  const so = document.getElementById('score-overlay');
+  so.classList.add('on');
+  const sn = document.getElementById('scoreNum');
+  sn.textContent   = scores.total;
+  sn.style.color   = clr(scores.total);
+  sn.style.textShadow = `0 0 20px ${clr(scores.total)}, 0 0 40px ${clr(scores.total)}80`;
+
+  // Grade
+  const g = grade(scores.total);
+  const gl = document.getElementById('gradeLetter');
+  gl.textContent    = g.l;
+  gl.style.color    = g.c;
+  gl.style.textShadow = `0 0 30px ${g.c}, 0 0 60px ${g.c}50`;
+  document.getElementById('gradeTitle').textContent = g.t;
+  document.getElementById('goldenPct').textContent  = scores.phi + '%';
+
+  // Gender pill
+  const pill = document.getElementById('genderPill');
+  pill.classList.add('on');
+  document.getElementById('gIcon').textContent = gender === 'male' ? '♂' : '♀';
+  document.getElementById('gText').textContent = gender === 'male' ? 'Nam' : 'Nữ';
+  if (age) document.getElementById('gAge').textContent = `· ~${Math.round(age)} tuổi`;
+
+  // Metrics
+  const mkeys = [
+    { key:'faceShape', sId:'mFace',    bId:'bFace',    dId:'dFace'    },
+    { key:'eyes',      sId:'mEyes',    bId:'bEyes',    dId:'dEyes'    },
+    { key:'nose',      sId:'mNose',    bId:'bNose',    dId:'dNose'    },
+    { key:'mouth',     sId:'mMouth',   bId:'bMouth',   dId:'dMouth'   },
+    { key:'symmetry',  sId:'mSym',     bId:'bSym',     dId:'dSym'     },
+    { key:'forehead',  sId:'mForehead',bId:'bForehead',dId:'dForehead'},
+  ];
+  mkeys.forEach(m => {
+    const v = scores[m.key];
+    const se = document.getElementById(m.sId);
+    if (se) { se.textContent = v; se.style.color = clr(v); }
+    setBar(m.bId, v);
+    const de = document.getElementById(m.dId);
+    if (de) de.textContent = metricDesc(m.key, v);
+  });
+
+  // Readings — refresh only when score shifts > 7
+  if (!readingsDone || Math.abs(scores.total - lastReadingTotal) > 7) {
+    lastReadingTotal = scores.total;
+    readingsDone = true;
+    document.getElementById('rdPersonality').textContent = pick('personality', scores.total);
+    document.getElementById('rdEarly').textContent       = pick('early',       scores.symmetry);
+    document.getElementById('rdCurrent').textContent     = pick('current',     scores.faceShape);
+    document.getElementById('rdLate').textContent        = pick('late',        scores.eyes);
+  }
+
+  // Scan line
+  document.getElementById('scanLine').classList.add('on');
+  document.getElementById('idle-msg').classList.add('off');
+}
+
+function resetUI() {
+  document.getElementById('score-overlay').classList.remove('on');
+  document.getElementById('idle-msg').classList.remove('off');
+  document.getElementById('scanLine').classList.remove('on');
+  document.getElementById('genderPill').classList.remove('on');
+}
+
+/* ───────────────────────────────────────────────
+   MODEL LOADING
+─────────────────────────────────────────────── */
+async function loadModels() {
+  const status = document.getElementById('loader-status');
+  const bar    = document.getElementById('loader-bar');
+
+  const steps = [
+    { msg:'Tải mô hình phát hiện khuôn mặt...',
+      fn: () => faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL) },
+    { msg:'Tải mô hình 68 điểm đặc trưng...',
+      fn: () => faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL) },
+    { msg:'Tải mô hình tuổi & giới tính...',
+      fn: () => faceapi.nets.ageGenderNet.loadFromUri(MODEL_URL) },
+  ];
+
+  for (let i = 0; i < steps.length; i++) {
+    status.textContent = steps[i].msg;
+    bar.style.width    = `${Math.round((i / steps.length) * 85)}%`;
+    await steps[i].fn();
+  }
+
+  status.textContent = '✓ Sẵn sàng!';
+  bar.style.width = '100%';
+  await new Promise(r => setTimeout(r, 700));
+
+  const loader = document.getElementById('loader');
+  loader.classList.add('fade-out');
+  setTimeout(() => loader.style.display = 'none', 1100);
+}
+
+/* ───────────────────────────────────────────────
+   WEBCAM & DETECTION
+─────────────────────────────────────────────── */
+let videoEl   = null;
+let isRunning = false;
+let frame     = 0;
+let lastUpdate = 0;
+
+async function startCamera() {
+  const btn = document.getElementById('btnCam');
+  btn.disabled    = true;
+  btn.textContent = 'Đang kết nối...';
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width:{ideal:640}, height:{ideal:480}, facingMode:'user' },
+      audio: false
+    });
+    videoEl = document.getElementById('video');
+    videoEl.srcObject = stream;
+    await new Promise(r => videoEl.addEventListener('loadedmetadata', r, { once:true }));
+    await videoEl.play();
+
+    btn.textContent = '✓ CAMERA ĐÃ KẾT NỐI';
+    btn.classList.add('active');
+
+    isRunning = true;
+    detectionLoop();
+  } catch (err) {
+    console.error(err);
+    btn.disabled = false;
+    btn.textContent = '✗ LỖI — THỬ LẠI';
+    btn.style.background = 'linear-gradient(135deg,#4a1010,#8a2020)';
+    btn.style.color = '#f05050';
+  }
+}
+
+async function detectionLoop() {
+  if (!isRunning || !videoEl || videoEl.paused) {
+    requestAnimationFrame(detectionLoop);
+    return;
+  }
+
+  frame++;
+  const now = Date.now();
+
+  if (frame % 10 === 0) {
+    try {
+      const dets = await faceapi
+        .detectAllFaces(videoEl, new faceapi.TinyFaceDetectorOptions({
+          inputSize: 224,
+          scoreThreshold: 0.38
+        }))
+        .withFaceLandmarks()
+        .withAgeAndGender();
+
+      const sz = {
+        width:  videoEl.videoWidth  || 640,
+        height: videoEl.videoHeight || 480
+      };
+      const resized = faceapi.resizeResults(dets, sz);
+
+      drawFace(resized, sz.width, sz.height);
+
+      if (dets.length > 0 && now - lastUpdate > 500) {
+        lastUpdate = now;
+        const d      = dets[0];
+        const scores = calcScore(d.landmarks, d.gender);
+        if (scores) updateUI(scores, d.gender, d.age);
+      } else if (dets.length === 0 && now - lastUpdate > 1200) {
+        resetUI();
+      }
+    } catch (e) {
+      // silently continue
     }
+  }
+
+  requestAnimationFrame(detectionLoop);
 }
 
-/* Toggle chế độ LIVE auto-poll */
-function toggleAutoLive() {
-    var btn = document.getElementById('btn-auto-live');
-    if (_mnLive.active) {
-        /* Tắt */
-        _mnLive.active = false;
-        if (_mnLive.timer) { clearInterval(_mnLive.timer); _mnLive.timer = null; }
-        btn.innerText = 'BẬT LIVE';
-        btn.style.color = '#80d8ff';
-        btn.style.borderColor = '#80d8ff';
-        setMNDot('idle');
-        setMNStatus('Live đã tắt', '');
-    } else {
-        /* Bật */
-        _mnLive.active = true;
-        btn.innerText = '⏹ TẮT LIVE';
-        btn.style.color = '#00d4ff';
-        btn.style.borderColor = '#00d4ff';
-        setMNDot('live');
-        setMNStatus('LIVE — Poll mỗi ' + _mnLive.pollInterval + 's...', 'mn-live-active');
-
-        /* Chạy ngay 1 lần */
-        livePollTick();
-
-        /* Sau đó poll định kỳ */
-        _mnLive.timer = setInterval(function() {
-            livePollTick();
-        }, _mnLive.pollInterval * 1000);
-    }
-}
-
-function livePollTick() {
-    if (!_mnLive.active) return;
-
-    setMNDot('crawling');
-    var now = new Date();
-    var timeStr = ("0" + now.getHours()).slice(-2) + ':' + ("0" + now.getMinutes()).slice(-2) + ':' + ("0" + now.getSeconds()).slice(-2);
-
-    var ok = doOneCrawl(true);
-    if (ok) {
-        setMNStatus('LIVE ● Đã nạp data mới lúc ' + timeStr, 'mn-live-active');
-        setMNDot('live');
-        /* Tự chạy engine */
-        setTimeout(function() { runEngine(); }, 500);
-    } else {
-        var dateInMN = parseMNDate();
-        var loNums = crawlLoFromMN();
-        var detail = dateInMN ? ('Bảng: ' + dateInMN) : 'Chưa load';
-        if (dateInMN && !loNums) detail += ' (chưa đủ giải)';
-        else if (dateInMN && loNums) detail += ' (đã có trong DB)';
-        setMNStatus('LIVE ● ' + detail + ' | Poll: ' + timeStr, '');
-        setMNDot('live');
-    }
-}
-
-/* Giữ lại hàm cũ cho backward compat */
-function autoCrawlTuMinhNgoc() {
-    manualCrawlNow();
-}
-
-initDB();
+/* ───────────────────────────────────────────────
+   BOOT
+─────────────────────────────────────────────── */
+window.addEventListener('load', async () => {
+  try {
+    await loadModels();
+  } catch (err) {
+    console.error('Model load failed:', err);
+    document.getElementById('loader-status').textContent =
+      '⚠ Lỗi tải model. Kiểm tra kết nối internet và thử lại.';
+  }
+});
 </script>
 </body>
 </html>
-
-
