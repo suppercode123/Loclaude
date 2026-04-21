@@ -858,9 +858,11 @@ window.analyzeBirth=function(){
 /* ══ SCORING ══ */
 function dist(a,b){return Math.sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y));}
 function scoreR(actual,ideal,tol){
-  if(!isFinite(actual))return 50;
+  if(!isFinite(actual)||!isFinite(ideal)||ideal===0)return 50;
   var dev=Math.abs(actual-ideal)/Math.abs(ideal);
-  return Math.max(0,Math.min(100,100-(dev/tol)*36));
+  // Gaussian curve: 100 tại điểm lý tưởng, giảm mượt ra hai bên
+  var score=100*Math.exp(-2*(dev*dev)/(tol*tol));
+  return Math.max(18,Math.min(100,Math.round(score)));
 }
 function calcScore(lm,gender){
   var p=lm.positions;
@@ -885,7 +887,7 @@ function calcScore(lm,gender){
   var s6=scoreR(upper/(lower||1),1.0,0.17);
   var s7=scoreR(lowerLipH/(upperLipH||1),PHI,0.22);
   var raw=s1*.16+s2*.20+s3*.15+s4*.14+s5*.20+s6*.10+s7*.05;
-  var total=Math.round(Math.min(97,Math.max(38,raw)));
+  var total=Math.round(Math.min(97,Math.max(25,raw)));
   return{total:total,faceShape:Math.round(s1),eyes:Math.round(s2),nose:Math.round(s3),mouth:Math.round(s4),symmetry:Math.round(s5),forehead:Math.round(s6),phi:Math.round(scoreR(faceH/faceW,PHI,0.13))};
 }
 
@@ -1299,4 +1301,4 @@ function bootApp(){
 }
 </script>
 </body>
-            </html>
+  </html>
