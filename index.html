@@ -1005,6 +1005,69 @@ window.readFullReport=function(){
   speak(text);
 };
 
+/* ══ AI READING ══ */
+async function generateAIReading(scores,gender,age){
+  var genderText=gender==='male'?'Nam':'Nữ';
+  var ageText=age?Math.round(age)+' tuổi':'không rõ tuổi';
+  var prompt='Bạn là Thầy Khởi — một thầy tướng số nổi tiếng người Việt, giọng văn thâm trầm, uyên bác, bí ẩn, xen lẫn chất phán bài bản cổ xưa.\n\n'+
+    'Dữ liệu đo đạc khuôn mặt của người '+genderText+', '+ageText+':\n'+
+    '- Điểm tổng tướng số: '+scores.total+'/100\n'+
+    '- Khuôn mặt: '+scores.faceShape+'/100\n'+
+    '- Đôi mắt: '+scores.eyes+'/100\n'+
+    '- Mũi: '+scores.nose+'/100\n'+
+    '- Miệng: '+scores.mouth+'/100\n'+
+    '- Độ đối xứng: '+scores.symmetry+'/100\n'+
+    '- Trán/ngũ quan: '+scores.forehead+'/100\n\n'+
+    'Hãy viết lời phán HOÀN TOÀN DỰA VÀO CÁC CON SỐ THỰC TẾ trên. Đề cập cụ thể ít nhất 2-3 chỉ số trong mỗi phần. Trả lời bằng JSON thuần túy (không markdown, không backtick), theo đúng format sau:\n'+
+    '{"overall":"...2-3 câu lời phán tổng quát, nhắc điểm tổng và ít nhất 1 chỉ số...","personality":"...2 câu tính cách dựa trên mắt+miệng+đối xứng...","early":"...2 câu tiền vận dựa trên trán+tổng...","current":"...2 câu vận hiện tại dựa trên khuôn mặt+mũi...","late":"...2 câu hậu vận dựa trên tổng+đôi mắt...","descFaceShape":"...1 câu nhận xét khuôn mặt điểm '+scores.faceShape+'...","descEyes":"...1 câu nhận xét mắt điểm '+scores.eyes+'...","descNose":"...1 câu nhận xét mũi điểm '+scores.nose+'...","descMouth":"...1 câu nhận xét miệng điểm '+scores.mouth+'...","descSymmetry":"...1 câu nhận xét đối xứng điểm '+scores.symmetry+'...","descForehead":"...1 câu nhận xét trán điểm '+scores.forehead+'..."}';
+
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    var data=await resp.json();
+    var raw=data.content&&data.content[0]&&data.content[0].text||'';
+    // Strip possible ```json fences
+    var clean=raw.replace(/```json|```/g,'').trim();
+    var r=JSON.parse(clean);
+    // Fill in results
+    document.getElementById('overallReading').innerHTML=r.overall||'';
+    document.getElementById('rdPersonality').textContent=r.personality||'';
+    document.getElementById('rdEarly').textContent=r.early||'';
+    document.getElementById('rdCurrent').textContent=r.current||'';
+    document.getElementById('rdLate').textContent=r.late||'';
+    // Metric descriptions
+    var dmap=[
+      ['dFace',r.descFaceShape],['dEyes',r.descEyes],['dNose',r.descNose],
+      ['dMouth',r.descMouth],['dSym',r.descSymmetry],['dForehead',r.descForehead]
+    ];
+    dmap.forEach(function(d){var el=document.getElementById(d[0]);if(el&&d[1])el.textContent=d[1];});
+    window._aiDescsDone=true;
+    setVoiceStatus('Nhấn ▶ ĐỌC TOÀN BỘ để nghe Thầy phán',false);
+  }catch(err){
+    console.warn('AI reading error, falling back to templates:',err);
+    // Fallback to template
+    document.getElementById('overallReading').innerHTML=pick('overall',scores.total);
+    document.getElementById('rdPersonality').textContent=pick('personality',scores.total);
+    document.getElementById('rdEarly').textContent=pick('early',scores.symmetry);
+    document.getElementById('rdCurrent').textContent=pick('current',scores.faceShape);
+    document.getElementById('rdLate').textContent=pick('late',scores.eyes);
+    var mkeys2=[
+      {key:'faceShape',dId:'dFace'},{key:'eyes',dId:'dEyes'},{key:'nose',dId:'dNose'},
+      {key:'mouth',dId:'dMouth'},{key:'symmetry',dId:'dSym'},{key:'forehead',dId:'dForehead'}
+    ];
+    mkeys2.forEach(function(m){var de=document.getElementById(m.dId);if(de)de.textContent=metricDesc(m.key,scores[m.key]);});
+    window._aiDescsDone=true;
+    setVoiceStatus('Nhấn ▶ ĐỌC TOÀN BỘ để nghe Thầy phán',false);
+  }
+}
+
 /* ══ UI UPDATE ══ */
 var lastTotal=-99,readingDone=false,scanDone=false;
 var scanTimer=null,scanCounter=0;
@@ -1044,21 +1107,27 @@ function updateUI(scores,gender,age){
     var v=scores[m.key];
     var se=document.getElementById(m.sId);if(se){se.textContent=v;se.style.color=clr(v);}
     setBar(m.bId,v);
-    var de=document.getElementById(m.dId);if(de)de.textContent=metricDesc(m.key,v);
+    if(!window._aiDescsDone){var de=document.getElementById(m.dId);if(de)de.textContent=metricDesc(m.key,v);}
   });
   if(!readingDone||Math.abs(scores.total-lastTotal)>7){
     lastTotal=scores.total;readingDone=true;
+    window._aiDescsDone=false;
     // Build a unique seed from the full score fingerprint of this face
     window._pickSeed=(scores.total*31+scores.eyes*17+scores.nose*13+scores.mouth*11+scores.symmetry*7+scores.forehead*5+scores.faceShape*3)&0x7fffffff;
-    document.getElementById('overallReading').innerHTML=pick('overall',scores.total);
-    document.getElementById('rdPersonality').textContent=pick('personality',scores.total);
-    document.getElementById('rdEarly').textContent=pick('early',scores.symmetry);
-    document.getElementById('rdCurrent').textContent=pick('current',scores.faceShape);
-    document.getElementById('rdLate').textContent=pick('late',scores.eyes);
+    // Show AI loading placeholders
+    var loadingStyle='color:var(--muted2);font-style:italic;';
+    document.getElementById('overallReading').innerHTML='<span style="'+loadingStyle+'">⏳ Thầy Khởi đang phán...</span>';
+    document.getElementById('rdPersonality').textContent='⏳ Đang xem tính cách...';
+    document.getElementById('rdEarly').textContent='⏳ Đang xem tiền vận...';
+    document.getElementById('rdCurrent').textContent='⏳ Đang xem vận hiện tại...';
+    document.getElementById('rdLate').textContent='⏳ Đang xem hậu vận...';
+    // Also show loading for metric descs
+    mkeys.forEach(function(m){var de=document.getElementById(m.dId);if(de)de.textContent='⏳ Đang luận...'});
     renderMonths(scores.total);
     document.getElementById('audioBar').classList.add('show');
     document.getElementById('btnReset').style.display='block';
-    setVoiceStatus('Nhấn ▶ ĐỌC TOÀN BỘ để nghe Thầy phán',false);
+    setVoiceStatus('⏳ Thầy Khởi đang phán — vui lòng chờ...',false);
+    generateAIReading(scores,gender,age);
   }
   document.getElementById('scanLine').classList.add('on');
   document.getElementById('idle-msg').classList.add('off');
@@ -1073,7 +1142,7 @@ function resetUI(){
 
 window.resetSession=function(){
   stopReading();
-  scanDone=false;readingDone=false;lastTotal=-99;
+  scanDone=false;readingDone=false;lastTotal=-99;window._aiDescsDone=false;
   if(scanTimer){clearInterval(scanTimer);scanTimer=null;}
   document.getElementById('scan-overlay').classList.remove('on');
   document.getElementById('done-overlay').classList.remove('on');
@@ -1230,4 +1299,4 @@ function bootApp(){
 }
 </script>
 </body>
-  </html>
+            </html>
